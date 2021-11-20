@@ -1,0 +1,134 @@
+["alias-finder.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/alias-finder/alias-finder.plugin.zsh"
+
+["colorize.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/colorize/colorize.plugin.zsh"
+
+["command-not-found.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/command-not-found/command-not-found.plugin.zsh"
+
+["history-substring-search/history-substring-search.plugin.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/history-substring-search/history-substring-search.plugin.zsh"
+
+["history-substring-search/history-substring-search.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/history-substring-search/history-substring-search.zsh"
+
+["safe-paste.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/safe-paste/safe-paste.plugin.zsh"
+
+["thefuck.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/thefuck/thefuck.plugin.zsh"
+
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+# [""]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+["go.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/golang/golang.plugin.zsh"
+
+["powerlevel10k"]
+refreshPeriod = "168h"
+stripComponents = 1
+type = "archive"
+url = "https://github.com/romkatv/powerlevel10k/archive/master.tar.gz"
+
+["z.zsh"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/rupa/z/master/z.sh"

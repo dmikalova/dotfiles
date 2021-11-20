@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Load default config
+SKEL_BASHRC="/etc/skel/.bashrc"
+if [ -f "${SKEL_BASHRC}" ]; then
+    # shellcheck source=/etc/skel/.bashrc
+    . "${SKEL_BASHRC}"
+fi
+
+# remap terminal keyboard shortcuts
+stty intr ^J
+
+# Add $HOME/.bin to PATH
+export BIN="${HOME}/.bin"
+mkdir -p "${BIN}"
+PATH="${BIN}:${PATH}"
+PATH=$PATH:$(go env GOPATH)/bin
+export PATH
+
+# Enable FASD
+eval "$(fasd --init auto)"
+
+# Enable history
+# shopt -s histappend
+export HISTCONTROL=ignoreboth:erasedups
+export HISTFILESIZE=-1
+export HISTSIZE=-1
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+
+# rm
+alias rm='trash'
+
+# gtk
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0

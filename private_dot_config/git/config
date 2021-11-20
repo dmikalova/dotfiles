@@ -1,0 +1,33 @@
+[commit]
+	gpgSign = true
+
+[credential]
+	helper = "libsecret"
+
+[diff "sops"]
+	textconv = sops -d
+
+[includeIf "gitdir:**/github.com/**"]
+	path = ~/.config/git/github
+
+[includeIf "gitdir:**/gitlab.com/**"]
+	path = ~/.config/git/gitlab
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[tag]
+	gpgSign = true
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+
+[url "git@gitlab.com:"]
+	insteadOf = https://gitlab.com/
+
+[user]
+	name = David Mikalova
+	signingkey = 573A7913

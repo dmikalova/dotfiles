@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+echo "Starting $(basename "${0}")"
+
+# notify-send requires DBUS
+eval "export $(grep -Ez DBUS_SESSION_BUS_ADDRESS /proc/"$(pgrep -u "dmikalova" "plasma" | head -n 1)"/environ)"
+/usr/bin/notify-send -a "David..." "it is time to go to sleep"
+
+echo "Finished $(basename "${0}")"

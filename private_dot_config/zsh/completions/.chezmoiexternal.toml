@@ -1,0 +1,47 @@
+["_fd"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/fd/_fd"
+
+["_node"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_node"
+
+["_rg"]
+executable = true
+refreshPeriod = "168h"
+type = "file"
+url = "https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg"
+
+# ["_"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+
+# ["_"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+
+# ["_"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+
+# ["_"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
+
+# ["_"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = ""
