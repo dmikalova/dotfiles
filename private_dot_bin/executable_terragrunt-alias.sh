@@ -4,7 +4,7 @@ if [ "${DEBUG:=}" = true ]; then set -x; fi
 
 DIR="$(git rev-parse --show-toplevel || true)"
 if [ "${DIR}" = "$HOME/code/github.com/dmikalova/infrastructure" ]; then
-    CREDS=$(sops -d "${DIR}/digitalocean/digitalocean.sops.json")
+    CREDS=$(sops -d "${DIR}/secrets/digitalocean.sops.json")
     AWS_ACCESS_KEY_ID="$(echo "${CREDS}" | jq -r ".DIGITALOCEAN_SPACES_KEY")"
     AWS_SECRET_ACCESS_KEY="$(echo "${CREDS}" | jq -r ".DIGITALOCEAN_SPACES_SECRET")"
 fi

@@ -53,6 +53,7 @@ alias tgfmt='terragrunt-fmt-all.sh'
 alias tgi='tg init'
 alias tgiu='tg init -upgrade'
 alias tgip='tgi && tgp'
+alias tgipa='tgi && tgp && tga'
 alias tgo='tg output'
 alias tgoj='tg output -json'
 alias tgp="tg plan -out 'terraform.plan'"

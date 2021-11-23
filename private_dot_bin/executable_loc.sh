@@ -2,7 +2,7 @@
 set -eu
 if [ "${DEBUG:=}" = true ]; then set -x; fi
 
-cd "${GH_DIR}"
+cd "${HOME}/code/github.com"
 cloc "cddc39" "dmikalova" "e91e63" "screeptorio" \
     --fullpath \
     --exclude-ext "nix,svg,vim" \
