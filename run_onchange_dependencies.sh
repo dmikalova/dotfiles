@@ -43,5 +43,5 @@ sudo snap install bw
 # xclip
 # xdotool
 
-# Monospaced: Source code pro
+# Monospaced: Noto mono
 # Normal: Noto sans
