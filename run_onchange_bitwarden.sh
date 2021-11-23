@@ -8,6 +8,7 @@ TMP_DIR="${HOME}/bw-tmp"
 mkdir --parents "${TMP_DIR}"
 trap cleanup EXIT
 
+echo "Unlocking bitwarden"
 BW_SESSION="$(bw unlock --raw)"
 export BW_SESSION
 

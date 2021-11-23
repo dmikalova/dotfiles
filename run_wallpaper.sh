@@ -10,3 +10,5 @@ qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
         d.writeConfig("Image", "file://'"${HOME}/.wallpaper"'")
     }}
 '
+
+echo "run"
