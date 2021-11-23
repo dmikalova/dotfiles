@@ -3,6 +3,10 @@
 autoload -Uz compinit
 compinit -d "${DIR}/cache/zcompdump"
 
+if hash bw 2>/dev/null; then
+  bw completion --shell zsh | dd status=none of="${HOME}/.config/zsh/completions/_bw"
+fi
+
 if hash doctl 2>/dev/null; then
   doctl completion zsh | dd status=none of="${HOME}/.config/zsh/completions/_doctl"
 fi
