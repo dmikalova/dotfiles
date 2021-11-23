@@ -12,7 +12,6 @@ sudo apt install \
     xclip
 
 echo "installing go packages"
-go install github.com/hazcod/enpass-cli/cmd/enpasscli@latest
 
 echo "installing global npm packages"
 npm install --global trash-cli
