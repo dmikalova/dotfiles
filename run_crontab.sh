@@ -3,9 +3,6 @@
 set -u
 if [ "${DEBUG:=}" = true ]; then set -x; fi
 
-echo "Starting $(basename "${0}")"
-
-echo "Setting crontab"
 crontab -r
 
 (
@@ -20,5 +17,3 @@ crontab -r
     # Run tests with cron env:
     # /usr/bin/env -i "$(cat ${HOME}/cron-env)" "$@"
 ) | crontab -
-
-echo "Finished $(basename "${0}")"
