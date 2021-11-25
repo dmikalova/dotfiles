@@ -913,7 +913,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_10Actions0]
-CommandURL=/home/dmikalova/.bin/window-bottom-left.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 0 -y 50
 Type=COMMAND_URL
 
 [Data_4_10Conditions]
@@ -939,7 +939,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_11Actions0]
-CommandURL=/home/dmikalova/.bin/window-bottom-right.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 70 -y 50
 Type=COMMAND_URL
 
 [Data_4_11Conditions]
@@ -965,7 +965,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_12Actions0]
-CommandURL=/home/dmikalova/.bin/window-center.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 40 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_12Conditions]
@@ -991,7 +991,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_13Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-left.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 70 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_13Conditions]
@@ -1017,7 +1017,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_14Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-right.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 70 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_14Conditions]
@@ -1043,7 +1043,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_15Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-wide.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 60 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_15Conditions]
@@ -1069,7 +1069,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_16Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-left.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 80 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_16Conditions]
@@ -1095,7 +1095,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_17Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-wide-right.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 80 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_17Conditions]
@@ -1121,7 +1121,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_18Actions0]
-CommandURL=/home/dmikalova/.bin/window-full.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 100 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_18Conditions]
@@ -1147,7 +1147,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_19Actions0]
-CommandURL=/home/dmikalova/.bin/window-left.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_19Conditions]
@@ -1199,7 +1199,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_20Actions0]
-CommandURL=/home/dmikalova/.bin/window-right.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 100 -x 70 -y 0
 Type=COMMAND_URL
 
 [Data_4_20Conditions]
@@ -1225,7 +1225,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_21Actions0]
-CommandURL=/home/dmikalova/.bin/window-top-left.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_21Conditions]
@@ -1251,7 +1251,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_22Actions0]
-CommandURL=/home/dmikalova/.bin/window-top-right.sh
+CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 70 -y 0
 Type=COMMAND_URL
 
 [Data_4_22Conditions]
