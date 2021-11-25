@@ -4,7 +4,9 @@ if [ "${DEBUG:=}" = true ]; then set -x; fi
 
 echo "Starting $(basename "${0}")"
 
-export "$(grep -Ez DBUS_SESSION_BUS_ADDRESS /proc/"$(pgrep -u "dmikalova" "plasma" | head -n 1)"/environ)"
-loginctl lock-session
+SESSIONS="$(loginctl show-user "$LOGNAME" -p "Sessions" --value)"
+for SESSION in $SESSIONS; do
+    loginctl lock-session "${SESSION}"
+done
 
 echo "Finished $(basename "${0}")"
