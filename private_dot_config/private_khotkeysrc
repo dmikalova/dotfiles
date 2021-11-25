@@ -887,7 +887,7 @@ Type=GESTURE
 
 [Data_4]
 Comment=Comment
-DataCount=23
+DataCount=22
 Enabled=true
 Name=Brocket
 SystemGroup=0
@@ -906,14 +906,14 @@ Type=SIMPLE_ACTION_DATA
 [Data_4_10]
 Comment=Comment
 Enabled=true
-Name=vscode
+Name=wbl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_10Actions]
 ActionsCount=1
 
 [Data_4_10Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-vscode.sh
+CommandURL=/home/dmikalova/.bin/window-bottom-left.sh
 Type=COMMAND_URL
 
 [Data_4_10Conditions]
@@ -925,21 +925,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_10Triggers0]
-Key=Alt+V
+Key=Meta+Alt+Z
 Type=SHORTCUT
-Uuid={8c51abf3-ade6-45ef-bacd-9e307dda32ef}
+Uuid={28e272ed-aecf-4cd9-be29-dec115dd8f3b}
 
 [Data_4_11]
 Comment=Comment
 Enabled=true
-Name=wbl
+Name=wbr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_11Actions]
 ActionsCount=1
 
 [Data_4_11Actions0]
-CommandURL=/home/dmikalova/.bin/window-bottom-left.sh
+CommandURL=/home/dmikalova/.bin/window-bottom-right.sh
 Type=COMMAND_URL
 
 [Data_4_11Conditions]
@@ -951,21 +951,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_11Triggers0]
-Key=Meta+Alt+Z
+Key=Meta+Alt+X
 Type=SHORTCUT
-Uuid={28e272ed-aecf-4cd9-be29-dec115dd8f3b}
+Uuid={0245ed0d-a3ac-457a-b58a-d347a430aed8}
 
 [Data_4_12]
 Comment=Comment
 Enabled=true
-Name=wbr
+Name=wc
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_12Actions]
 ActionsCount=1
 
 [Data_4_12Actions0]
-CommandURL=/home/dmikalova/.bin/window-bottom-right.sh
+CommandURL=/home/dmikalova/.bin/window-center.sh
 Type=COMMAND_URL
 
 [Data_4_12Conditions]
@@ -977,21 +977,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_12Triggers0]
-Key=Meta+Alt+X
+Key=Meta+Alt+U
 Type=SHORTCUT
-Uuid={0245ed0d-a3ac-457a-b58a-d347a430aed8}
+Uuid={8bbb8ca3-5c0b-464f-adcf-0b78520126cf}
 
 [Data_4_13]
 Comment=Comment
 Enabled=true
-Name=wc
+Name=wcl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_13Actions]
 ActionsCount=1
 
 [Data_4_13Actions0]
-CommandURL=/home/dmikalova/.bin/window-center.sh
+CommandURL=/home/dmikalova/.bin/window-center-left.sh
 Type=COMMAND_URL
 
 [Data_4_13Conditions]
@@ -1003,21 +1003,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_13Triggers0]
-Key=Meta+Alt+U
+Key=Meta+Alt+Y
 Type=SHORTCUT
-Uuid={8bbb8ca3-5c0b-464f-adcf-0b78520126cf}
+Uuid={8346ee56-e80b-460c-bf1b-7e58ff551b9e}
 
 [Data_4_14]
 Comment=Comment
 Enabled=true
-Name=wcl
+Name=wcr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_14Actions]
 ActionsCount=1
 
 [Data_4_14Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-left.sh
+CommandURL=/home/dmikalova/.bin/window-center-right.sh
 Type=COMMAND_URL
 
 [Data_4_14Conditions]
@@ -1029,21 +1029,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_14Triggers0]
-Key=Meta+Alt+Y
+Key=Meta+Alt+I
 Type=SHORTCUT
-Uuid={8346ee56-e80b-460c-bf1b-7e58ff551b9e}
+Uuid={a81b7799-903e-48b6-9dc4-9def64482231}
 
 [Data_4_15]
 Comment=Comment
 Enabled=true
-Name=wcr
+Name=wcw
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_15Actions]
 ActionsCount=1
 
 [Data_4_15Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-right.sh
+CommandURL=/home/dmikalova/.bin/window-center-wide.sh
 Type=COMMAND_URL
 
 [Data_4_15Conditions]
@@ -1055,21 +1055,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_15Triggers0]
-Key=Meta+Alt+I
+Key=Meta+Alt+J
 Type=SHORTCUT
-Uuid={a81b7799-903e-48b6-9dc4-9def64482231}
+Uuid={9db63529-5e49-4d76-9185-814cb82e319d}
 
 [Data_4_16]
 Comment=Comment
 Enabled=true
-Name=wcw
+Name=wcwl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_16Actions]
 ActionsCount=1
 
 [Data_4_16Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-wide.sh
+CommandURL=/home/dmikalova/.bin/window-center-left.sh
 Type=COMMAND_URL
 
 [Data_4_16Conditions]
@@ -1081,21 +1081,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_16Triggers0]
-Key=Meta+Alt+J
+Key=Meta+Alt+H
 Type=SHORTCUT
-Uuid={9db63529-5e49-4d76-9185-814cb82e319d}
+Uuid={5cdb9738-31ac-4a5b-af1d-55bbf5ced57a}
 
 [Data_4_17]
 Comment=Comment
 Enabled=true
-Name=wcwl
+Name=wcwr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_17Actions]
 ActionsCount=1
 
 [Data_4_17Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-left.sh
+CommandURL=/home/dmikalova/.bin/window-center-wide-right.sh
 Type=COMMAND_URL
 
 [Data_4_17Conditions]
@@ -1107,21 +1107,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_17Triggers0]
-Key=Meta+Alt+H
+Key=Meta+Alt+K
 Type=SHORTCUT
-Uuid={5cdb9738-31ac-4a5b-af1d-55bbf5ced57a}
+Uuid={65c864b8-a43c-44d2-808d-1a51979ada6a}
 
 [Data_4_18]
 Comment=Comment
 Enabled=true
-Name=wcwr
+Name=wf
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_18Actions]
 ActionsCount=1
 
 [Data_4_18Actions0]
-CommandURL=/home/dmikalova/.bin/window-center-wide-right.sh
+CommandURL=/home/dmikalova/.bin/window-full.sh
 Type=COMMAND_URL
 
 [Data_4_18Conditions]
@@ -1133,21 +1133,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_18Triggers0]
-Key=Meta+Alt+K
+Key=Meta+Alt+M
 Type=SHORTCUT
-Uuid={65c864b8-a43c-44d2-808d-1a51979ada6a}
+Uuid={32ab225f-887e-4345-a061-d9435d33ba32}
 
 [Data_4_19]
 Comment=Comment
 Enabled=true
-Name=wf
+Name=wl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_19Actions]
 ActionsCount=1
 
 [Data_4_19Actions0]
-CommandURL=/home/dmikalova/.bin/window-full.sh
+CommandURL=/home/dmikalova/.bin/window-left.sh
 Type=COMMAND_URL
 
 [Data_4_19Conditions]
@@ -1159,15 +1159,15 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_19Triggers0]
-Key=Meta+Alt+M
+Key=Meta+Alt+A
 Type=SHORTCUT
-Uuid={32ab225f-887e-4345-a061-d9435d33ba32}
+Uuid={1d8babba-c5d6-4501-90b1-046364657224}
 
 [Data_4_1Actions]
 ActionsCount=1
 
 [Data_4_1Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-bitwarden.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class bitward --cmd /snap/bitwarden/current/bitwarden
 Type=COMMAND_URL
 
 [Data_4_1Conditions]
@@ -1186,20 +1186,20 @@ Uuid={be42fea4-6e99-491c-bdd6-c9f9b3252063}
 [Data_4_2]
 Comment=Comment
 Enabled=true
-Name=chrome
+Name=discord
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_20]
 Comment=Comment
 Enabled=true
-Name=wl
+Name=wr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_20Actions]
 ActionsCount=1
 
 [Data_4_20Actions0]
-CommandURL=/home/dmikalova/.bin/window-left.sh
+CommandURL=/home/dmikalova/.bin/window-right.sh
 Type=COMMAND_URL
 
 [Data_4_20Conditions]
@@ -1211,21 +1211,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_20Triggers0]
-Key=Meta+Alt+A
+Key=Meta+Alt+S
 Type=SHORTCUT
-Uuid={1d8babba-c5d6-4501-90b1-046364657224}
+Uuid={d34f3aa6-35e4-46f7-8149-5eb494433267}
 
 [Data_4_21]
 Comment=Comment
 Enabled=true
-Name=wr
+Name=wtl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_21Actions]
 ActionsCount=1
 
 [Data_4_21Actions0]
-CommandURL=/home/dmikalova/.bin/window-right.sh
+CommandURL=/home/dmikalova/.bin/window-top-left.sh
 Type=COMMAND_URL
 
 [Data_4_21Conditions]
@@ -1237,21 +1237,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_21Triggers0]
-Key=Meta+Alt+S
+Key=Meta+Alt+Q
 Type=SHORTCUT
-Uuid={d34f3aa6-35e4-46f7-8149-5eb494433267}
+Uuid={61f7d13f-d31c-4054-87f8-db3134005fdf}
 
 [Data_4_22]
 Comment=Comment
 Enabled=true
-Name=wtl
+Name=wtr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_22Actions]
 ActionsCount=1
 
 [Data_4_22Actions0]
-CommandURL=/home/dmikalova/.bin/window-top-left.sh
+CommandURL=/home/dmikalova/.bin/window-top-right.sh
 Type=COMMAND_URL
 
 [Data_4_22Conditions]
@@ -1263,32 +1263,6 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_22Triggers0]
-Key=Meta+Alt+Q
-Type=SHORTCUT
-Uuid={61f7d13f-d31c-4054-87f8-db3134005fdf}
-
-[Data_4_23]
-Comment=Comment
-Enabled=true
-Name=wtr
-Type=SIMPLE_ACTION_DATA
-
-[Data_4_23Actions]
-ActionsCount=1
-
-[Data_4_23Actions0]
-CommandURL=/home/dmikalova/.bin/window-top-right.sh
-Type=COMMAND_URL
-
-[Data_4_23Conditions]
-Comment=
-ConditionsCount=0
-
-[Data_4_23Triggers]
-Comment=Simple_action
-TriggersCount=1
-
-[Data_4_23Triggers0]
 Key=Meta+Alt+W
 Type=SHORTCUT
 Uuid={1d462df0-e9e5-4db6-98a9-750ef38d148a}
@@ -1297,7 +1271,7 @@ Uuid={1d462df0-e9e5-4db6-98a9-750ef38d148a}
 ActionsCount=1
 
 [Data_4_2Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-chrome.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class discord
 Type=COMMAND_URL
 
 [Data_4_2Conditions]
@@ -1309,21 +1283,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_2Triggers0]
-Key=
+Key=Alt+I
 Type=SHORTCUT
-Uuid={0e73a358-e440-4b78-a0d2-36b528ed7cbd}
+Uuid={8e0ff5da-4bd0-479e-a0de-ef6c5631bf75}
 
 [Data_4_3]
 Comment=Comment
 Enabled=true
-Name=discord
+Name=dolphin
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_3Actions]
 ActionsCount=1
 
 [Data_4_3Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-discord.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class dolphin
 Type=COMMAND_URL
 
 [Data_4_3Conditions]
@@ -1335,21 +1309,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_3Triggers0]
-Key=Alt+I
+Key=Alt+D
 Type=SHORTCUT
-Uuid={8e0ff5da-4bd0-479e-a0de-ef6c5631bf75}
+Uuid={76e9b3d5-b343-4721-9b22-09935fbde2fb}
 
 [Data_4_4]
 Comment=Comment
 Enabled=true
-Name=dolphin
+Name=firefox
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_4Actions]
 ActionsCount=1
 
 [Data_4_4Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-dolphin.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class firefox
 Type=COMMAND_URL
 
 [Data_4_4Conditions]
@@ -1361,21 +1335,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_4Triggers0]
-Key=Alt+D
+Key=Alt+F
 Type=SHORTCUT
-Uuid={76e9b3d5-b343-4721-9b22-09935fbde2fb}
+Uuid={7851f030-ebcf-4b75-9758-e95cb36369ae}
 
 [Data_4_5]
 Comment=Comment
 Enabled=true
-Name=firefox
+Name=konsole
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_5Actions]
 ActionsCount=1
 
 [Data_4_5Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-firefox.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class konsole
 Type=COMMAND_URL
 
 [Data_4_5Conditions]
@@ -1387,21 +1361,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_5Triggers0]
-Key=Alt+F
+Key=Alt+T
 Type=SHORTCUT
-Uuid={7851f030-ebcf-4b75-9758-e95cb36369ae}
+Uuid={e3801f2f-cda4-4947-bfe7-cd359f5bd459}
 
 [Data_4_6]
 Comment=Comment
 Enabled=true
-Name=konsole
+Name=lens
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_6Actions]
 ActionsCount=1
 
 [Data_4_6Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-konsole.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class lens
 Type=COMMAND_URL
 
 [Data_4_6Conditions]
@@ -1413,21 +1387,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_6Triggers0]
-Key=Alt+T
+Key=Alt+L
 Type=SHORTCUT
-Uuid={e3801f2f-cda4-4947-bfe7-cd359f5bd459}
+Uuid={6bdab318-2965-408e-b4ee-3fb2884093fc}
 
 [Data_4_7]
 Comment=Comment
 Enabled=true
-Name=lens
+Name=screeps
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_7Actions]
 ActionsCount=1
 
 [Data_4_7Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-lens.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class screeps
 Type=COMMAND_URL
 
 [Data_4_7Conditions]
@@ -1439,21 +1413,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_7Triggers0]
-Key=Alt+L
+Key=Alt+P
 Type=SHORTCUT
-Uuid={6bdab318-2965-408e-b4ee-3fb2884093fc}
+Uuid={c30e8d82-5d06-4af7-b63c-a60dee97aa11}
 
 [Data_4_8]
 Comment=Comment
 Enabled=true
-Name=screeps
+Name=settings
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_8Actions]
 ActionsCount=1
 
 [Data_4_8Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-screeps.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class systemsettings5
 Type=COMMAND_URL
 
 [Data_4_8Conditions]
@@ -1465,21 +1439,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_8Triggers0]
-Key=Alt+P
+Key=Alt+S
 Type=SHORTCUT
-Uuid={c30e8d82-5d06-4af7-b63c-a60dee97aa11}
+Uuid={0fd4e284-f579-4fa1-bbf9-ed101c77aabc}
 
 [Data_4_9]
 Comment=Comment
 Enabled=true
-Name=settings
+Name=vscode
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_9Actions]
 ActionsCount=1
 
 [Data_4_9Actions0]
-CommandURL=/home/dmikalova/.bin/brocket-settings.sh
+CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class code
 Type=COMMAND_URL
 
 [Data_4_9Conditions]
@@ -1491,9 +1465,9 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_9Triggers0]
-Key=Alt+S
+Key=Alt+V
 Type=SHORTCUT
-Uuid={0fd4e284-f579-4fa1-bbf9-ed101c77aabc}
+Uuid={8c51abf3-ade6-45ef-bacd-9e307dda32ef}
 
 [General]
 XftAntialias[$d]
