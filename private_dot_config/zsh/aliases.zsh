@@ -11,6 +11,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ai='sudo apt install'
 alias as='apt-cache search'
+alias au='sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt autoclean'
 alias cat='ccat'
 alias cl='xclip -selection c'
 alias cld='printf "%s" $(pwd) | cl'
@@ -27,7 +28,6 @@ alias ls='ls --all --color=auto --human-readable'
 alias mv='mv --interactive'
 alias reboot='sudo reboot'
 alias rm='trash'
-alias update='sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt autoclean'
 
 # git
 alias gcpa='git-commit-push-all.sh'

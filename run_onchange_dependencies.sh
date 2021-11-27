@@ -12,6 +12,7 @@ sudo apt install \
     xclip
 
 echo "installing go packages"
+# go get -u github.com/dirk/quickhook
 
 echo "installing global npm packages"
 npm install --global trash-cli
