@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+cd "${HOME}/code/github.com"
+
+FILES=$(
+    find cddc39 dmikalova e91e63 screeptorio \( \
+        -type d -name .terragrunt-cache -o \
+        -type d -name node_modules \
+        \) -prune -o \( \
+        -type d -name .git \
+        \) -print
+)
+
+for FILE in $FILES; do
+    DIR=$(dirname "${FILE}")
+    LICENSE="${DIR}/LICENSE"
+    # test if exists
+    echo "${FILE} ${LICENSE}"
+    if ! test -f "${LICENSE}"; then
+        code "${LICENSE}"
+        exit
+    fi
+    # test if empty
+    if ! test -s "${LICENSE}"; then
+        code "${LICENSE}"
+        exit
+    fi
+    # test if apache license
+    # if
+    # [ -f "$file" ] && head -n 1 < "$file" | grep -q '^#include'
+    head -n 1 "${LICENSE}"
+done

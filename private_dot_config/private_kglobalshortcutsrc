@@ -25,6 +25,7 @@ display=Display\tMeta+P,Display\tMeta+P,Switch Display
 [khotkeys]
 _k_friendly_name=KDE Daemon
 {0245ed0d-a3ac-457a-b58a-d347a430aed8}=Meta+Alt+X,none,wbr
+{0a6ecaa6-1d04-4986-a10d-82c6bb01e5ce}=none,none,New Action
 {0fd4e284-f579-4fa1-bbf9-ed101c77aabc}=Alt+S,none,settings
 {1d462df0-e9e5-4db6-98a9-750ef38d148a}=Meta+Alt+W,none,wtr
 {1d8babba-c5d6-4501-90b1-046364657224}=Meta+Alt+A,none,wl
@@ -96,7 +97,7 @@ MoveZoomUp=none,none,Move Zoomed Area Upwards
 Remove Window From Group=none,none,Remove Window From Group
 Setup Window Shortcut=none,none,Setup Window Shortcut
 Show Desktop=Meta+D,Meta+D,Show Desktop
-ShowDesktopGrid=Ctrl+F8,Ctrl+F8,Show Desktop Grid
+ShowDesktopGrid=Meta+Alt+G,Ctrl+F8,Show Desktop Grid
 Suspend Compositing=Alt+Shift+F12,Alt+Shift+F12,Suspend Compositing
 Switch One Desktop Down=none,Meta+Ctrl+Down,Switch One Desktop Down
 Switch One Desktop Up=none,Meta+Ctrl+Up,Switch One Desktop Up
@@ -140,6 +141,7 @@ Switch to Screen 6=none,none,Switch to Screen 6
 Switch to Screen 7=none,none,Switch to Screen 7
 Toggle Night Color=none,none,Toggle Night Color
 Toggle Window Raise/Lower=none,none,Toggle Window Raise/Lower
+ToggleCurrentThumbnail=,Meta+Ctrl+T,Toggle Thumbnail for Current Window
 Walk Through Desktop List=,none,Walk Through Desktop List
 Walk Through Desktop List (Reverse)=none,none,Walk Through Desktop List (Reverse)
 Walk Through Desktops=,none,Walk Through Desktops
@@ -265,7 +267,7 @@ Turn Off Screen=none,none,Turn Off Screen
 _k_friendly_name=Power Management
 
 [plasmashell]
-_k_friendly_name=Activity switching
+_k_friendly_name=Plasma
 activate task manager entry 1=Meta+1,Meta+1,Activate Task Manager Entry 1
 activate task manager entry 10=Meta+0,Meta+0,Activate Task Manager Entry 10
 activate task manager entry 2=Meta+2,Meta+2,Activate Task Manager Entry 2

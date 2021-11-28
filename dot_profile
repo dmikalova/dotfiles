@@ -1,0 +1,11 @@
+# shellcheck shell=sh
+
+# load default config
+SKEL_PROFILE="/etc/skel/.profile"
+if [ -f "${SKEL_PROFILE}" ]; then
+    # shellcheck source=/etc/skel/.profile
+    . "${SKEL_PROFILE}"
+fi
+
+# gtk
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0

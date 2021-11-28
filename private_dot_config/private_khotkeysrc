@@ -913,7 +913,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_10Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 0 -y 50
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 50
 Type=COMMAND_URL
 
 [Data_4_10Conditions]
@@ -939,7 +939,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_11Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 70 -y 50
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 50
 Type=COMMAND_URL
 
 [Data_4_11Conditions]
@@ -965,7 +965,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_12Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 40 -t 100 -x 30 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 40 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_12Conditions]
@@ -991,7 +991,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_13Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 70 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_13Conditions]
@@ -1017,7 +1017,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_14Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 70 -t 100 -x 30 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_14Conditions]
@@ -1043,7 +1043,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_15Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 60 -t 100 -x 20 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 60 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_15Conditions]
@@ -1069,7 +1069,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_16Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 80 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_16Conditions]
@@ -1095,7 +1095,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_17Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 80 -t 100 -x 20 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_17Conditions]
@@ -1121,7 +1121,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_18Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 100 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 100 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_18Conditions]
@@ -1147,7 +1147,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_19Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_19Conditions]
@@ -1167,7 +1167,7 @@ Uuid={1d8babba-c5d6-4501-90b1-046364657224}
 ActionsCount=1
 
 [Data_4_1Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class bitward --cmd /snap/bitwarden/current/bitwarden
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class bitwarden --cmd /snap/bitwarden/current/bitwarden
 Type=COMMAND_URL
 
 [Data_4_1Conditions]
@@ -1199,7 +1199,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_20Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 100 -x 70 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 70 -y 0
 Type=COMMAND_URL
 
 [Data_4_20Conditions]
@@ -1225,7 +1225,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_21Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_21Conditions]
@@ -1251,7 +1251,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_22Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket resize -w 30 -t 50 -x 70 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 0
 Type=COMMAND_URL
 
 [Data_4_22Conditions]
@@ -1271,7 +1271,7 @@ Uuid={1d462df0-e9e5-4db6-98a9-750ef38d148a}
 ActionsCount=1
 
 [Data_4_2Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class discord
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class discord
 Type=COMMAND_URL
 
 [Data_4_2Conditions]
@@ -1297,7 +1297,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_3Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class dolphin
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class dolphin
 Type=COMMAND_URL
 
 [Data_4_3Conditions]
@@ -1323,7 +1323,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_4Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class firefox
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class firefox
 Type=COMMAND_URL
 
 [Data_4_4Conditions]
@@ -1349,7 +1349,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_5Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class konsole
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class konsole
 Type=COMMAND_URL
 
 [Data_4_5Conditions]
@@ -1375,7 +1375,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_6Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class lens
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class lens
 Type=COMMAND_URL
 
 [Data_4_6Conditions]
@@ -1401,7 +1401,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_7Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class screeps
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class screeps
 Type=COMMAND_URL
 
 [Data_4_7Conditions]
@@ -1427,7 +1427,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_8Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class systemsettings5
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class systemsettings5
 Type=COMMAND_URL
 
 [Data_4_8Conditions]
@@ -1453,7 +1453,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_4_9Actions0]
-CommandURL=/home/dmikalova/go/bin/brocket run-or-raise --class code
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class code
 Type=COMMAND_URL
 
 [Data_4_9Conditions]
