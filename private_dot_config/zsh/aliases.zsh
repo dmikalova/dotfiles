@@ -17,7 +17,6 @@ alias cl='xclip -selection c'
 alias cld='printf "%s" $(pwd) | cl'
 alias cp='cp --interactive --recursive'
 alias cdg='cd $(git rev-parse --show-toplevel)'
-alias cza='chezmoi apply && zsh'
 alias diff='colordiff'
 alias fd='fdfind'
 # alias grep='grep --color=auto --exclude-dir=.terragrunt-cache --exclude-dir=node_modules'
@@ -29,8 +28,13 @@ alias mv='mv --interactive'
 alias reboot='sudo reboot'
 alias rm='trash'
 
+# chezmoi
+alias cza='chezmoi apply && zsh'
+alias czr='chezmoi re-add'
+alias czs='chezmoi status'
+
 # git
-alias gcpa='git-commit-push-all.sh'
+alias gcpa='git-commit-push-all'
 alias gs='git status'
 
 # npm
@@ -41,15 +45,15 @@ alias tf='terraform'
 alias tfa="tf apply 'terraform.plan'"
 alias tfi='tf init'
 alias tfip='tfi && tfp'
-alias tfla='tflint-all.sh'
+alias tfla='tflint-all'
 alias tfp="tf plan -out 'terraform.plan'"
 
 # terragrunt
-alias tg='terragrunt-alias.sh'
+alias tg='terragrunt-alias'
 alias tga="tg apply 'terraform.plan'"
 alias tgd='tg destroy'
-alias tgdc='terragrunt-delete-caches.sh'
-alias tgfmt='terragrunt-fmt-all.sh'
+alias tgdc='terragrunt-delete-caches'
+alias tgfmt='terragrunt-fmt-all'
 alias tgi='tg init'
 alias tgiu='tg init -upgrade'
 alias tgip='tgi && tgp'

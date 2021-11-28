@@ -1,5 +1,5 @@
-["brocket.sh"]
-executable = true
-refreshPeriod = "168h"
-type = "file"
-url = "https://raw.githubusercontent.com/dmikalova/brocket/main/brocket"
+# ["brocket.sh"]
+# executable = true
+# refreshPeriod = "168h"
+# type = "file"
+# url = "https://raw.githubusercontent.com/dmikalova/brocket/main/brocket"

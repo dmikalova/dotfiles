@@ -1,0 +1,58 @@
+#!/bin/sh
+set -eu
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+cd "${HOME}/code/github.com"
+
+FILES=$(
+    find cddc39 dmikalova e91e63 screeptorio \( \
+        -type d -name .terragrunt-cache -o \
+        -type d -name node_modules \
+        \) -prune -o \( \
+        -name main.tf -o \
+        -type d -name .git -o \
+        -name README.md \
+        \) -print
+)
+
+# echo "$FILES"
+
+for FILE in $FILES; do
+    DIR=$(dirname "${FILE}")
+    README="${DIR}/README.md"
+    # test if exists
+    echo "${FILE}"
+    echo "${README}"
+    if ! test -f "${README}"; then
+        code "${README}"
+        exit
+    fi
+    # test if empty
+    if ! test -s "${README}"; then
+        code "${README}"
+        exit
+    fi
+done
+
+# MAINS=$(find . -name "*.go")
+# for MAIN in $MAINS; do
+#     DIR=$(dirname "${MAIN}")
+#     README="${DIR}/README.md"
+#     if ! test -f "${README}"; then
+#         echo "${README}"
+#         code "${README}"
+#         exit
+#     fi
+# done
+
+# # EXCLUDE="-type d \( -name node_modules -o -name .terragrunt-cache -o -name .terrafform \) -prune"
+# MAINS=$(find . -type d -name .git)
+# for MAIN in $MAINS; do
+#     DIR=$(dirname "${MAIN}")
+#     README="${DIR}/README.md"
+#     if ! test -f "${README}"; then
+#         echo "${README}"
+#         code "${README}"
+#         exit
+#     fi
+# done
