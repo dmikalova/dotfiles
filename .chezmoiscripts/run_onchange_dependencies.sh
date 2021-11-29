@@ -4,12 +4,22 @@ echo "installing apt packages"
 sudo apt install \
     "catimg" \
     "chroma" \
+    "cloc" \
+    "curl" \
+    "docker" \
     "fd-find" \
+    "fonts-noto-color-emoji" \
+    "fonts-noto-core" \
+    "fonts-noto-mono" \
     "fzf" \
     "inotify-tools" \
     "kwalletcli" \
     "pinentry-tty" \
+    "playerctl" \
+    "ripgrep" \
     "thefuck" \
+    "unzip" \
+    "wget" \
     "xclip"
 
 echo "installing go packages"
@@ -18,113 +28,45 @@ go install "github.com/dmikalova/brocket"
 echo "installing global npm packages"
 npm install --global "trash-cli"
 
-echo "installing snaps"
-sudo snap install --classic "chezmoi"
-sudo snap install "bitwarden"
-sudo snap install "bw"
-
-# tf, tflint, tg, hcledit
-# consul
-# go get -u github.com/dirk/quickhook
-# docker
-# enpass
-# exfat
-# git
-# go_1_12
-# firefox
-# libsecret
-# nodejs-10_x
-# nomad
-# packer
-# shellchec
-# steam
-# unzip
-# vault
-# vscode
-# wget
-# wmctrl
-# xclip
-# xdotool
-
-# Monospaced: Noto mono
-# Normal: Noto sans
-
-# libnotify-bin
-# cmake
-# nvidia-driver-450
-# qtdeclarative5-dev
-# libc++1
-# playerctl
-# /home/dmikalova/downloads/discord-0.0.13.deb
-# awscli
-# node-grunt-cli
-# simpleburn
-# libkf5cddbwidgets5
-# plantuml
-# golang-go
-# ardour
-# soundkonverter
-# finger
-# byobu
-# docker
-# apt-transport-https ca-certificates curl gnupg lsb-release
-# docker-ce docker-ce-cli containerd.io
-# firefox
-# terraform-ls
-# terraform
-# kubectl
-# pgadmin3
 # apache2-utils
-# gtk3-nocsd
-# nodejs
-# steam
-# xsel
-# s3cmd
-# gtk3-nocsd
-# gtk3-nocsd
-# gnome-keyring
-# libusb-dev
-# pdftk
-# surf
-# chromium-browser
-# cloc
-# seahorse
-# git-all
-# git
-# gh
-# zsh
-# /home/dmikalova/downloads/code_1.62.2-1636665017_amd64.deb
-# /home/dmikalova/downloads/extraterm_0.59.3_amd64.deb
-# fish
-# colortest
-# colordiff
-# fzf
-# fd-find fzf
-# catimg
-# chroma
-# xclip
-# ripgrep
-# thefuck
+# apt-transport-https
+# ardour
 # atool
-# kwalletcli
-# pinentry-tty
-# golang
-# gnome-keyring
-# inotify-tools
-
-# android-studio
-# bare
-# bitwarden
-# bw
-# chezmoi
-# chromium
-# core
-# core18
-# core20
+# ca-certificates
+# cmake
+# colordiff
+# colortest
 # discord
+# exfat
+# fd-find
 # ffmpeg
-# gnome-3-28-1804
+# finger
+# firefox
+# fzf
+# gh
+# git
+# gnome
+# gnome-keyring
+# gnupg
 # gtk-common-themes
-# helm
-# postman
-# vault
+# gtk3-nocsd
+# inotify-tools
+# kubectl
+# kwalletcli
+# libkf5cddbwidgets5
+# libnotify-bin
+# libsecret
+# libusb-dev
+# lsb-release
+# nodejs
+# nodejs-10_x
+# pgadmin3
+# pinentry-tty
+# plantuml
+# s3cmd
+# simpleburn
+# soundkonverter
+# steam
+# terraform-ls
+# vscode
+# zsh

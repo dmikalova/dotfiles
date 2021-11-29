@@ -1167,7 +1167,7 @@ Uuid={1d8babba-c5d6-4501-90b1-046364657224}
 ActionsCount=1
 
 [Data_4_1Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class bitwarden --cmd /snap/bitwarden/current/bitwarden
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class bitwarden --cmd /home/dmikalova/.local/bin/bitwarden
 Type=COMMAND_URL
 
 [Data_4_1Conditions]

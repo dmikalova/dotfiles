@@ -38,6 +38,8 @@ zip() {
 
 targz "age/age" "https://github.com/FiloSottile/age/releases/download/v1.0.0/age-v1.0.0-linux-amd64.tar.gz"
 targz "age/age-keygen" "https://github.com/FiloSottile/age/releases/download/v1.0.0/age-v1.0.0-linux-amd64.tar.gz"
+bin "bitwarden" "https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=appimage"
+zip "bw" "https://vault.bitwarden.com/download/?app=cli&platform=linux"
 targz "chezmoi" "https://github.com/twpayne/chezmoi/releases/download/v2.9.0/chezmoi_2.9.0_linux_amd64.tar.gz"
 bin "chrysalis" "https://github.com/keyboardio/Chrysalis/releases/download/v0.8.6/Chrysalis-0.8.6.AppImage"
 targz "doctl" "https://github.com/digitalocean/doctl/releases/download/v1.67.0/doctl-1.67.0-linux-amd64.tar.gz"
