@@ -19,7 +19,7 @@ for FILE in $FILES; do
     DIR=$(dirname "${FILE}")
     README="${DIR}/README.md"
     # test if exists
-    echo "${FILE} ${README}"
+    echo "$(tput setaf 1)${README}$(tput sgr0)"
     if ! test -f "${README}"; then
         code "${README}"
         exit
