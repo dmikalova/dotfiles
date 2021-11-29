@@ -111,3 +111,20 @@ sudo snap install "bw"
 # golang
 # gnome-keyring
 # inotify-tools
+
+# android-studio
+# bare
+# bitwarden
+# bw
+# chezmoi
+# chromium
+# core
+# core18
+# core20
+# discord
+# ffmpeg
+# gnome-3-28-1804
+# gtk-common-themes
+# helm
+# postman
+# vault
