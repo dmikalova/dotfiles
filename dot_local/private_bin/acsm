@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+docker run -v $PWD:/home/knock/acsm:z --rm -it ubuntu:22.04 bash
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
+apt update
+apt install libzip-dev qtbase5-dev libcrypt-dev libssl1.1
+cd /lib/x86_64-linux-gnu/
+cp ./libcrypt.so.1 ./libcrypto.so.1.1
+cd /home/knock/acsm/acsm/libgourou_utils_0.5.1/
+./adept_activate -u ade@email -p xxx
+./acsmdownloader -f ./file.acsm
+
+echo "Finished $(basename "${0}")"

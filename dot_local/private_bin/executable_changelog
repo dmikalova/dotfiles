@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 # Set defaults.
 FILE="$HOME/Documents/changelog"
