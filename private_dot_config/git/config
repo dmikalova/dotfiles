@@ -39,8 +39,8 @@
 	name = "David Mikalova"
 	signingkey = "573A7913"
 
-[remote "origin"]
-	url = https://github.com/Homebrew/homebrew-core
+# [remote "origin"]
+	# url = https://github.com/Homebrew/homebrew-core
 	# fetch = +refs/heads/*:refs/remotes/origin/*
 
 [filter "lfs"]
@@ -51,6 +51,6 @@
 
 [lfs]
 	repositoryformatversion = 0
-	
+
 [blame]
 	ignoreRevsFile = .git-blame-ignore-revs
