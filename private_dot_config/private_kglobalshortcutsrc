@@ -25,7 +25,6 @@ display=Display\tMeta+P,Display\tMeta+P,Switch Display
 [khotkeys]
 _k_friendly_name=KDE Daemon
 {0245ed0d-a3ac-457a-b58a-d347a430aed8}=Meta+Alt+X,none,wbr
-{0a6ecaa6-1d04-4986-a10d-82c6bb01e5ce}=none,none,New Action
 {0fd4e284-f579-4fa1-bbf9-ed101c77aabc}=Alt+S,none,settings
 {1d462df0-e9e5-4db6-98a9-750ef38d148a}=Meta+Alt+W,none,wtr
 {1d8babba-c5d6-4501-90b1-046364657224}=Meta+Alt+A,none,wl
@@ -48,7 +47,9 @@ _k_friendly_name=KDE Daemon
 {c30e8d82-5d06-4af7-b63c-a60dee97aa11}=Alt+P,none,screeps
 {d03619b6-9b3c-48cc-9d9c-a2aadb485550}=,none,Search
 {d34f3aa6-35e4-46f7-8149-5eb494433267}=Meta+Alt+S,none,wr
+{dd4e4a69-3df3-4652-9cb4-b166e61d1478}=Alt+O,none,obsidian
 {e3801f2f-cda4-4947-bfe7-cd359f5bd459}=Alt+T,none,konsole
+{f21e8695-90e6-4819-9689-9a8a16aed11d}=Alt+K,none,slack
 
 [kmix]
 _k_friendly_name=Audio Volume

@@ -17,6 +17,9 @@ append_path "${BIN_DIR}"
 export ANDROID_SDK="${HOME}/Android/Sdk"
 append_path "${ANDROID_SDK}/platform-tools"
 
+# brew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # git
 export GIT_CONFIG="${HOME}/.config/git/config"
 

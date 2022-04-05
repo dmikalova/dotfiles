@@ -1,11 +1,18 @@
 [commit]
 	gpgsign = "true"
 
+[core]
+	autocrlf = false
+
 [credential]
 	helper = "libsecret"
 
 [diff "sops"]
 	textconv = "sops -d"
+
+[homebrew]
+	analyticsmessage = true
+	caskanalyticsmessage = true
 
 [includeif "gitdir:**/github.com/**"]
 	path = "~/.config/git/github"
@@ -31,3 +38,19 @@
 [user]
 	name = "David Mikalova"
 	signingkey = "573A7913"
+
+[remote "origin"]
+	url = https://github.com/Homebrew/homebrew-core
+	# fetch = +refs/heads/*:refs/remotes/origin/*
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[lfs]
+	repositoryformatversion = 0
+	
+[blame]
+	ignoreRevsFile = .git-blame-ignore-revs

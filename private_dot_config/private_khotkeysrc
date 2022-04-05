@@ -887,7 +887,7 @@ Type=GESTURE
 
 [Data_4]
 Comment=Comment
-DataCount=22
+DataCount=24
 Enabled=true
 Name=Brocket
 SystemGroup=0
@@ -906,14 +906,14 @@ Type=SIMPLE_ACTION_DATA
 [Data_4_10]
 Comment=Comment
 Enabled=true
-Name=wbl
+Name=settings
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_10Actions]
 ActionsCount=1
 
 [Data_4_10Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 50
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class systemsettings5
 Type=COMMAND_URL
 
 [Data_4_10Conditions]
@@ -925,21 +925,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_10Triggers0]
-Key=Meta+Alt+Z
+Key=Alt+S
 Type=SHORTCUT
-Uuid={28e272ed-aecf-4cd9-be29-dec115dd8f3b}
+Uuid={0fd4e284-f579-4fa1-bbf9-ed101c77aabc}
 
 [Data_4_11]
 Comment=Comment
 Enabled=true
-Name=wbr
+Name=vscode
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_11Actions]
 ActionsCount=1
 
 [Data_4_11Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 50
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class code
 Type=COMMAND_URL
 
 [Data_4_11Conditions]
@@ -951,21 +951,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_11Triggers0]
-Key=Meta+Alt+X
+Key=Alt+V
 Type=SHORTCUT
-Uuid={0245ed0d-a3ac-457a-b58a-d347a430aed8}
+Uuid={8c51abf3-ade6-45ef-bacd-9e307dda32ef}
 
 [Data_4_12]
 Comment=Comment
 Enabled=true
-Name=wc
+Name=wbl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_12Actions]
 ActionsCount=1
 
 [Data_4_12Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 40 -t 100 -x 30 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 50
 Type=COMMAND_URL
 
 [Data_4_12Conditions]
@@ -977,21 +977,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_12Triggers0]
-Key=Meta+Alt+U
+Key=Meta+Alt+Z
 Type=SHORTCUT
-Uuid={8bbb8ca3-5c0b-464f-adcf-0b78520126cf}
+Uuid={28e272ed-aecf-4cd9-be29-dec115dd8f3b}
 
 [Data_4_13]
 Comment=Comment
 Enabled=true
-Name=wcl
+Name=wbr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_13Actions]
 ActionsCount=1
 
 [Data_4_13Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 50
 Type=COMMAND_URL
 
 [Data_4_13Conditions]
@@ -1003,21 +1003,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_13Triggers0]
-Key=Meta+Alt+Y
+Key=Meta+Alt+X
 Type=SHORTCUT
-Uuid={8346ee56-e80b-460c-bf1b-7e58ff551b9e}
+Uuid={0245ed0d-a3ac-457a-b58a-d347a430aed8}
 
 [Data_4_14]
 Comment=Comment
 Enabled=true
-Name=wcr
+Name=wc
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_14Actions]
 ActionsCount=1
 
 [Data_4_14Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 30 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 40 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_14Conditions]
@@ -1029,21 +1029,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_14Triggers0]
-Key=Meta+Alt+I
+Key=Meta+Alt+U
 Type=SHORTCUT
-Uuid={a81b7799-903e-48b6-9dc4-9def64482231}
+Uuid={8bbb8ca3-5c0b-464f-adcf-0b78520126cf}
 
 [Data_4_15]
 Comment=Comment
 Enabled=true
-Name=wcw
+Name=wcl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_15Actions]
 ActionsCount=1
 
 [Data_4_15Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 60 -t 100 -x 20 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_15Conditions]
@@ -1055,21 +1055,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_15Triggers0]
-Key=Meta+Alt+J
+Key=Meta+Alt+Y
 Type=SHORTCUT
-Uuid={9db63529-5e49-4d76-9185-814cb82e319d}
+Uuid={8346ee56-e80b-460c-bf1b-7e58ff551b9e}
 
 [Data_4_16]
 Comment=Comment
 Enabled=true
-Name=wcwl
+Name=wcr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_16Actions]
 ActionsCount=1
 
 [Data_4_16Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 70 -t 100 -x 30 -y 0
 Type=COMMAND_URL
 
 [Data_4_16Conditions]
@@ -1081,21 +1081,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_16Triggers0]
-Key=Meta+Alt+H
+Key=Meta+Alt+I
 Type=SHORTCUT
-Uuid={5cdb9738-31ac-4a5b-af1d-55bbf5ced57a}
+Uuid={a81b7799-903e-48b6-9dc4-9def64482231}
 
 [Data_4_17]
 Comment=Comment
 Enabled=true
-Name=wcwr
+Name=wcw
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_17Actions]
 ActionsCount=1
 
 [Data_4_17Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 20 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 60 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_17Conditions]
@@ -1107,21 +1107,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_17Triggers0]
-Key=Meta+Alt+K
+Key=Meta+Alt+J
 Type=SHORTCUT
-Uuid={65c864b8-a43c-44d2-808d-1a51979ada6a}
+Uuid={9db63529-5e49-4d76-9185-814cb82e319d}
 
 [Data_4_18]
 Comment=Comment
 Enabled=true
-Name=wf
+Name=wcwl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_18Actions]
 ActionsCount=1
 
 [Data_4_18Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 100 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_18Conditions]
@@ -1133,21 +1133,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_18Triggers0]
-Key=Meta+Alt+M
+Key=Meta+Alt+H
 Type=SHORTCUT
-Uuid={32ab225f-887e-4345-a061-d9435d33ba32}
+Uuid={5cdb9738-31ac-4a5b-af1d-55bbf5ced57a}
 
 [Data_4_19]
 Comment=Comment
 Enabled=true
-Name=wl
+Name=wcwr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_19Actions]
 ActionsCount=1
 
 [Data_4_19Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 80 -t 100 -x 20 -y 0
 Type=COMMAND_URL
 
 [Data_4_19Conditions]
@@ -1159,9 +1159,9 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_19Triggers0]
-Key=Meta+Alt+A
+Key=Meta+Alt+K
 Type=SHORTCUT
-Uuid={1d8babba-c5d6-4501-90b1-046364657224}
+Uuid={65c864b8-a43c-44d2-808d-1a51979ada6a}
 
 [Data_4_1Actions]
 ActionsCount=1
@@ -1192,14 +1192,14 @@ Type=SIMPLE_ACTION_DATA
 [Data_4_20]
 Comment=Comment
 Enabled=true
-Name=wr
+Name=wf
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_20Actions]
 ActionsCount=1
 
 [Data_4_20Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 70 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 100 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_20Conditions]
@@ -1211,21 +1211,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_20Triggers0]
-Key=Meta+Alt+S
+Key=Meta+Alt+M
 Type=SHORTCUT
-Uuid={d34f3aa6-35e4-46f7-8149-5eb494433267}
+Uuid={32ab225f-887e-4345-a061-d9435d33ba32}
 
 [Data_4_21]
 Comment=Comment
 Enabled=true
-Name=wtl
+Name=wl
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_21Actions]
 ActionsCount=1
 
 [Data_4_21Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 0 -y 0
 Type=COMMAND_URL
 
 [Data_4_21Conditions]
@@ -1237,21 +1237,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_21Triggers0]
-Key=Meta+Alt+Q
+Key=Meta+Alt+A
 Type=SHORTCUT
-Uuid={61f7d13f-d31c-4054-87f8-db3134005fdf}
+Uuid={1d8babba-c5d6-4501-90b1-046364657224}
 
 [Data_4_22]
 Comment=Comment
 Enabled=true
-Name=wtr
+Name=wr
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_22Actions]
 ActionsCount=1
 
 [Data_4_22Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 0
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 100 -x 70 -y 0
 Type=COMMAND_URL
 
 [Data_4_22Conditions]
@@ -1263,6 +1263,58 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_22Triggers0]
+Key=Meta+Alt+S
+Type=SHORTCUT
+Uuid={d34f3aa6-35e4-46f7-8149-5eb494433267}
+
+[Data_4_23]
+Comment=Comment
+Enabled=true
+Name=wtl
+Type=SIMPLE_ACTION_DATA
+
+[Data_4_23Actions]
+ActionsCount=1
+
+[Data_4_23Actions0]
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 0 -y 0
+Type=COMMAND_URL
+
+[Data_4_23Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_4_23Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_4_23Triggers0]
+Key=Meta+Alt+Q
+Type=SHORTCUT
+Uuid={61f7d13f-d31c-4054-87f8-db3134005fdf}
+
+[Data_4_24]
+Comment=Comment
+Enabled=true
+Name=wtr
+Type=SIMPLE_ACTION_DATA
+
+[Data_4_24Actions]
+ActionsCount=1
+
+[Data_4_24Actions0]
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket resize -w 30 -t 50 -x 70 -y 0
+Type=COMMAND_URL
+
+[Data_4_24Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_4_24Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_4_24Triggers0]
 Key=Meta+Alt+W
 Type=SHORTCUT
 Uuid={1d462df0-e9e5-4db6-98a9-750ef38d148a}
@@ -1394,14 +1446,14 @@ Uuid={6bdab318-2965-408e-b4ee-3fb2884093fc}
 [Data_4_7]
 Comment=Comment
 Enabled=true
-Name=screeps
+Name=obsidian
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_7Actions]
 ActionsCount=1
 
 [Data_4_7Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class screeps
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class obsidian
 Type=COMMAND_URL
 
 [Data_4_7Conditions]
@@ -1413,21 +1465,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_7Triggers0]
-Key=Alt+P
+Key=Alt+O
 Type=SHORTCUT
-Uuid={c30e8d82-5d06-4af7-b63c-a60dee97aa11}
+Uuid={dd4e4a69-3df3-4652-9cb4-b166e61d1478}
 
 [Data_4_8]
 Comment=Comment
 Enabled=true
-Name=settings
+Name=screeps
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_8Actions]
 ActionsCount=1
 
 [Data_4_8Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class systemsettings5
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class screeps
 Type=COMMAND_URL
 
 [Data_4_8Conditions]
@@ -1439,21 +1491,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_8Triggers0]
-Key=Alt+S
+Key=Alt+P
 Type=SHORTCUT
-Uuid={0fd4e284-f579-4fa1-bbf9-ed101c77aabc}
+Uuid={c30e8d82-5d06-4af7-b63c-a60dee97aa11}
 
 [Data_4_9]
 Comment=Comment
 Enabled=true
-Name=vscode
+Name=slack
 Type=SIMPLE_ACTION_DATA
 
 [Data_4_9Actions]
 ActionsCount=1
 
 [Data_4_9Actions0]
-CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class code
+CommandURL=/home/dmikalova/.cache/go-path/bin/brocket run-or-raise --class slack
 Type=COMMAND_URL
 
 [Data_4_9Conditions]
@@ -1465,9 +1517,9 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_4_9Triggers0]
-Key=Alt+V
+Key=Alt+K
 Type=SHORTCUT
-Uuid={8c51abf3-ade6-45ef-bacd-9e307dda32ef}
+Uuid={f21e8695-90e6-4819-9689-9a8a16aed11d}
 
 [General]
 XftAntialias[$d]
