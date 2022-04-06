@@ -1,8 +1,9 @@
-Host gitlab
-    Hostname gitlab.com
+Host gitlab.com
     AddKeysToAgent yes
+    Hostname gitlab.com
     IdentityFile ~/.ssh/id_logixboard
 
-Host *
+Host github.com
     AddKeysToAgent yes
+    Hostname github.com
     IdentityFile ~/.ssh/id_home-desktop

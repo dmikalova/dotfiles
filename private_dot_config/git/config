@@ -10,6 +10,12 @@
 [diff "sops"]
 	textconv = "sops -d"
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
 [homebrew]
 	analyticsmessage = true
 	caskanalyticsmessage = true
@@ -23,8 +29,14 @@
 [init]
 	defaultbranch = "main"
 
+[lfs]
+	repositoryformatversion = 0
+
 [pull]
 	rebase = "false"
+
+[push]
+	default = current
 
 [tag]
 	gpgsign = "true"
@@ -38,19 +50,6 @@
 [user]
 	name = "David Mikalova"
 	signingkey = "573A7913"
-
-# [remote "origin"]
-	# url = https://github.com/Homebrew/homebrew-core
-	# fetch = +refs/heads/*:refs/remotes/origin/*
-
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-
-[lfs]
-	repositoryformatversion = 0
 
 [blame]
 	ignoreRevsFile = .git-blame-ignore-revs
