@@ -44,6 +44,11 @@ append_path "${NPM_CACHE_DIR}/bin"
 export N_PREFIX="${NPM_CACHE_DIR}"
 export NPM_CONFIG_USERCONFIG="${HOME}/.config/npm/npmrc"
 
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
 # restic
 export RESTIC_PASSWORD=""
 export RESTIC_REPOSITORY="s3:https://nyc3.digitaloceanspaces.com/cddc39/backups"
