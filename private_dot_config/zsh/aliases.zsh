@@ -36,6 +36,7 @@ alias czs='chezmoi status'
 # git
 alias gcpa='git-commit-push-all'
 alias gs='git status'
+alias ge='git commit --amend --no-edit && git push -f'
 
 # npm
 alias npmi='npm install'
