@@ -53,3 +53,5 @@
 
 [blame]
 	ignoreRevsFile = .git-blame-ignore-revs
+[lfs "origin.git/info/lfs"]
+	locksverify = false
