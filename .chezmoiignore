@@ -1,3 +1,27 @@
 LICENSE
 README.md
 images
+
+{{ if eq .chezmoi.os "darwin" -}}
+# Linux-only: KDE, crontab, wallpaper, login theme, mouse
+.chezmoiscripts/run_crontab.sh
+.chezmoiscripts/run_onchange_kensington-mouse.sh
+.chezmoiscripts/run_onchange_login_theme.sh
+.chezmoiscripts/run_onchange_system_wallpaper.sh
+.chezmoiscripts/run_wallpaper.sh
+.chezmoiscripts/run_onchange_dependencies-linux.sh
+.local/bin/run_onchange_binaries.sh
+dot_face
+dot_face.icon
+dot_wallpaper
+private_dot_config/private_kglobalshortcutsrc
+private_dot_config/private_khotkeysrc
+private_dot_config/private_kscreenlockerrc
+private_dot_config/private_kwinrc
+{{ end -}}
+
+{{ if eq .chezmoi.os "linux" -}}
+# macOS-only: Hammerspoon, macOS dependencies
+.hammerspoon
+.chezmoiscripts/run_onchange_dependencies-darwin.sh
+{{ end -}}

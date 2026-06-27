@@ -1,0 +1,6 @@
+mode = "symlink"
+{{ if eq .chezmoi.os "darwin" -}}
+sourceDir = "~/Code/github.com/dmikalova/dotfiles"
+{{ else -}}
+sourceDir = "~/code/github.com/dmikalova/dotfiles"
+{{ end -}}

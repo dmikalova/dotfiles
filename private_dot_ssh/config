@@ -1,7 +1,6 @@
-Host gitlab.com
-    AddKeysToAgent yes
-    Hostname gitlab.com
-    IdentityFile ~/.ssh/id_logixboard
+Include /Users/david.mikalova/.colima/ssh_config
+
+IdentityFile /Users/david.mikalova/.ssh/id_home-desktop
 
 Host github.com
     AddKeysToAgent yes

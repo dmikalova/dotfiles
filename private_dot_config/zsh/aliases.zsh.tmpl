@@ -1,0 +1,57 @@
+#!/bin/zsh
+
+# atool
+alias compress='apack'
+alias expand='aunpack --subdir'
+
+# brew
+alias bu='brew update && brew upgrade && brew cleanup'
+
+# builtins
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias cl='pbcopy'
+alias cld='printf "%s" $(pwd) | cl'
+alias cp='cp -ir'
+alias cdg='cd $(git rev-parse --show-toplevel)'
+alias diff='colordiff'
+alias g='grep --color=auto --ignore-case --recursive'
+alias ls='eza'
+alias mv='mv -i'
+alias reboot='sudo reboot'
+alias rm='trash'
+
+# chezmoi
+alias chezmoi='chezmoi --source ~/Code/github.com/dmikalova/dotfiles'
+alias cza='chezmoi apply && zsh'
+alias czr='chezmoi re-add'
+alias czs='chezmoi status'
+
+# git
+alias gcpa='git-commit-push-all'
+alias gs='git status'
+alias ge='git commit --amend --no-edit && git push -f'
+
+# npm
+alias npmi='npm install'
+
+# terraform
+alias tf='terraform'
+alias tfa="tf apply 'terraform.plan'"
+alias tfi='tf init'
+alias tfip='tfi && tfp'
+alias tfla='tflint-all'
+alias tfp="tf plan -out 'terraform.plan'"
+
+# utilities
+alias file-count='echo $PWD; for t in files links directories; do echo `find . -type ${t:0:1} | wc -l` $t; done 2> /dev/null'
+alias rm-empty-subdirs='find . -type d -empty -print -delete'
+alias serve-dir='python3 -m http.server 54003'
+
+# vscode
+alias cg='code $(git rev-parse --show-toplevel)'
+
+# yarn
+alias yarn='yarnpkg'

@@ -1,6 +1,37 @@
 # Dot Files
 
-[![maintained by dmikalova](https://img.shields.io/static/v1?&color=ccff90&label=maintained%20by&labelColor=424242&logo=&logoColor=fff&message=dmikalova&&style=flat-square)](https://github.com/dmikalova)
-[![chezmoi](https://img.shields.io/static/v1?&color=fff&label=&labelColor=424242&logoColor=fff&message=chezmoi&&style=flat-square)](https://www.chezmoi.io/)
-
 Personal dot files managed with [Chezmoi](https://www.chezmoi.io/).
+
+## Usage
+
+Set the chezmoi source alias, then preview and apply:
+
+```sh
+alias chezmoi='chezmoi --source ~/Code/github.com/dmikalova/dotfiles'
+chezmoi diff
+```
+
+Preview changes before applying:
+
+```sh
+chezmoi diff
+chezmoi apply -n -v
+```
+
+Apply changes:
+
+```sh
+chezmoi apply
+```
+
+Add a file to chezmoi:
+
+```sh
+chezmoi add ~/.config/example/config.toml
+```
+
+Edit a managed file:
+
+```sh
+chezmoi edit ~/.zshrc
+```

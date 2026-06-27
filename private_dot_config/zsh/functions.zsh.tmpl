@@ -1,0 +1,113 @@
+# run commands on multiple piped lines
+# ... | each command1 command2 "command3 has spaces"
+each() {
+    while read line; do
+        for f in "$@"; do
+            "$f" "$line"
+        done
+    done
+}
+
+# Determine size of a file or total size of a directory
+fs() {
+    if du -b /dev/null >/dev/null 2>&1; then
+        local arg=-sbh
+    else
+        local arg=-sh
+    fi
+    # shellcheck disable=SC2199
+    if [[ -n "$@" ]]; then
+        du $arg -- "$@"
+    else
+        du $arg -- .[^.]* *
+    fi
+}
+
+# Make PR for github
+ghpr() {
+    gh pr create --base main --head $(git branch --show-current) --title \"${1}\" --assignee @me
+}
+
+git-tag() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: git-tag <env>" >&2
+        return 1
+    fi
+    local env="$1"
+    git commit -a -n
+    git tag -d "$env"
+    git push origin ":refs/tags/$env" --no-verify
+    git tag "$env" -m "$env"
+    git push --no-verify
+    git push origin "$env" --no-verify
+}
+
+# colorize man pages
+man() {
+    env \
+        LESS_TERMCAP_mb="$(printf '\e[1;31m')" \
+        LESS_TERMCAP_md="$(printf '\e[1;31m')" \
+        LESS_TERMCAP_me="$(printf '\e[0m')" \
+        LESS_TERMCAP_se="$(printf '\e[0m')" \
+        LESS_TERMCAP_so="$(printf '\e[1;44;33m')" \
+        LESS_TERMCAP_ue="$(printf '\e[0m')" \
+        LESS_TERMCAP_us="$(printf '\e[1;32m')" \
+        man "$@"
+}
+
+# Create a new directory and enter it
+mkd() {
+    mkdir -p "$@"
+    cd "$@" || exit
+}
+
+# pulumi init project
+pulumi_init() { (
+    set -e
+
+    if [ ! -f Pulumi.yaml ]; then
+        echo "Pulumi.yaml does not exist. Aborting initialization."
+        exit 1
+    fi
+
+    if [ ! -f .tool-versions ]; then
+        echo "nodejs 20.18.3" >".tool-versions"
+    fi
+
+    pulumi install
+
+    if ! aws sts get-caller-identity --profile ellation-engineering.admin >/dev/null 2>&1; then
+        aws sso login --profile ellation-engineering.admin
+    fi
+
+    awsume ellation-engineering.admin
+
+    if ! pulumi stack select dev; then
+        pulumi stack init crunchyroll/dev
+    fi
+    pulumi stack select dev
+    pulumi up
+
+    if ! pulumi stack select stg; then
+        pulumi stack init crunchyroll/stg
+    fi
+    pulumi stack select stg
+    pulumi up
+
+    awsume ellation.admin
+    if ! pulumi stack select prd; then
+        pulumi stack init crunchyroll/prd
+    fi
+    pulumi stack select prd
+    pulumi up
+
+    NAME=$(yq '.name' ./Pulumi.yaml)
+    open "https://app.pulumi.com/crunchyroll/${NAME}/prd/settings/access"
+    open "https://app.pulumi.com/crunchyroll/${NAME}/stg/settings/access"
+    open "https://app.pulumi.com/crunchyroll/${NAME}/dev/settings/access"
+
+    TEAM=$(pulumi config get --path 'aws:defaultTags.tags.team')
+    echo "Update access for each stack:"
+    echo "  eng-cloud-reliability: admin"
+    echo "  $TEAM: write"
+); }
