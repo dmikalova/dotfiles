@@ -45,8 +45,3 @@ setopt NO_BEEP      # Disable system beep.
 
 # Turn off autocorrection
 unsetopt correct_all
-
-# stty key mappings
-[[ -n ${TTY:-} && $+commands[stty] == 1 ]] && stty intr ^J <$TTY >$TTY
-# stty start ^O # start / ctrl+q
-# stty stop ^I # stop / ctrl+s

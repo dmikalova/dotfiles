@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-DIR="$(dirname "${0}")"
+DIR="${HOME}/.config/zsh"
 
 # source configs
 source "${DIR}/aliases.zsh"
