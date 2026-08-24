@@ -3,28 +3,35 @@
 
 echo "installing brew packages"
 brew install \
-    "age" \
-    "catimg" \
-    "chezmoi" \
-    "chroma" \
-    "cloc" \
-    "coreutils" \
-    "deno" \
-    "direnv" \
-    "fd" \
-    "fzf" \
-    "gh" \
-    "git" \
-    "gnupg" \
-    "jq" \
-    "opentofu" \
-    "pinentry-mac" \
-    "ripgrep" \
-    "shellcheck" \
-    "sops" \
-    "trash-cli"
+	"age" \
+	"catimg" \
+	"chezmoi" \
+	"chroma" \
+	"cloc" \
+	"colordiff" \
+	"copilot-cli" \
+	"coreutils" \
+	"deno" \
+	"direnv" \
+	"eza" \
+	"fd" \
+	"fzf" \
+	"gh" \
+	"git" \
+	"gnupg" \
+	"jq" \
+	"opentofu" \
+	"pinentry-mac" \
+	"ripgrep" \
+	"shellcheck" \
+	"shfmt" \
+	"starship" \
+	"sops" \
+	"thefuck" \
+	"zoxide" \
+	"trash-cli"
 
 brew install --cask \
-    "bitwarden" \
-    "hammerspoon" \
-    "warp"
+	"bitwarden" \
+	"hammerspoon" \
+	"warp"

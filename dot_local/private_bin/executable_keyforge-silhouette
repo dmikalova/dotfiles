@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+DECKLIST="${1:?Usage: keyforge-silhouette <decklist_file> [source]}"
+SOURCE="${2:-archon_arcana}"
+
+python clean_up.py
+python plugins/keyforge/fetch.py "$DECKLIST" "$SOURCE"
+python create_pdf.py --paper_size tabloid --fit crop --extend_corners 3.5mm --extend_edges 3 --registration 4
+python offset_pdf.py --x_offset 2 --y_offset -4
+open game/output/game_offset.pdf

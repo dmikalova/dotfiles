@@ -8,19 +8,8 @@ Set the chezmoi source alias, then preview and apply:
 
 ```sh
 alias chezmoi='chezmoi --source ~/Code/github.com/dmikalova/dotfiles'
+chezmoi status
 chezmoi diff
-```
-
-Preview changes before applying:
-
-```sh
-chezmoi diff
-chezmoi apply -n -v
-```
-
-Apply changes:
-
-```sh
 chezmoi apply
 ```
 
