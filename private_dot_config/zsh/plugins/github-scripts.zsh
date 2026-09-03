@@ -475,7 +475,7 @@ coco() {
 
 	# Run pre-commit hooks before spending time on AI
 	echo "Running pre-commit hooks..."
-	git hook run pre-commit || return 1
+	git hook run --ignore-missing pre-commit || return 1
 
 	# Generate commit message via AI
 	echo "Generating commit message..."
