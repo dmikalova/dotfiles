@@ -1,0 +1,72 @@
+#!/bin/zsh
+# Semantic commit and push. Stages all changes, uses Claude to write a
+# semantic commit message, then pushes. Repos owned by dmikalova may commit
+# and push directly to the default branch; other repos may not.
+
+set -euo pipefail
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+_from_first_cc_line() {
+	printf '%s\n' "$1" | awk '
+		BEGIN { found = 0 }
+		{
+			if (!found && $0 ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]/) {
+				found = 1
+			}
+			if (found) print
+		}
+	'
+}
+
+current_branch=$(git branch --show-current)
+default_branch=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
+default_branch="${default_branch:-main}"
+
+origin_url=$(git remote get-url origin 2>/dev/null || true)
+owner=$(printf '%s' "$origin_url" | sed -E 's#(git@github\.com:|https://github\.com/)([^/]+)/.*#\2#')
+
+if [[ "$current_branch" == "$default_branch" && "$owner" != "dmikalova" ]]; then
+	echo "Cannot commit from the default branch ($current_branch)." >&2
+	exit 1
+fi
+
+# Check there are changes to commit
+if [[ -z "$(git status --porcelain 2>/dev/null)" ]]; then
+	echo "Nothing to commit - working tree is clean." >&2
+	exit 1
+fi
+
+# Stage all changes
+echo "Staging all changes..."
+git add -A
+
+# Run pre-commit hooks before spending time on AI
+echo "Running pre-commit hooks..."
+git hook run --ignore-missing pre-commit
+
+# Generate commit message via AI
+echo "Generating commit message..."
+msg=$(git diff --cached | claude -p \
+	"Write a semantic commit message (conventional commits format) for this diff. Output ONLY the commit message, nothing else. Use a short subject line and optionally a body separated by a blank line." \
+	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence)
+if [[ -z "$msg" ]]; then
+	echo "Failed to generate commit message." >&2
+	exit 1
+fi
+
+# Drop any AI preface before the first conventional-commit line.
+msg="$(_from_first_cc_line "$msg")"
+if [[ -z "$msg" ]]; then
+	echo "AI output missing a conventional commit title." >&2
+	exit 1
+fi
+
+# Show and confirm
+echo "\nCommit message:\n$msg\n"
+
+# Commit (hooks already passed)
+git commit -n -m "$msg"
+
+# Push
+echo "Pushing..."
+git push

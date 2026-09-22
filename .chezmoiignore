@@ -24,4 +24,6 @@ private_dot_config/private_kwinrc
 # macOS-only: Hammerspoon, macOS dependencies
 .hammerspoon
 .chezmoiscripts/run_onchange_dependencies-darwin.sh
+.chezmoiscripts/run_onchange_macos-defaults-darwin.sh
+.chezmoiscripts/run_once_after_checklist-darwin.sh
 {{ end -}}

@@ -1,16 +1,11 @@
 # AWS SSO + Awsume helper
 aws-auth() {
-	if [[ -z "$1" ]]; then
-		echo "Usage: aws-auth <role-name>"
-		return 1
-	fi
-
-	local role="$1"
+	local role="${1:-sb-ro}"
 
 	# Check if SSO session is valid
-	if ! aws sts get-caller-identity --profile codemobs.read &>/dev/null; then
+	if ! aws sts get-caller-identity --profile "$role" &>/dev/null; then
 		echo "AWS SSO not logged in. Logging in..."
-		if ! aws sso login --profile codemobs.read; then
+		if ! aws sso login --profile "$role"; then
 			echo "AWS SSO login failed"
 			return 1
 		fi
@@ -21,7 +16,8 @@ aws-auth() {
 }
 
 aws-generate-config() {
-	cat >~/.aws/config <<'EOF'
+	mkdir -p $HOME/.aws
+	cat >$HOME/.aws/config <<'EOF'
 [default]
 cli_pager=
 output = json
@@ -31,24 +27,25 @@ EOF
 	aws-sso-util configure populate \
 		--region us-west-2 \
 		--sso-region us-west-2 \
-		--sso-start-url https://crunchycloud.awsapps.com/start \
+		--sso-start-url https://d-9267a1970f.awsapps.com/start \
 		--account-name-case lower \
-		--role-name-case lower \
-		--trim-account-name '-(?<=pr)o(?=d)' \
-		--trim-account-name '(?<=acc)oun(?=t)' \
-		--trim-account-name '(?<=el)lation' \
-		--trim-account-name '(?<=eng)ineering' \
-		--trim-account-name '(?<=infra)structure' \
-		--trim-account-name '(?<=int)ernal' \
-		--trim-account-name '(?<=m)ana(?=g)|(?<=g)e(?=m)|(?<=m)en(?=t)' \
-		--trim-account-name '(?<=pr)o(?=d)|(?<=d)uction' \
-		--trim-account-name '(?<=sec)urity' \
-		--trim-account-name '(?<=st)agin(?=g)' \
-		--trim-account-name '^cr-' \
-		--trim-account-name '^(?<=cr)unchyroll' \
-		--trim-role-name '(?<=admin)istrator' \
-		--trim-role-name '(?<=read)only' \
-		--trim-role-name 'payer-'
-	sed -i '' 's/elg/el-g/g' ~/.aws/config
-	sed -i '' 's|credential_process = aws-sso-util|credential_process = /opt/homebrew/bin/aws-sso-util|g' ~/.aws/config
+		--role-name-case lower
+
+	# shorten account names
+	sed -i '' \
+		-e 's/gs-production/prod/g' \
+		-e 's/gs-sandbox/sb/g' \
+		-e 's/gs-staging/stg/g' \
+		-e 's/gs-internal/int/g' \
+		$HOME/.aws/config
+
+	# shorten/simplify role suffixes
+	sed -i '' \
+		-e 's/\.goodship-developer/-dev/g' \
+		-e 's/\.readonlyaccess/-ro/g' \
+		-e 's/\.administratoraccess/-admin/g' \
+		$HOME/.aws/config
+
+	# credential_process needs an absolute path; bare "aws-sso-util" isn't resolved via PATH
+	sed -i '' 's|credential_process = aws-sso-util|credential_process = /opt/homebrew/bin/aws-sso-util|g' $HOME/.aws/config
 }

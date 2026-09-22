@@ -435,10 +435,8 @@ gh-dmikalova-uncommitted() {
 	echo "No uncommitted changes found."
 }
 
-# Semantic commit and push.
-# Stages all changes, uses AI to write a semantic commit message, then pushes.
-
 # Return AI output starting at the first conventional-commit style line.
+# Shared by coprd below and by coco/copr in dot_local/private_bin.
 _from_first_cc_line() {
 	local _text="$1"
 	printf '%s\n' "$_text" | awk '
@@ -452,132 +450,8 @@ _from_first_cc_line() {
 	'
 }
 
-coco() {
-	# Don't run from the default branch
-	local current_branch
-	current_branch=$(git branch --show-current)
-	local default_branch
-	default_branch=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
-	if [[ "$current_branch" == "${default_branch:-main}" ]]; then
-		echo "Cannot commit from the default branch ($current_branch)." >&2
-		return 1
-	fi
-
-	# Check there are changes to commit
-	if [[ -z "$(git status --porcelain 2>/dev/null)" ]]; then
-		echo "Nothing to commit - working tree is clean." >&2
-		return 1
-	fi
-
-	# Stage all changes
-	echo "Staging all changes..."
-	git add -A || return 1
-
-	# Run pre-commit hooks before spending time on AI
-	echo "Running pre-commit hooks..."
-	git hook run --ignore-missing pre-commit || return 1
-
-	# Generate commit message via AI
-	echo "Generating commit message..."
-	local msg
-	msg=$(git diff --cached | copilot -p \
-		"Write a semantic commit message (conventional commits format) for this diff. Output ONLY the commit message, nothing else. Use a short subject line and optionally a body separated by a blank line." \
-		--model gemini-3.5-flash --effort none -s)
-	if [[ -z "$msg" ]]; then
-		echo "Failed to generate commit message." >&2
-		return 1
-	fi
-
-	# Drop any AI preface before the first conventional-commit line.
-	msg="$(_from_first_cc_line "$msg")"
-	if [[ -z "$msg" ]]; then
-		echo "AI output missing a conventional commit title." >&2
-		return 1
-	fi
-
-	# Show and confirm
-	echo "\nCommit message:\n$msg\n"
-
-	# Commit (hooks already passed)
-	git commit -n -m "$msg" || return 1
-
-	# Push
-	echo "Pushing..."
-	git push || return 1
-}
-
-# Create a PR with AI-generated description.
-# Requires all changes to be already committed.
-copr() {
-	# Don't run from the default branch
-	local current_branch
-	current_branch=$(git branch --show-current)
-	local default_branch
-	default_branch=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
-	if [[ -z "$default_branch" ]]; then default_branch="main"; fi
-	if [[ "$current_branch" == "$default_branch" ]]; then
-		echo "Cannot create PR from the default branch ($current_branch)." >&2
-		return 1
-	fi
-
-	# Check working tree is clean
-	if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
-		echo "Uncommitted changes exist. Commit or stash them first." >&2
-		return 1
-	fi
-
-	# Push current branch
-	echo "Pushing..."
-	git push -u origin HEAD || return 1
-
-	# Generate PR title and body via AI in a single call
-	echo "Generating PR title and description..."
-	local diff_content result title body
-	diff_content=$(git diff "$default_branch"...HEAD)
-
-	result=$(echo "$diff_content" | copilot -p \
-		"Write a PR title and description for this diff. Summarize these changes with high information density, covering all major points without conversational filler. Format: first line is the title (semantic/conventional commits format, no quotes), then a blank line, then the markdown description body with a brief summary and list of key changes. Output ONLY this, nothing else." \
-		--model gemini-3.5-flash --effort none -s)
-	if [[ -z "$result" ]]; then
-		echo "Failed to generate PR description." >&2
-		return 1
-	fi
-
-	# Drop AI preface and keep output starting from the first valid title line.
-	local cc_block
-	cc_block="$(_from_first_cc_line "$result")"
-	if [[ -n "$cc_block" ]]; then
-		result="$cc_block"
-	fi
-
-	title="${result%%$'\n'*}"
-	body="${result#*$'\n'$'\n'}"
-	if [[ "$body" == "$result" ]]; then
-		body="${result#*$'\n'}"
-	fi
-
-	if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
-		title="$(git log --format=%s "$default_branch"...HEAD | head -n 1)"
-		if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
-			title="chore: summarize branch changes"
-		fi
-	fi
-
-	echo "\nTitle:\n$title"
-	echo "\nDescription:\n$body\n"
-
-	# Create or update the PR
-	local existing_pr
-	existing_pr=$(gh pr view --json number --jq .number 2>/dev/null)
-	if [[ -n "$existing_pr" ]]; then
-		echo "Updating existing PR #$existing_pr..."
-		gh pr edit "$existing_pr" --title "$title" --body "$body" || return 1
-	else
-		# --reviewer cbeauroll,cfavroth,malya-reddirouthu --reviewer crunchyroll/devops \
-		gh pr create --base "$default_branch" --assignee @me \
-			--title "$title" --body "$body" || return 1
-	fi
-}
+# coco and copr have moved to ~/.local/bin (dot_local/private_bin/executable_coco,
+# dot_local/private_bin/executable_copr) as standalone scripts using the claude CLI.
 
 # Create a draft PR with AI-generated description.
 # Requires all changes to be already committed.

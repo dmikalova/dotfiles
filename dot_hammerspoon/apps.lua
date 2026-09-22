@@ -25,7 +25,7 @@ local apps = {
   { "P", "Preview",            "any" },
   { "Q", "LastPass",           "work" },
   { "S", "System Settings",    "any" },
-  { "T", "Warp",               "both" },
+  { "T", "Ghostty",            "both" },
   { "V", "Code",               "both" },
   { "Y", "YouTube Music",      "personal" },
   { "X", "Clipboard",          "reserved" },
@@ -121,7 +121,7 @@ local function getWindowsOnCurrentSpace(app)
   local currentSpace = hs.spaces.focusedSpace()
   local windowsOnSpace = {}
 
-  -- Use global search (needed for Electron apps like VS Code, Warp)
+  -- Use global search (needed for Electron apps like VS Code, Ghostty)
   for _, win in ipairs(hs.window.allWindows()) do
     local winApp = win:application()
     if appMatches(winApp, app) then

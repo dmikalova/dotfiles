@@ -29,6 +29,12 @@
 	process = git-lfs filter-process
 	required = true
 
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	allowedSignersFile = "~/.config/git/allowed_signers"
+
 [homebrew]
 	analyticsmessage = true
 	caskanalyticsmessage = true
@@ -66,5 +72,7 @@
 
 [user]
 	name = "David Mikalova"
-	signingkey = "5EBF8795634732EA05ED84275C4017A2573A7913"
+	# GPG signing (replaced by SSH signing above)
+	# signingkey = "5EBF8795634732EA05ED84275C4017A2573A7913"
+	signingkey = "~/.ssh/id_dmikalova.pub"
 

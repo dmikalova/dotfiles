@@ -4,12 +4,17 @@
 echo "installing brew packages"
 brew install \
 	"age" \
+	"aws-sso-util" \
+	"aws-vpn-client" \
+	"awscli" \
+	"awsume" \
 	"catimg" \
 	"chezmoi" \
 	"chroma" \
+	"circleci" \
+	"claude-code" \
 	"cloc" \
 	"colordiff" \
-	"copilot-cli" \
 	"coreutils" \
 	"deno" \
 	"direnv" \
@@ -17,21 +22,37 @@ brew install \
 	"fd" \
 	"fzf" \
 	"gh" \
+	"ghostty" \
 	"git" \
 	"gnupg" \
+	"golang" \
 	"jq" \
+	"meetingbar" \
+	"nvm" \
 	"opentofu" \
 	"pinentry-mac" \
 	"ripgrep" \
 	"shellcheck" \
 	"shfmt" \
-	"starship" \
 	"sops" \
+	"starship" \
 	"thefuck" \
-	"zoxide" \
-	"trash-cli"
+	"trash-cli" \
+	"zoxide"
 
 brew install --cask \
 	"bitwarden" \
+	"font-jetbrains-mono-nerd-font" \
 	"hammerspoon" \
-	"warp"
+	"linearmouse" \
+	"visual-studio-code"
+
+echo "installing node via nvm"
+export NVM_DIR="${HOME}/.nvm"
+mkdir -p "${NVM_DIR}"
+# shellcheck disable=SC1091
+. "/opt/homebrew/opt/nvm/nvm.sh"
+
+nvm install --lts
+nvm alias default 'lts/*'
+corepack enable

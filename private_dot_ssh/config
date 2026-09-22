@@ -1,8 +1,9 @@
 Include /Users/david.mikalova/.colima/ssh_config
 
-IdentityFile /Users/david.mikalova/.ssh/id_home-desktop
+IdentityFile ~/.ssh/id_dmikalova
 
 Host github.com
     AddKeysToAgent yes
+    UseKeychain yes
     Hostname github.com
-    IdentityFile ~/.ssh/id_home-desktop
+    IdentityFile ~/.ssh/id_dmikalova

@@ -1,0 +1,79 @@
+#!/bin/zsh
+# Create a PR with an AI-generated title/description.
+# Requires all changes to be already committed.
+
+set -euo pipefail
+if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+_from_first_cc_line() {
+	printf '%s\n' "$1" | awk '
+		BEGIN { found = 0 }
+		{
+			if (!found && $0 ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]/) {
+				found = 1
+			}
+			if (found) print
+		}
+	'
+}
+
+# Don't run from the default branch
+current_branch=$(git branch --show-current)
+default_branch=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
+default_branch="${default_branch:-main}"
+if [[ "$current_branch" == "$default_branch" ]]; then
+	echo "Cannot create PR from the default branch ($current_branch)." >&2
+	exit 1
+fi
+
+# Check working tree is clean
+if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
+	echo "Uncommitted changes exist. Commit or stash them first." >&2
+	exit 1
+fi
+
+# Push current branch
+echo "Pushing..."
+git push -u origin HEAD
+
+# Generate PR title and body via AI in a single call
+echo "Generating PR title and description..."
+result=$(git diff "$default_branch"...HEAD | claude -p \
+	"Write a PR title and description for this diff. Summarize these changes with high information density, covering all major points without conversational filler. Format: first line is the title (semantic/conventional commits format, no quotes), then a blank line, then the markdown description body with a brief summary and list of key changes. Output ONLY this, nothing else." \
+	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence)
+if [[ -z "$result" ]]; then
+	echo "Failed to generate PR description." >&2
+	exit 1
+fi
+
+# Drop AI preface and keep output starting from the first valid title line.
+cc_block="$(_from_first_cc_line "$result")"
+if [[ -n "$cc_block" ]]; then
+	result="$cc_block"
+fi
+
+title="${result%%$'\n'*}"
+body="${result#*$'\n'$'\n'}"
+if [[ "$body" == "$result" ]]; then
+	body="${result#*$'\n'}"
+fi
+
+if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
+	title="$(git log --format=%s "$default_branch"...HEAD | head -n 1)"
+	if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
+		title="chore: summarize branch changes"
+	fi
+fi
+
+echo "\nTitle:\n$title"
+echo "\nDescription:\n$body\n"
+
+# Create or update the PR
+existing_pr=$(gh pr view --json number --jq .number 2>/dev/null || true)
+if [[ -n "$existing_pr" ]]; then
+	echo "Updating existing PR #$existing_pr..."
+	gh pr edit "$existing_pr" --title "$title" --body "$body"
+else
+	gh pr create --base "$default_branch" --assignee @me \
+		--title "$title" --body "$body"
+fi

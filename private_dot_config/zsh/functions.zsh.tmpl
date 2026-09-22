@@ -62,8 +62,16 @@ mkd() {
 }
 
 # pulumi init project
+# TODO: fill in the real AWS profile per stage and the Pulumi Cloud org name
 pulumi_init() { (
     set -e
+
+    local -A stage_profiles=(
+        [dev]="TODO-dev-profile"
+        [stg]="TODO-stg-profile"
+        [prd]="TODO-prd-profile"
+    )
+    local pulumi_org="TODO-pulumi-org"
 
     if [ ! -f Pulumi.yaml ]; then
         echo "Pulumi.yaml does not exist. Aborting initialization."
@@ -76,35 +84,25 @@ pulumi_init() { (
 
     pulumi install
 
-    if ! aws sts get-caller-identity --profile ellation-engineering.admin >/dev/null 2>&1; then
-        aws sso login --profile ellation-engineering.admin
-    fi
+    for stage in dev stg prd; do
+        local profile="${stage_profiles[$stage]}"
 
-    awsume ellation-engineering.admin
+        if ! aws sts get-caller-identity --profile "$profile" >/dev/null 2>&1; then
+            aws sso login --profile "$profile"
+        fi
+        awsume "$profile"
 
-    if ! pulumi stack select dev; then
-        pulumi stack init crunchyroll/dev
-    fi
-    pulumi stack select dev
-    pulumi up
-
-    if ! pulumi stack select stg; then
-        pulumi stack init crunchyroll/stg
-    fi
-    pulumi stack select stg
-    pulumi up
-
-    awsume ellation.admin
-    if ! pulumi stack select prd; then
-        pulumi stack init crunchyroll/prd
-    fi
-    pulumi stack select prd
-    pulumi up
+        if ! pulumi stack select "$stage"; then
+            pulumi stack init "${pulumi_org}/${stage}"
+        fi
+        pulumi stack select "$stage"
+        pulumi up
+    done
 
     NAME=$(yq '.name' ./Pulumi.yaml)
-    open "https://app.pulumi.com/crunchyroll/${NAME}/prd/settings/access"
-    open "https://app.pulumi.com/crunchyroll/${NAME}/stg/settings/access"
-    open "https://app.pulumi.com/crunchyroll/${NAME}/dev/settings/access"
+    for stage in prd stg dev; do
+        open "https://app.pulumi.com/${pulumi_org}/${NAME}/${stage}/settings/access"
+    done
 
     TEAM=$(pulumi config get --path 'aws:defaultTags.tags.team')
     echo "Update access for each stack:"

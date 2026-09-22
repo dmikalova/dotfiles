@@ -1,0 +1,51 @@
+{
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.11.4",
+  "schemes" : [
+    {
+      "buttons" : {
+        "autoScroll" : {
+          "enabled" : false,
+          "mode" : "toggle",
+          "speed" : 1,
+          "trigger" : {
+            "button" : 2
+          }
+        },
+        "mappings" : [
+          {
+            "action" : "mouse.button.middle",
+            "button" : 3,
+            "command" : false,
+            "control" : false,
+            "option" : false,
+            "shift" : false
+          }
+        ],
+        "switchPrimaryButtonAndSecondaryButtons" : true
+      },
+      "if" : {
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0x8018",
+          "productName" : "Expert Wireless TB",
+          "vendorID" : "0x47d"
+        }
+      },
+      "pointer" : {
+        "acceleration" : 0.8,
+        "speed" : 0.16
+      },
+      "scrolling" : {
+        "acceleration" : {
+          "vertical" : 3
+        },
+        "reverse" : {
+          "vertical" : true
+        },
+        "speed" : {
+          "vertical" : 3
+        }
+      }
+    }
+  ]
+}

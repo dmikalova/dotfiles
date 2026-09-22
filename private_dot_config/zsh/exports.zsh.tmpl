@@ -29,10 +29,8 @@ export GPG_TTY=$(tty)
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-# npm
-NPM_CACHE_DIR="${HOME}/.cache/npm"
-append_path "${NPM_CACHE_DIR}/bin"
-export N_PREFIX="${NPM_CACHE_DIR}"
+# nvm
+export NVM_DIR="${HOME}/.nvm"
 # export NPM_CONFIG_USERCONFIG="${HOME}/.config/npm/npmrc"
 
 # sops
