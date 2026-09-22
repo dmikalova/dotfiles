@@ -1,6 +1,7 @@
 LICENSE
 README.md
 images
+tools
 
 {{ if eq .chezmoi.os "darwin" -}}
 # Linux-only: KDE, crontab, wallpaper, login theme, mouse

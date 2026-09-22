@@ -30,6 +30,7 @@ brew install \
 	"meetingbar" \
 	"nvm" \
 	"opentofu" \
+	"postgresql@15" \
 	"pinentry-mac" \
 	"ripgrep" \
 	"shellcheck" \
@@ -42,6 +43,7 @@ brew install \
 
 brew install --cask \
 	"bitwarden" \
+	"docker-desktop" \
 	"font-jetbrains-mono-nerd-font" \
 	"hammerspoon" \
 	"linearmouse" \

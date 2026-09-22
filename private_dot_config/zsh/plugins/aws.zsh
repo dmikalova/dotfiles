@@ -41,7 +41,7 @@ EOF
 
 	# shorten/simplify role suffixes
 	sed -i '' \
-		-e 's/\.goodship-developer/-dev/g' \
+		-e 's/\.goodship-developer//g' \
 		-e 's/\.readonlyaccess/-ro/g' \
 		-e 's/\.administratoraccess/-admin/g' \
 		$HOME/.aws/config

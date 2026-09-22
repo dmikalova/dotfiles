@@ -37,7 +37,7 @@
       },
       "scrolling" : {
         "acceleration" : {
-          "vertical" : 3
+          "vertical" : 2
         },
         "reverse" : {
           "vertical" : true

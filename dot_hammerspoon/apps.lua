@@ -23,7 +23,6 @@ local apps = {
   { "M", messagesPWABundleID,  "personal" },
   { "O", "Obsidian",           "personal" },
   { "P", "Preview",            "any" },
-  { "Q", "LastPass",           "work" },
   { "S", "System Settings",    "any" },
   { "T", "Ghostty",            "both" },
   { "V", "Code",               "both" },
@@ -116,9 +115,21 @@ local function gotoSpaceSmooth(targetSpace)
   end
 end
 
--- Get windows of an app that are on the current space
+-- Get the set of currently active space IDs across all screens. With macOS's
+-- "Displays have separate Spaces" enabled, each screen shows its own active
+-- space simultaneously, so hs.spaces.focusedSpace() (space of the focused
+-- screen only) misses windows sitting on another screen's active space.
+local function getActiveSpaceIds()
+  local ids = {}
+  for _, spaceId in pairs(hs.spaces.activeSpaces()) do
+    ids[spaceId] = true
+  end
+  return ids
+end
+
+-- Get windows of an app that are on any currently active space (any screen)
 local function getWindowsOnCurrentSpace(app)
-  local currentSpace = hs.spaces.focusedSpace()
+  local activeSpaceIds = getActiveSpaceIds()
   local windowsOnSpace = {}
 
   -- Use global search (needed for Electron apps like VS Code, Ghostty)
@@ -128,7 +139,7 @@ local function getWindowsOnCurrentSpace(app)
       local winSpaces = hs.spaces.windowSpaces(win)
       if winSpaces then
         for _, spaceId in ipairs(winSpaces) do
-          if spaceId == currentSpace then
+          if activeSpaceIds[spaceId] then
             table.insert(windowsOnSpace, win)
             break
           end
@@ -249,8 +260,33 @@ local function launchOrFocusInSpace(app, spaceType)
     return
   end
 
+  local targetIndex = getSpaceIndex(targetSpace)
+  local currentWinIndex = getSpaceIndex(currentWinSpace)
+
+  if not currentWinIndex then
+    -- Window's space isn't one of the main screen's known spaces (e.g. the
+    -- window is parked on a different physical monitor's own Space, which
+    -- happens with "Displays have separate Spaces" enabled). Pull it onto
+    -- the main screen first, then re-check.
+    win:moveToScreen(hs.screen.mainScreen(), false, true)
+    hs.timer.usleep(300000)
+    currentSpace = hs.spaces.focusedSpace()
+    winSpaces = hs.spaces.windowSpaces(win)
+    currentWinSpace = winSpaces and winSpaces[1]
+    currentWinIndex = getSpaceIndex(currentWinSpace)
+
+    if currentWinSpace == targetSpace or not currentWinIndex then
+      if targetSpace and currentSpace ~= targetSpace then
+        gotoSpaceSmooth(targetSpace)
+      end
+      win:focus()
+      if appObj then appObj:activate() end
+      return
+    end
+  end
+
   -- Window in wrong space - need to move it
-  local moveLeft = getSpaceIndex(targetSpace) < getSpaceIndex(currentWinSpace)
+  local moveLeft = targetIndex < currentWinIndex
 
   if currentSpace ~= currentWinSpace then
     gotoSpaceSmooth(currentWinSpace)

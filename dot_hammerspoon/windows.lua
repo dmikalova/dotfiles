@@ -54,14 +54,6 @@ end
 -- Position presets: { x, y, w, h }
 -- Keyboard layout mirrors position on screen
 local positions = {
-  -- Corners (50% × 50%)
-  --   Q W
-  --   Z X
-  Q = { 0, 0, 0.5, 0.5 },     -- Top left
-  W = { 0.5, 0, 0.5, 0.5 },   -- Top right
-  Z = { 0, 0.5, 0.5, 0.5 },   -- Bottom left
-  X = { 0.5, 0.5, 0.5, 0.5 }, -- Bottom right
-
   -- Width presets (full height)
   --   Y U I  (70%, 40%, 70%)
   --   H J K  (80%, 60%, 80%)
@@ -78,6 +70,34 @@ local positions = {
 
 for key, pos in pairs(positions) do
   hs.hotkey.bind(mod, key, function()
+    moveWindow(pos[1], pos[2], pos[3], pos[4])
+  end)
+end
+
+-- Corners (Q/W top, Z/X bottom): 30% x 50% on large screens, quarter screen
+-- (50% x 50%) on smaller screens.
+--   Q W
+--   Z X
+local largeCorners = {
+  Q = { 0, 0, 0.3, 0.5 },     -- Top left
+  W = { 0.7, 0, 0.3, 0.5 },   -- Top right
+  Z = { 0, 0.5, 0.3, 0.5 },   -- Bottom left
+  X = { 0.7, 0.5, 0.3, 0.5 }, -- Bottom right
+}
+local smallCorners = {
+  Q = { 0, 0, 0.5, 0.5 },     -- Top left
+  W = { 0.5, 0, 0.5, 0.5 },   -- Top right
+  Z = { 0, 0.5, 0.5, 0.5 },   -- Bottom left
+  X = { 0.5, 0.5, 0.5, 0.5 }, -- Bottom right
+}
+
+for _, key in ipairs({ "Q", "W", "Z", "X" }) do
+  hs.hotkey.bind(mod, key, function()
+    local win = hs.window.focusedWindow()
+    if not win then return end
+
+    local corners = isLargeScreen(win) and largeCorners or smallCorners
+    local pos = corners[key]
     moveWindow(pos[1], pos[2], pos[3], pos[4])
   end)
 end

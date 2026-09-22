@@ -1,0 +1,43 @@
+#!/bin/sh
+# Build each Go tool under tools/ (one subdir per tool, binary name == dir
+# name) and install it to ~/.local/bin. chezmoi ignores tools/ (see
+# .chezmoiignore) so it's never copied into the home directory -- this reads
+# straight from the source directory instead.
+#
+# This script only reruns when something under tools/ changes at all (the
+# hash below is chezmoi's onchange trigger); it then hashes each subdir
+# individually against its last-built hash and only rebuilds the ones that
+# actually changed.
+#
+# tools/: {{ output "sh" "-c" (printf "find %s/tools -type f | sort | xargs shasum -a 256 | shasum -a 256 | cut -d' ' -f1" .chezmoi.sourceDir) }}
+set -eu
+
+SRC_ROOT="{{ .chezmoi.sourceDir }}/tools"
+BIN_DIR="${HOME}/.local/bin"
+STATE_DIR="${HOME}/.local/state/dotfiles-tools"
+mkdir -p "${BIN_DIR}" "${STATE_DIR}"
+
+if command -v sha256sum >/dev/null 2>&1; then
+    CHECKSUM="sha256sum"
+else
+    CHECKSUM="shasum -a 256"
+fi
+
+hash_dir() {
+    find "$1" -type f | sort | xargs $CHECKSUM | $CHECKSUM | awk '{print $1}'
+}
+
+for dir in "${SRC_ROOT}"/*/; do
+    [ -f "${dir}go.mod" ] || continue
+    name=$(basename "${dir}")
+    hash=$(hash_dir "${dir}")
+    state_file="${STATE_DIR}/${name}.sha256"
+
+    if [ -f "${state_file}" ] && [ "$(cat "${state_file}")" = "${hash}" ]; then
+        continue
+    fi
+
+    echo "building ${name}" >&2
+    (cd "${dir}" && go build -o "${BIN_DIR}/${name}" .)
+    echo "${hash}" > "${state_file}"
+done
