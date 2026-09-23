@@ -14,7 +14,7 @@
 local messagesPWABundleID = "com.google.Chrome.app.hpfldicfbfomlpcikngkocigghgafkph"
 local apps = {
   { "B", "Bitwarden",          "personal" },
-  { "C", "Google Chrome",      "space-args", { work = '--profile-directory="Profile 1"', personal = '--profile-directory="Default"' } },
+  { "C", "Google Chrome",      "space-args", { work = '--profile-directory="Default"', personal = '--profile-directory="Profile 1"' } },
   { "D", "Finder",             "reserved" },
   { "G", "Signal",             "personal" },
   { "H", "Hammerspoon Reload", "reserved" },

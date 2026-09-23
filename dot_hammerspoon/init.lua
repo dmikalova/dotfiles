@@ -1,4 +1,5 @@
 -- Load modules
+require("hs.ipc")
 require("apps")
 require("spaces")
 require("windows")
@@ -15,9 +16,12 @@ hs.hotkey.bind("alt", "X", function()
   if win then win:close() end
 end)
 
--- Cmd+Alt+L: Lock screen
+-- Cmd+Alt+L: Lock screen. hs.caffeinate.lockScreen() deadlocks the entire
+-- Hammerspoon process on this machine (confirmed: it never returns, and even
+-- IPC stops responding until force-quit). Simulate the native Lock Screen
+-- shortcut instead, which goes through macOS's normal path.
 hs.hotkey.bind({ "cmd", "alt" }, "L", function()
-  hs.caffeinate.lockScreen()
+  hs.eventtap.keyStroke({ "ctrl", "cmd" }, "q")
 end)
 
 -- Cmd+Alt+V: Show clipboard history

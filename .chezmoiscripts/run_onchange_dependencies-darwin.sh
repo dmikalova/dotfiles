@@ -39,10 +39,12 @@ brew install \
 	"starship" \
 	"thefuck" \
 	"trash-cli" \
-	"zoxide"
+	"zoxide" \
+	"zsh-autosuggestions"
 
 brew install --cask \
 	"bitwarden" \
+	"discord" \
 	"docker-desktop" \
 	"font-jetbrains-mono-nerd-font" \
 	"hammerspoon" \

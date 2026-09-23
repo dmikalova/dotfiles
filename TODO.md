@@ -1,14 +1,10 @@
 # To do
 
-- 401k?
-- iru security - https://goodshipgroup.slack.com/archives/C03CZN7N55E/p1766362200902059
-- John Pisano - IT
-- wallpapers
+- [Onboarding checklist](https://app.notion.com/p/goodship-io/Onboarding-checklist-David-Mikalova-3e224418dc93801d9bded147623f628e)
+
 - Ask Notion "As a new infra hire working on the platform, what documents should I review to get started with the system"
 
 ## Home
-- usb dongle
-- log into personal macbook to sync icloud
 - can chezmoi run directly off of github link?
 - alternative to obsidian?
 
@@ -20,8 +16,6 @@ Teams:
 - Rob, Ben and Riley work on Analytics Engineering, which is ETL implementation and maintenance
 
 
-poc
-db runway
 
 dip:from firefighters to force multipliers
 

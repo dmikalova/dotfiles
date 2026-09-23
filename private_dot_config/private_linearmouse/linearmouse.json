@@ -23,14 +23,24 @@
         ],
         "switchPrimaryButtonAndSecondaryButtons" : true
       },
-      "if" : {
-        "device" : {
-          "category" : "mouse",
-          "productID" : "0x8018",
-          "productName" : "Expert Wireless TB",
-          "vendorID" : "0x47d"
+      "if" : [
+        {
+          "device" : {
+            "category" : "mouse",
+            "productID" : "0x8018",
+            "productName" : "Expert Wireless TB",
+            "vendorID" : "0x47d"
+          }
+        },
+        {
+          "device" : {
+            "category" : "mouse",
+            "productID" : "0x1020",
+            "productName" : "Kensington Expert Mouse",
+            "vendorID" : "0x47d"
+          }
         }
-      },
+      ],
       "pointer" : {
         "acceleration" : 0.8,
         "speed" : 0.16
