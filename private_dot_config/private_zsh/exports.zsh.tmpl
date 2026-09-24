@@ -44,8 +44,9 @@ export DELTA_PAGER="less -R"
 export MANPAGER="sh -c 'col -bx | bat --language man --plain'"
 export MANROFFOPT="-c"
 
-# vim
-export EDITOR="vim"
+# editor
+export EDITOR="nvim"
+export VISUAL="nvim"
 
 # secrets
 {{ if eq .chezmoi.os "darwin" -}}

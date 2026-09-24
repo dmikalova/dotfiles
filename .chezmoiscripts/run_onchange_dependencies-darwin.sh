@@ -36,6 +36,7 @@ brew install \
 	"jq" \
 	"jqp" \
 	"moor" \
+	"neovim" \
 	"meetingbar" \
 	"nvm" \
 	"opentofu" \
@@ -47,6 +48,7 @@ brew install \
 	"shfmt" \
 	"sops" \
 	"starship" \
+	"tree-sitter-cli" \
 	"zoxide"
 
 brew install --cask \
