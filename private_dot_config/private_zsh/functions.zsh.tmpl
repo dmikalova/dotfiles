@@ -1,3 +1,13 @@
+# Source a tool's generated init script from the cache, regenerating it when
+# the tool's binary is newer (e.g. after brew upgrade). Saves a subprocess per
+# tool on every shell start.
+# Usage: _cached_init <binary> <command that prints the init script>
+_cached_init() {
+    local bin="${commands[$1]}" cache="${ZSH_CACHE_DIR}/init-${1}.zsh"
+    [[ -s $cache && $cache -nt $bin ]] || eval "$2" >|"$cache"
+    source "$cache"
+}
+
 # run commands on multiple piped lines
 # ... | each command1 command2 "command3 has spaces"
 each() {
@@ -6,6 +16,29 @@ each() {
             "$f" "$line"
         done
     done
+}
+
+# AWS SSO login if needed, then assume the role (default sb-ro). A function,
+# not a script: awsume sets credentials in the current shell.
+aws-auth() {
+    local role="${1:-sb-ro}"
+
+    # Check if SSO session is valid
+    if ! aws sts get-caller-identity --profile "$role" &>/dev/null; then
+        echo "AWS SSO not logged in. Logging in..."
+        if ! aws sso login --profile "$role"; then
+            echo "AWS SSO login failed"
+            return 1
+        fi
+    fi
+
+    awsume "$role"
+}
+# rm: move to the macOS Trash instead of deleting. rm-style flags (-r, -f, ...)
+# are dropped - /usr/bin/trash rejects them - so `rm -rf dir` still works.
+rm() {
+    local -a files=("${(@)@:#-*}")
+    /usr/bin/trash "${files[@]}"
 }
 
 # Determine size of a file or total size of a directory
@@ -42,23 +75,23 @@ git-tag() {
     git push origin "$env" --no-verify
 }
 
-# colorize man pages
-man() {
-    env \
-        LESS_TERMCAP_mb="$(printf '\e[1;31m')" \
-        LESS_TERMCAP_md="$(printf '\e[1;31m')" \
-        LESS_TERMCAP_me="$(printf '\e[0m')" \
-        LESS_TERMCAP_se="$(printf '\e[0m')" \
-        LESS_TERMCAP_so="$(printf '\e[1;44;33m')" \
-        LESS_TERMCAP_ue="$(printf '\e[0m')" \
-        LESS_TERMCAP_us="$(printf '\e[1;32m')" \
-        man "$@"
+# cd into the first dmikalova repo with uncommitted changes
+gh-dmikalova-uncommitted() {
+    local base_dir="${HOME}/Code/github.com/dmikalova"
+    for dir in "$base_dir"/*(N/); do
+        if git -C "$dir" status --porcelain 2>/dev/null | grep -q .; then
+            cd "$dir"
+            echo "Uncommitted changes in: ${dir:t}"
+            return 0
+        fi
+    done
+    echo "No uncommitted changes found."
 }
 
 # Create a new directory and enter it
 mkd() {
     mkdir -p "$@"
-    cd "$@" || exit
+    cd "$@" || return
 }
 
 # pulumi init project

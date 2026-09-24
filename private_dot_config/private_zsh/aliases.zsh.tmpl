@@ -1,14 +1,14 @@
 #!/bin/zsh
 
-# atool
-alias compress='apack'
-alias expand='aunpack --subdir'
+# archives: ouch detects the format from the file name
+alias compress='ouch compress'
+alias expand='ouch decompress'
 
 # aws
 alias awsume='source awsume'
 
 # brew
-alias bu='brew update && brew upgrade && brew cleanup'
+alias bu='brew update && brew upgrade && brew cleanup && antidote update'
 
 # builtins
 alias ..="cd .."
@@ -16,20 +16,25 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias caff='caffeinate -ud'
+alias cat='bat --paging=never'
 alias cl='pbcopy'
 alias cld='printf "%s" $(pwd) | cl'
 alias cp='cp -ir'
 alias cdg='cd $(git rev-parse --show-toplevel)'
 alias diff='colordiff'
-alias g='grep --color=auto --ignore-case --recursive'
-alias ls='eza'
+alias g='rg --ignore-case'
+alias ll='eza -l --git --icons'
+alias ls='eza --group-directories-first'
+alias lt='eza --tree --level=2'
 alias mv='mv -i'
 alias reboot='sudo reboot'
-alias rm='trash'
+
+# claude - noglob so `?` and `*` in the question aren't globbed
+alias '??'='noglob ask'
+alias explain='noglob explain'
 
 # chezmoi
-alias chezmoi='chezmoi --source ~/Code/github.com/dmikalova/dotfiles'
-alias cza='chezmoi apply && zsh'
+alias cza='chezmoi apply && exec zsh'
 alias czr='chezmoi re-add'
 alias czs='chezmoi status'
 

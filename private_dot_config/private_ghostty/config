@@ -7,7 +7,11 @@ shell-integration = zsh
 shell-integration-features = cursor,sudo,title
 
 cursor-style = block
+adjust-cursor-thickness = 3
 mouse-scroll-multiplier = 3
+
+# Left Option sends Alt (fzf Alt+C); right Option still types characters like ç
+macos-option-as-alt = left
 
 window-padding-x = 8
 window-padding-y = 8

@@ -4,10 +4,14 @@
 echo "installing brew packages"
 brew install \
 	"age" \
+	"antidote" \
+	"atuin" \
 	"aws-sso-util" \
 	"aws-vpn-client" \
 	"awscli" \
 	"awsume" \
+	"bat" \
+	"carapace" \
 	"catimg" \
 	"chezmoi" \
 	"chroma" \
@@ -17,6 +21,7 @@ brew install \
 	"colordiff" \
 	"coreutils" \
 	"deno" \
+	"difftastic" \
 	"direnv" \
 	"eza" \
 	"fd" \
@@ -24,23 +29,25 @@ brew install \
 	"gh" \
 	"ghostty" \
 	"git" \
+	"git-delta" \
 	"gnupg" \
 	"golang" \
+	"hunk" \
 	"jq" \
+	"jqp" \
+	"moor" \
 	"meetingbar" \
 	"nvm" \
 	"opentofu" \
-	"postgresql@15" \
+	"ouch" \
 	"pinentry-mac" \
+	"postgresql@15" \
 	"ripgrep" \
 	"shellcheck" \
 	"shfmt" \
 	"sops" \
 	"starship" \
-	"thefuck" \
-	"trash-cli" \
-	"zoxide" \
-	"zsh-autosuggestions"
+	"zoxide"
 
 brew install --cask \
 	"bitwarden" \
@@ -49,6 +56,7 @@ brew install --cask \
 	"font-sauce-code-pro-nerd-font" \
 	"hammerspoon" \
 	"linearmouse" \
+	"obsidian" \
 	"signal" \
 	"visual-studio-code"
 

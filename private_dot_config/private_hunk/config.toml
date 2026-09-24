@@ -1,0 +1,71 @@
+# Hunk: diff viewer for reviewing agent changes. Reference: https://hunk.dev/docs/reference/config/
+#
+# Hunk themes are fixed hex palettes (it can't use the terminal's ANSI colors),
+# so this rebuilds Ghostty's Monokai Pro Light on top of a neutral light base.
+theme = "monokai-pro-light"
+
+[themes.monokai-pro-light]
+base = "github-light-default"
+label = "Monokai Pro Light"
+
+background = "#faf4f2"
+panel = "#f2ebe8"
+panelAlt = "#ede7e5"
+border = "#d9d2d0"
+text = "#29242a"
+muted = "#918c8e"
+accent = "#1c8ca8"
+accentMuted = "#a3d0db"
+
+addedBg = "#e8f3ec"
+removedBg = "#fbe6ec"
+contextBg = "#faf4f2"
+addedContentBg = "#cfe8d9"
+removedContentBg = "#f6ccd8"
+contextContentBg = "#faf4f2"
+addedSignColor = "#269d69"
+removedSignColor = "#e14775"
+movedAddedBg = "#e3eef4"
+movedRemovedBg = "#f5e9e0"
+lineNumberBg = "#f2ebe8"
+lineNumberFg = "#a59fa0"
+selectedHunk = "#ede7e5"
+
+badgeAdded = "#269d69"
+badgeRemoved = "#e14775"
+badgeNeutral = "#a59fa0"
+fileNew = "#269d69"
+fileDeleted = "#e14775"
+fileRenamed = "#7058be"
+fileModified = "#cc7a0a"
+fileUntracked = "#1c8ca8"
+
+noteBorder = "#7058be"
+noteBackground = "#f4f0f8"
+noteTitleBackground = "#e6def3"
+noteTitleText = "#29242a"
+
+# Syntax colors from Monokai Pro Light: red keywords, amber strings, green
+# functions, purple constants, cyan types, orange parameters, gray comments.
+[themes.monokai-pro-light.syntax_scopes]
+"comment" = "#a59fa0"
+"punctuation.definition.comment" = "#a59fa0"
+"keyword" = "#e14775"
+"keyword.operator" = "#e14775"
+"storage" = "#e14775"
+"entity.name.tag" = "#e14775"
+"string" = "#cc7a0a"
+"constant.numeric" = "#7058be"
+"constant.language" = "#7058be"
+"constant.character" = "#7058be"
+"entity.name.function" = "#269d69"
+"support.function" = "#269d69"
+"storage.type" = "#1c8ca8"
+"entity.name.type" = "#1c8ca8"
+"entity.name.class" = "#1c8ca8"
+"support.type" = "#1c8ca8"
+"support.class" = "#1c8ca8"
+"entity.other.attribute-name" = "#1c8ca8"
+"variable.parameter" = "#e16032"
+"variable" = "#29242a"
+"punctuation" = "#918c8e"

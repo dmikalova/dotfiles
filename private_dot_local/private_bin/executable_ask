@@ -1,0 +1,13 @@
+#!/bin/sh
+# Ask Claude for the shell command(s) to do something. Aliased to `??`.
+# Usage: ?? find files over 100MB in this repo
+
+set -eu
+
+if [ $# -eq 0 ]; then
+	echo "Usage: ?? <what you want to do>" >&2
+	exit 1
+fi
+
+claude -p "Give the macOS zsh command(s) to do the following, each with a one-line explanation. Be concise, no preamble: $*" \
+	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence

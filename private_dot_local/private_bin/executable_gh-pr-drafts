@@ -1,0 +1,69 @@
+#!/bin/zsh
+# List my draft PRs in a repo.
+# Usage: gh-pr-drafts <owner/repo|github url>
+
+gh-pr-drafts() {
+	emulate -L zsh
+	setopt local_options pipefail
+
+	local input="$1"
+	if [[ -z "$input" ]]; then
+		echo "Usage: gh-pr-drafts <owner/repo|github url>" >&2
+		return 1
+	fi
+
+	if ! command -v gh >/dev/null 2>&1; then
+		echo "gh CLI not found" >&2
+		return 1
+	fi
+
+	# Normalize to owner/repo
+	local repo="$input"
+	repo="${repo#http://github.com/}"
+	repo="${repo#https://github.com/}"
+	repo="${repo#git@github.com:}"
+	repo="${repo%.git}"
+	repo="${repo%/}"
+	if [[ "$repo" != */* ]]; then
+		echo "Could not parse owner/repo from: $input" >&2
+		return 1
+	fi
+
+	local drafts
+	drafts=$(gh pr list \
+		--repo "$repo" \
+		--author "@me" \
+		--state open \
+		--draft \
+		--limit 200 \
+		--json number,url,title) || return 1
+
+	local count
+	count=$(printf '%s' "$drafts" | jq 'length')
+	if [[ "$count" == "0" ]]; then
+		echo "No draft PRs."
+		return 0
+	fi
+
+	local cols=${COLUMNS:-0}
+	if ((cols == 0)); then
+		cols=$(tput cols 2>/dev/null) || cols=80
+	fi
+
+	echo "Draft PRs in $repo ($count):"
+	local first=1
+	printf '%s' "$drafts" | jq -r 'sort_by(.number) | .[] | [.number, .title, .url] | @tsv' |
+		while IFS=$'\t' read -r num title url; do
+			((first)) && first=0 || echo
+			local prefix="  #${num}  "
+			local indent=${(l:${#prefix}:: :)}
+			local max=$((cols - ${#prefix}))
+			if ((max < 4)); then max=4; fi
+			if ((${#title} > max)); then
+				title="${title[1,max-3]}..."
+			fi
+			printf '%s%s\n%s%s\n' "$prefix" "$title" "$indent" "$url"
+		done
+}
+
+gh-pr-drafts "$@"

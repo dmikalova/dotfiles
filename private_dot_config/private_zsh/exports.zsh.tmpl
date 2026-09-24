@@ -16,18 +16,14 @@ append_path "${BIN_DIR}"
 # brew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# git
-export GIT_CONFIG="${HOME}/.config/git/config"
-
 # go
-append_path "$(go env GOPATH)/bin"
+append_path "${HOME}/go/bin"
 
 # gpg
 export GPG_TTY=$(tty)
 
 # locale
 export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
 
 # nvm
 export NVM_DIR="${HOME}/.nvm"
@@ -39,6 +35,14 @@ export SOPS_AGE_KEY_FILE="${HOME}/.config/sops/key.txt"
 
 # terraform
 # export TF_CLI_CONFIG_FILE="${HOME}/.config/terraform/terraformrc"
+
+# pager: moor, except delta keeps less for n/N jumps between files
+export PAGER="moor"
+export DELTA_PAGER="less -R"
+
+# bat: colored man pages
+export MANPAGER="sh -c 'col -bx | bat --language man --plain'"
+export MANROFFOPT="-c"
 
 # vim
 export EDITOR="vim"
@@ -69,7 +73,14 @@ fi
 # zsh
 export ZSH_COMPLETIONS_DIR="${DIR}/completions"
 export ZSH_CACHE_DIR="${DIR}/cache"
-export _Z_DATA="${ZSH_CACHE_DIR}/z_data"
-export FPATH="$FPATH:${ZSH_COMPLETIONS_DIR}"
+export FPATH="$FPATH:${ZSH_COMPLETIONS_DIR}:${HOME}/.docker/completions"
+
+# fzf: ANSI colors follow the terminal theme. Alt+C picks from zoxide's
+# frecent directories, same as `zi`.
+export FZF_DEFAULT_COMMAND="fd --hidden --exclude .git"
+export FZF_DEFAULT_OPTS="--color=16 --height=40% --layout=reverse --border"
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+export FZF_ALT_C_COMMAND="zoxide query --list"
+export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
 
 unfunction append_path

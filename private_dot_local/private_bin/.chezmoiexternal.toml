@@ -1,0 +1,25 @@
+{{- /* pay-respects isn't in Homebrew core; install the author's GitHub release. */ -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $version := "0.8.8" -}}
+{{-   $target := "aarch64-apple-darwin" -}}
+{{-   $sha256 := "e834e928dcaf9cd72a99478bb61e0630ba76e32c7b228eb3a7be9c5f404cd548" -}}
+{{-   if eq .chezmoi.arch "amd64" -}}
+{{-     $target = "x86_64-apple-darwin" -}}
+{{-     $sha256 = "64c30e1a62605279abf219193c53bf251687ea419a0c99d2e15ae8b5b6a58587" -}}
+{{-   end -}}
+{{-   $url := printf "https://github.com/iffse/pay-respects/releases/download/v%s/pay-respects-%s-%s.tar.zst" $version $version $target }}
+["pay-respects"]
+type = "archive-file"
+url = "{{ $url }}"
+path = "pay-respects"
+executable = true
+checksum.sha256 = "{{ $sha256 }}"
+
+# Rules loaded at runtime; the request-ai fallback module is left out on purpose.
+["_pay-respects-module-100-runtime-rules"]
+type = "archive-file"
+url = "{{ $url }}"
+path = "_pay-respects-module-100-runtime-rules"
+executable = true
+checksum.sha256 = "{{ $sha256 }}"
+{{ end -}}

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Ask Claude to explain a shell command.
+# Usage: explain tar -xzvf archive.tar.gz
+
+set -eu
+
+if [ $# -eq 0 ]; then
+	echo "Usage: explain <command>" >&2
+	exit 1
+fi
+
+claude -p "Explain this shell command concisely - what it does and what each part means, no preamble: $*" \
+	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence

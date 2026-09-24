@@ -1,12 +1,16 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Segments use the Monokai Pro palette below. Plain text outside the segments
+# (❯, command duration) uses the terminal's ANSI colors instead, so it stays
+# readable on Ghostty's Monokai Pro Light background.
+
 format = """
-[](fg:color_green bg:default)\
+[](fg:mp_green)\
 $directory\
-[](fg:color_green bg:color_yellow)\
+[](fg:mp_green bg:mp_yellow)\
 $git_branch\
 $git_status\
-[](fg:color_yellow bg:color_pink)\
+[](fg:mp_yellow bg:mp_red)\
 $c\
 $rust\
 $golang\
@@ -16,154 +20,131 @@ $java\
 $kotlin\
 $haskell\
 $python\
-[](fg:color_pink bg:color_purple)\
+[](fg:mp_red bg:mp_purple)\
 $docker_context\
 $kubernetes\
 $aws\
-[](fg:color_purple bg:color_bg1)\
-$shell\
+[](fg:mp_purple bg:mp_gray)\
 $shlvl\
 $time\
-[ ](fg:color_bg1 bg:default)\
+[ ](fg:mp_gray)\
 $fill\
 $cmd_duration\
-$line_break$character"""
+$line_break\
+$character"""
 
-continuation_prompt = '[󰄾 ](fg:color_green) '
-palette = 'monokai_pro_spectrum'
+palette = "monokai_pro"
 
-[palettes.monokai_pro_spectrum]
-color_aqua = '#6ab0f3'
-color_bg0 = '#222222'
-color_bg1 = '#69676c'
-color_blue = '#5ad4e6'
-color_green = '#7bd88f'
-color_orange = '#fc9867'
-color_pink = '#fc618d'
-color_purple = '#948ae3'
-color_yellow = '#fce566'
-color_white = '#f7f1ff'
+[palettes.monokai_pro]
+mp_bg = "#2d2a2e"
+mp_fg = "#fcfcfa"
+mp_gray = "#727072"
+mp_green = "#a9dc76"
+mp_yellow = "#ffd866"
+mp_red = "#ff6188"
+mp_purple = "#ab9df2"
+
+continuation_prompt = '[󰄾 ](green) '
 
 [directory]
-truncate_to_repo = true
-truncation_length = 3
-before_repo_root_style = "fg:color_bg0 bg:color_green"
-repo_root_style = "bold fg:color_bg0 bg:color_green"
-style = "fg:color_bg0 bg:color_green"
-read_only_style = "fg:color_bg0 bg:color_green"
-format = "[ $path ]($style)"
-repo_root_format = '[$before_root_path]($before_repo_root_style)[󰊢$repo_root]($repo_root_style)[$path ]($style)[$read_only]($read_only_style)'
+style = "fg:mp_bg bg:mp_green"
+before_repo_root_style = "fg:mp_bg bg:mp_green"
+repo_root_style = "bold fg:mp_bg bg:mp_green"
+read_only_style = "fg:mp_bg bg:mp_green"
+format = '[ $path]($style)[$read_only ]($read_only_style)'
+repo_root_format = '[ $before_root_path]($before_repo_root_style)[󰊢$repo_root]($repo_root_style)[$path]($style)[$read_only ]($read_only_style)'
 home_symbol = ""
-fish_style_pwd_dir_length=2
+fish_style_pwd_dir_length = 2
 
 [git_branch]
 symbol = ""
-# style = "bg:color_yellow"
-format = '[[ $symbol $branch ](fg:color_bg0 bg:color_yellow)]($style)'
+style = "fg:mp_bg bg:mp_yellow"
+format = '[ $symbol $branch ]($style)'
 
 [git_status]
-# style = "bg:color_yellow"
-format = '[[($all_status$ahead_behind )](fg:color_bg0 bg:color_yellow)]($style)'
+style = "fg:mp_bg bg:mp_yellow"
+format = '[($all_status$ahead_behind )]($style)'
+
+[c]
+symbol = " "
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
+
+[rust]
+symbol = ""
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
+
+[golang]
+symbol = ""
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [nodejs]
 detect_extensions = []
 symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
-
-[c]
-symbol = " "
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
-
-[rust]
-symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
-
-[golang]
-symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [php]
 symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [java]
 symbol = " "
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [kotlin]
 symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [haskell]
 symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [python]
-pyenv_version_name = true
 detect_extensions = []
 symbol = ""
-# style = "bg:color_pink"
-format = '[[ $symbol( $version) ](fg:color_bg0 bg:color_pink)]($style)'
+style = "fg:mp_bg bg:mp_red"
+format = '[ $symbol( $version) ]($style)'
 
 [docker_context]
 symbol = " "
-style = "bg:color_purple"
-format = '[[ $symbol( $context) ](fg:color_blue bg:color_purple)]($style)'
+style = "fg:mp_bg bg:mp_purple"
+format = '[ $symbol( $context) ]($style)'
 
 [kubernetes]
-format = '[[ $symbol $cluster $context \($namespace\)](fg:color_blue bg:color_purple)]($style)'
 disabled = false
-contexts = [
-  { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
-]
+style = "fg:mp_bg bg:mp_purple"
+format = '[ $symbol$context( \($namespace\)) ]($style)'
 
 [aws]
 symbol = " "
-style = 'bold orange'
-format = '[[ $symbol$profile](fg:color_white bg:color_purple)]($style)'
-[aws.profile_aliases]
-Enterprise_Naming_Scheme-voidstars = 'void**'
-
-[shell]
-disabled = true
-format = "[[ $indicator](fg:color_white bg:color_bg1)]($style)"
+style = "fg:mp_bg bg:mp_purple"
+format = '[ $symbol$profile ]($style)'
 
 [shlvl]
 disabled = false
-style = "bg:color_bg1"
-format = "[[ zsh:$shlvl](fg:color_white bg:color_bg1)]($style)"
 threshold = 2
+style = "fg:mp_fg bg:mp_gray"
+format = '[ zsh:$shlvl]($style)'
 
 [time]
 disabled = false
-time_format = "%H:%M:%S"
-style = "bg:color_bg1"
-format = '[[ $time](bold fg:color_white bg:color_bg1)]($style)'
+style = "bold fg:mp_fg bg:mp_gray"
+format = '[ $time]($style)'
 
 [fill]
-disabled = false
 symbol = " "
 
 [cmd_duration]
-min_time = 1000
-format = '[$duration](bold color_yellow)'
-
-[line_break]
-disabled = false
+min_time = 0 # always show, 0s for anything under a second
+format = '[$duration](bold green)'
 
 [character]
-disabled = false
-success_symbol = '[](bold fg:color_green)'
-error_symbol = '[](bold fg:color_pink)'
-vimcmd_symbol = '[](bold fg:color_yellow)'
-vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
-vimcmd_replace_symbol = '[](bold fg:color_purple)'
-vimcmd_visual_symbol = '[](bold fg:color_green)'
+success_symbol = '[](bold green)'
+error_symbol = '[](bold red)'

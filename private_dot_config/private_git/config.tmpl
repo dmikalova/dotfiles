@@ -1,3 +1,8 @@
+[alias]
+	# difftastic: structural (syntax-aware) diffs on demand
+	dft = -c diff.external=difft diff
+	dlog = -c diff.external=difft log -p --ext-diff
+
 [blame]
 	ignoreRevsFile = .git-blame-ignore-revs
 
@@ -6,6 +11,7 @@
 
 [core]
 	autocrlf = false
+	pager = delta
 	hooksPath = .husky
 
 {{ if eq .chezmoi.os "darwin" -}}
@@ -20,6 +26,9 @@
 [credential]
 	helper = "libsecret"
 {{ end }}
+
+[delta]
+	navigate = true # n/N jump between files
 
 [diff "sops"]
 	textconv = "sops -d"
@@ -49,11 +58,18 @@
 [init]
 	defaultbranch = "main"
 
+[interactive]
+	diffFilter = delta --color-only
+
 [lfs]
 	repositoryformatversion = 0
 
+[merge]
+	conflictStyle = zdiff3
+
 [pager]
-	diff = false
+	# delta without a pager for diffs, like the old `diff = false`
+	diff = delta --paging=never
 
 [pull]
 	rebase = "false"
