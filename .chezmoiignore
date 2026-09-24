@@ -1,30 +1,11 @@
+# Repo-only files, not installed into ~
 LICENSE
 README.md
-images
+TODO.md
 tools
 
-{{ if eq .chezmoi.os "darwin" -}}
-# Linux-only: KDE, crontab, wallpaper, login theme, mouse
-.chezmoiscripts/run_crontab.sh
-.chezmoiscripts/run_onchange_kensington-mouse.sh
-.chezmoiscripts/run_onchange_login_theme.sh
-.chezmoiscripts/run_onchange_system_wallpaper.sh
-.chezmoiscripts/run_wallpaper.sh
-.chezmoiscripts/run_onchange_dependencies-linux.sh
-.local/bin/run_onchange_binaries.sh
-dot_face
-dot_face.icon
-dot_wallpaper
-private_dot_config/private_kglobalshortcutsrc
-private_dot_config/private_khotkeysrc
-private_dot_config/private_kscreenlockerrc
-private_dot_config/private_kwinrc
-{{ end -}}
-
-{{ if eq .chezmoi.os "linux" -}}
-# macOS-only: Hammerspoon, macOS dependencies
+{{ if ne .chezmoi.os "darwin" -}}
+# macOS-only. Scripts match by target name, without the run_*_ prefix.
 .hammerspoon
-.chezmoiscripts/run_onchange_dependencies-darwin.sh
-.chezmoiscripts/run_onchange_macos-defaults-darwin.sh
-.chezmoiscripts/run_once_after_checklist-darwin.sh
+.chezmoiscripts/*-darwin.sh
 {{ end -}}

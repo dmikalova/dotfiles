@@ -46,9 +46,10 @@ brew install --cask \
 	"bitwarden" \
 	"discord" \
 	"docker-desktop" \
-	"font-jetbrains-mono-nerd-font" \
+	"font-sauce-code-pro-nerd-font" \
 	"hammerspoon" \
 	"linearmouse" \
+	"signal" \
 	"visual-studio-code"
 
 echo "installing node via nvm"

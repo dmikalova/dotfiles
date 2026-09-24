@@ -2,11 +2,15 @@
 
 - [Onboarding checklist](https://app.notion.com/p/goodship-io/Onboarding-checklist-David-Mikalova-3e224418dc93801d9bded147623f628e)
 
-- Ask Notion "As a new infra hire working on the platform, what documents should I review to get started with the system"
+- time off
+- What does it mean that duck db is columnar compared to postgres
+- Why does `AWS_PROFILE=sb   yarn nx run infra-<project>:diff-sb` have to declare sb twice?
+- 
 
 ## Home
 - can chezmoi run directly off of github link?
 - alternative to obsidian?
+- bitwarden as ssh server
 
 Teams:
 - Alex Saucet leads the Procurement team

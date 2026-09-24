@@ -49,9 +49,17 @@ local function launchOrFocusApp(identifier)
   end
 end
 
--- Find app by name or bundle ID
+-- Find app by name or bundle ID. hs.application.find() returns a single app
+-- object, but if the search matches more than one running process (e.g. the
+-- same PWA open under two different Chrome profiles), it returns a plain
+-- array of matches instead - normalize to a single object so callers can
+-- always use app:method() safely.
 local function findApp(identifier)
-  return hs.application.find(identifier)
+  local result = hs.application.find(identifier)
+  if type(result) == "table" then
+    return result[1]
+  end
+  return result
 end
 
 -- Match window's app against identifier (name or bundle ID)

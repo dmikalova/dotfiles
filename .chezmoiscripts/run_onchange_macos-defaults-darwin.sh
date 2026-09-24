@@ -37,6 +37,11 @@ defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool fal
 defaults write NSGlobalDomain AppleAccentColor -int 3
 defaults write NSGlobalDomain AppleAquaColorVariant -int 1
 
+# Sound: alert sound "Crystal". macOS 26 renamed the alert sounds in System
+# Settings but kept the old files - confirmed by diffing NSGlobalDomain before/
+# after selecting it (Crystal = Glass.aiff, Bubble = Pop.aiff).
+defaults write NSGlobalDomain com.apple.sound.beep.sound -string "/System/Library/Sounds/Glass.aiff"
+
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall ControlCenter 2>/dev/null || true
