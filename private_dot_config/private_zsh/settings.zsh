@@ -40,6 +40,14 @@ bindkey '^H' backward-kill-word # cmd + ⌫
 bindkey '^[[3;5~' kill-word     # cmd + ⌦
 # bindkey '[I' backward-kill-line # cmd + ⌫
 
+# Word motions and deletes stop at punctuation like / - . = as in text editors;
+# only letters, digits and _ count as part of a word.
+WORDCHARS='_'
+
+# undo / redo line edits: Ghostty sends these for Cmd+Z / Cmd+Shift+Z
+bindkey '^_' undo
+bindkey '^[[122;10u' redo
+
 # miscellaneous settings.
 bindkey "\e[3~" delete-char # ⌦
 

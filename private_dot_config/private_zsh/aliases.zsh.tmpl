@@ -59,5 +59,11 @@ alias file-count='echo $PWD; for t in files links directories; do echo `find . -
 alias rm-empty-subdirs='find . -type d -empty -print -delete'
 alias serve-dir='python3 -m http.server 54003'
 
+# vim
+alias vi='nvim'
+alias vim='nvim'
+# both expand to nvim, so you-should-use would nag to type `vi` instead of `vim`
+YSU_IGNORED_ALIASES+=(vi vim)
+
 # vscode
 alias cg='code $(git rev-parse --show-toplevel)'

@@ -14,6 +14,37 @@ nvm() {
 # starship
 _cached_init starship "starship init zsh"
 
+# starship's $fill can't see line wrapping: when the header is wider than the
+# window it pads with one space, leaving the timer mid-line after the wrap.
+# Re-render as if the window were exactly as wide as the wrapped rows, so the
+# fill pads the last row and the timer lands at its right edge.
+_starship_prompt() {
+	local -a args=(
+		--keymap="${KEYMAP:-}"
+		--status="${STARSHIP_CMD_STATUS:-}"
+		--pipestatus="${STARSHIP_PIPE_STATUS[*]:-}"
+		--cmd-duration="${STARSHIP_DURATION:-}"
+		--jobs="$STARSHIP_JOBS_COUNT"
+	)
+	local out header
+	out="$(starship prompt --terminal-width="$COLUMNS" "${args[@]}")"
+	# Visible header width: drop the leading newline, zero-width %{...%} escapes, %%.
+	header="${${out#$'\n'}%%$'\n'*}"
+	header="${${(S)header//\%\{*\%\}/}//\%\%/%}"
+	if ((${#header} > COLUMNS)); then
+		# At overflow the fill is one space, so ${#header} is the width the rest
+		# needs plus that space; round it up to whole rows.
+		out="$(starship prompt --terminal-width="$((COLUMNS * ((${#header} + COLUMNS - 1) / COLUMNS)))" "${args[@]}")"
+	fi
+	# No blank line above the first prompt in a new terminal.
+	((_prompt_count == 1)) && out="${out#$'\n'}"
+	print -rn -- "$out"
+}
+PROMPT='$(_starship_prompt)'
+_prompt_count=0
+_count_prompts() { ((_prompt_count++)); }
+precmd_functions+=(_count_prompts)
+
 # zoxide
 _cached_init zoxide "zoxide init zsh"
 

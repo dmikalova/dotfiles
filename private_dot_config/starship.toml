@@ -27,7 +27,7 @@ $aws\
 [](fg:mp_purple bg:mp_gray)\
 $shlvl\
 $time\
-[ ](fg:mp_gray)\
+[](fg:mp_gray)\
 $fill\
 $cmd_duration\
 $line_break\
@@ -51,81 +51,81 @@ style = "fg:mp_bg bg:mp_green"
 before_repo_root_style = "fg:mp_bg bg:mp_green"
 repo_root_style = "bold fg:mp_bg bg:mp_green"
 read_only_style = "fg:mp_bg bg:mp_green"
-format = '[ $path]($style)[$read_only ]($read_only_style)'
-repo_root_format = '[ $before_root_path]($before_repo_root_style)[󰊢$repo_root]($repo_root_style)[$path]($style)[$read_only ]($read_only_style)'
+format = '[$path]($style)[( $read_only)]($read_only_style)'
+repo_root_format = '[$before_root_path]($before_repo_root_style)[󰊢$repo_root]($repo_root_style)[$path]($style)[( $read_only)]($read_only_style)'
 home_symbol = ""
 fish_style_pwd_dir_length = 2
 
 [git_branch]
 symbol = ""
 style = "fg:mp_bg bg:mp_yellow"
-format = '[ $symbol $branch ]($style)'
+format = '[ $symbol$branch]($style)'
 
 [git_status]
 style = "fg:mp_bg bg:mp_yellow"
-format = '[($all_status$ahead_behind )]($style)'
+format = '[( $all_status$ahead_behind)]($style)'
 
 [c]
-symbol = " "
+symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [rust]
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [golang]
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [nodejs]
 detect_extensions = []
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [php]
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [java]
-symbol = " "
+symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [kotlin]
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [haskell]
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [python]
 detect_extensions = []
 symbol = ""
 style = "fg:mp_bg bg:mp_red"
-format = '[ $symbol( $version) ]($style)'
+format = '[ $symbol($version)]($style)'
 
 [docker_context]
-symbol = " "
+symbol = ""
 style = "fg:mp_bg bg:mp_purple"
-format = '[ $symbol( $context) ]($style)'
+format = '[ $symbol($context)]($style)'
 
 [kubernetes]
 disabled = false
 style = "fg:mp_bg bg:mp_purple"
-format = '[ $symbol$context( \($namespace\)) ]($style)'
+format = '[ $symbol$context( \($namespace\))]($style)'
 
 [aws]
-symbol = " "
+symbol = ""
 style = "fg:mp_bg bg:mp_purple"
-format = '[ $symbol$profile ]($style)'
+format = '[ $symbol$profile]($style)'
 
 [shlvl]
 disabled = false

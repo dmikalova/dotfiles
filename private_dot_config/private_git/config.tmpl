@@ -1,4 +1,6 @@
 [alias]
+	# switch to a branch, creating it if it doesn't exist locally or on a remote
+	co = "!f() { git switch \"$@\" 2>/dev/null || git switch -c \"$@\"; }; f"
 	# difftastic: structural (syntax-aware) diffs on demand
 	dft = -c diff.external=difft diff
 	dlog = -c diff.external=difft log -p --ext-diff
