@@ -3,7 +3,7 @@ set -eu
 
 NL="
 "
-OWNERS="cddc39 dmikalova e91e63 screeptorio"
+OWNERS="cddc39 dmikalova"
 ROOT_DIR="$HOME/code/github.com/"
 
 REPOS=""

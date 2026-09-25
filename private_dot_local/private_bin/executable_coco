@@ -30,10 +30,16 @@ if [[ "$current_branch" == "$default_branch" && "$owner" != "dmikalova" ]]; then
 	exit 1
 fi
 
-# Check there are changes to commit
+# With a clean tree, push any commits that haven't reached origin yet
 if [[ -z "$(git status --porcelain 2>/dev/null)" ]]; then
-	echo "Nothing to commit - working tree is clean." >&2
-	exit 1
+	unpushed=$(git rev-list --count HEAD --not --remotes=origin)
+	if [[ "$unpushed" -eq 0 ]]; then
+		echo "Nothing to commit or push - working tree is clean." >&2
+		exit 1
+	fi
+	echo "Working tree is clean. Pushing $unpushed unpushed commit(s)..."
+	git push
+	exit 0
 fi
 
 # Stage all changes
