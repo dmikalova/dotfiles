@@ -1,0 +1,39 @@
+{
+  "name": "move-bullet-block",
+  "displayName": "Move Bullet Block",
+  "description": "Move a markdown bullet block (with its nested/wrapped lines) to the top or bottom of its sibling group",
+  "version": "0.0.1",
+  "publisher": "dmikalova",
+  "private": true,
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "moveBulletBlock.moveToBottom",
+        "title": "Move Bullet Block to Bottom"
+      },
+      {
+        "command": "moveBulletBlock.moveToTop",
+        "title": "Move Bullet Block to Top"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "moveBulletBlock.moveToBottom",
+        "key": "ctrl+shift+down",
+        "mac": "cmd+shift+down",
+        "when": "editorLangId == markdown && editorTextFocus"
+      },
+      {
+        "command": "moveBulletBlock.moveToTop",
+        "key": "ctrl+shift+up",
+        "mac": "cmd+shift+up",
+        "when": "editorLangId == markdown && editorTextFocus"
+      }
+    ]
+  }
+}

@@ -5,7 +5,7 @@
 - time off
 - What does it mean that duck db is columnar compared to postgres
 - Why does `AWS_PROFILE=sb   yarn nx run infra-<project>:diff-sb` have to declare sb twice?
-- 
+-
 
 ## Home
 - can chezmoi run directly off of github link?
