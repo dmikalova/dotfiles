@@ -32,9 +32,12 @@ brew install \
 	"git-delta" \
 	"gnupg" \
 	"golang" \
+	"govulncheck" \
 	"hunk" \
 	"jq" \
 	"jqp" \
+	"lefthook" \
+	"mage" \
 	"moor" \
 	"neovim" \
 	"meetingbar" \
@@ -61,6 +64,11 @@ brew install --cask \
 	"obsidian" \
 	"signal" \
 	"visual-studio-code"
+
+# The shared checks from project-standards, run by lefthook in projects
+# without go.mod. Rerun `go install ...@latest` to update it.
+echo "installing project-standards"
+GOBIN="${HOME}/.local/bin" go install github.com/dmikalova/project-standards/cmd/project-standards@latest
 
 echo "installing node via nvm"
 export NVM_DIR="${HOME}/.nvm"
