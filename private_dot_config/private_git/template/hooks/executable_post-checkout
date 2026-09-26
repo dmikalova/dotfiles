@@ -1,0 +1,21 @@
+#!/bin/sh
+# Copied into every new clone by init.templateDir, and run once by the
+# clone's first checkout. It installs lefthook's hooks in dmikalova's
+# repositories that configure lefthook, then removes itself, so every other
+# repository, work repositories included, is left without hooks.
+self="$(git rev-parse --git-common-dir)/hooks/post-checkout"
+rm -f "$self"
+
+case "$(git remote get-url origin 2>/dev/null)" in
+  *github.com[:/]dmikalova/*) ;;
+  *) exit 0 ;;
+esac
+command -v lefthook >/dev/null || exit 0
+root=$(git rev-parse --show-toplevel)
+for config in lefthook.yml lefthook.yaml lefthook.json lefthook.jsonc lefthook.toml \
+  .lefthook.yml .lefthook.yaml .lefthook.json .lefthook.jsonc .lefthook.toml; do
+  if [ -f "$root/$config" ]; then
+    (cd "$root" && lefthook install)
+    exit 0
+  fi
+done

@@ -58,6 +58,9 @@
 
 [init]
 	defaultbranch = "main"
+	# New clones get a one-shot post-checkout hook that installs lefthook in
+	# dmikalova repositories with a lefthook config.
+	templatedir = "~/.config/git/template"
 
 [interactive]
 	diffFilter = delta --color-only
