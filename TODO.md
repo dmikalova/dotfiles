@@ -11,6 +11,8 @@
 - can chezmoi run directly off of github link?
 - alternative to obsidian?
 - bitwarden as ssh server
+- clean up mklv configs
+- clean up mage commands in vex
 - Discord server lists open PRs:
 
 Performance & Build Metrics
