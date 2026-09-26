@@ -1,0 +1,6 @@
+# diatom's machine-wide config; each repo's .diatom/config.yaml sets the rest.
+# The built-in defaults are in diatom's internal/config/defaults.yaml.
+
+# Install each new diatom release as it comes out, and restart the scheduler
+# and panes on it. Running sessions are suspended first and resume after.
+autoUpdate: true
