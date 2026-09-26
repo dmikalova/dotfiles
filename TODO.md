@@ -13,6 +13,8 @@
 - bitwarden as ssh server
 - clean up mklv configs
 - clean up mage commands in vex
+- delete repos (brocket, lists, recipes)
+- github notifications app
 - Discord server lists open PRs:
 
 Performance & Build Metrics

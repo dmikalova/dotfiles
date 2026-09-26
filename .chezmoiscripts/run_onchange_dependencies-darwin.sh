@@ -52,6 +52,7 @@ brew install \
 	"sops" \
 	"starship" \
 	"tree-sitter-cli" \
+	"zellij" \
 	"zoxide"
 
 brew install --cask \

@@ -3,10 +3,10 @@
     "commit": "",
     "pr": ""
   },
-  "model": "sonnet",
+  "model": "opus",
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     }
   },
   "theme": "auto"

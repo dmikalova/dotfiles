@@ -1,0 +1,140 @@
+// Zellij theme matching Ghostty's Monokai Pro Light. Reference:
+// https://zellij.dev/documentation/themes
+//
+// Zellij's built-in themes draw light text on dark ribbons, which washes out on
+// a light terminal, so this rebuilds the palette hunk and Ghostty use:
+//   background #faf4f2  foreground #29242a  panel #ede7e5  border #d9d2d0
+//   selection #bfb9ba   muted #918c8e
+//   red #e14775  green #269d69  amber #cc7a0a  orange #e16032
+//   purple #7058be  cyan #1c8ca8
+themes {
+    monokai-pro-light {
+        text_unselected {
+            base 41 36 42
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        text_selected {
+            base 41 36 42
+            background 217 210 208
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        // The focused tab and the current mode in the status bar.
+        ribbon_selected {
+            base 250 244 242
+            background 28 140 168
+            emphasis_0 41 36 42
+            emphasis_1 237 231 229
+            emphasis_2 237 231 229
+            emphasis_3 237 231 229
+        }
+        ribbon_unselected {
+            base 41 36 42
+            background 217 210 208
+            emphasis_0 225 71 117
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        table_title {
+            base 38 157 105
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        table_cell_selected {
+            base 41 36 42
+            background 237 231 229
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        table_cell_unselected {
+            base 41 36 42
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        list_selected {
+            base 41 36 42
+            background 237 231 229
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        list_unselected {
+            base 41 36 42
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 38 157 105
+            emphasis_3 112 88 190
+        }
+        // The focused pane's border.
+        frame_selected {
+            base 38 157 105
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 112 88 190
+            emphasis_3 225 71 117
+        }
+        frame_unselected {
+            base 191 185 186
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 112 88 190
+            emphasis_3 225 71 117
+        }
+        // The focused pane's border outside normal mode (resize, move, ...).
+        frame_highlight {
+            base 225 96 50
+            background 250 244 242
+            emphasis_0 225 96 50
+            emphasis_1 28 140 168
+            emphasis_2 112 88 190
+            emphasis_3 225 71 117
+        }
+        exit_code_success {
+            base 38 157 105
+            background 250 244 242
+            emphasis_0 28 140 168
+            emphasis_1 250 244 242
+            emphasis_2 112 88 190
+            emphasis_3 28 140 168
+        }
+        exit_code_error {
+            base 225 71 117
+            background 250 244 242
+            emphasis_0 204 122 10
+            emphasis_1 250 244 242
+            emphasis_2 112 88 190
+            emphasis_3 28 140 168
+        }
+        multiplayer_user_colors {
+            player_1 112 88 190
+            player_2 28 140 168
+            player_3 225 96 50
+            player_4 38 157 105
+            player_5 204 122 10
+            player_6 225 71 117
+            player_7 145 140 142
+            player_8 112 88 190
+            player_9 28 140 168
+            player_10 225 96 50
+        }
+    }
+}
