@@ -1,0 +1,12 @@
+# diatom's machine-wide config; each repo's .diatom/config.toml sets the rest.
+# The built-in defaults are in diatom's internal/config/defaults.toml.
+
+# Install each new diatom release as it comes out, and restart the scheduler
+# and panes on it. Running sessions are suspended first and resume after.
+autoUpdate = true
+
+# The gate of each kind of repo that sets none of its own: go for a repo with
+# a go.mod, node for one with a package.json.
+[gates]
+go = "mage ci:check"
+node = "npm test"

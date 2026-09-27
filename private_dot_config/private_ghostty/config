@@ -1,6 +1,9 @@
 font-family = SauceCodePro Nerd Font Mono
 font-size = 18
 font-thicken = true
+# The Nerd Font has its own robot and ballot box, which Ghostty picks over
+# the color emoji when it redraws them; these always come from the emoji font.
+font-codepoint-map = U+1F916,U+2611=Apple Color Emoji
 theme = Monokai Pro Light
 
 shell-integration = zsh
@@ -17,6 +20,8 @@ macos-option-as-alt = left
 # settings.zsh). Ghostty's own undo (reopen a closed tab/split) stays on Cmd+Shift+T.
 keybind = super+z=text:\x1f
 keybind = super+shift+z=csi:122;10u
+# cmd+c copies a selection, and otherwise reaches the app, as diatom's copy.
+keybind = performable:super+c=copy_to_clipboard
 
 window-padding-x = 8
 window-padding-y = 8
