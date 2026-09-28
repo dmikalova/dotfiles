@@ -9,5 +9,5 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
-claude -p "Give the macOS zsh command(s) to do the following, each with a one-line explanation. Be concise, no preamble: $*" \
-	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence
+claude-bare "You answer shell questions for macOS zsh. Be concise, no preamble." \
+	"Give the macOS zsh command(s) to do the following, each with a one-line explanation: $*"

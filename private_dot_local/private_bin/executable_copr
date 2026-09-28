@@ -18,15 +18,23 @@ _usage() {
 	sed -n 's/^# \{0,1\}//; 5,8p' "$ZSH_ARGZERO"
 }
 
+# Keep the AI output from the first conventional-commit title on. Drops any
+# preface and markdown (heading, bullet, bold, backticks) around the title; the
+# body is markdown and kept as is.
 _from_first_cc_line() {
 	printf '%s\n' "$1" | awk '
 		BEGIN { found = 0 }
-		{
-			if (!found && $0 ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]/) {
+		!found {
+			line = $0
+			sub(/^[ \t]*(#+[ \t]*|[-*][ \t]+)?/, "", line)
+			gsub(/\*\*|__|`/, "", line)
+			if (line ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]*\))?!?:/) {
 				found = 1
+				print line
 			}
-			if (found) print
+			next
 		}
+		{ print }
 	'
 }
 
@@ -82,9 +90,9 @@ if ((!labels_given)) && [[ -n "$ci_labels" ]]; then
 	ci_names=(${(f)"$(cut -f1 <<<"$ci_labels")"})
 
 	echo "Suggesting labels..."
-	suggested=$(printf 'Labels:\n%s\n\nDiff:\n%s\n' "$ci_labels" "$diff" | claude -p \
-		"These are CircleCI labels for a GitHub PR, each with its effect, followed by the PR's diff. Suggest the labels that fit this diff. Most PRs need none; only suggest a label that skips tests or deploys when the diff clearly calls for it. Output ONLY label names, one per line, or nothing if none fit." \
-		--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence || true)
+	suggested=$(printf 'Labels:\n%s\n\nDiff:\n%s\n' "$ci_labels" "$diff" | claude-bare \
+		"You pick GitHub PR labels. Reply with label names only, one per line, as plain text, or with nothing if none fit." \
+		"Stdin has CircleCI labels for a GitHub PR, each with its effect, followed by the PR's diff. Suggest the labels that fit this diff. Most PRs need none; only suggest a label that skips tests or deploys when the diff clearly calls for it." || true)
 	# Keep only real label names.
 	suggested=(${(f)suggested})
 	suggested=(${suggested:*ci_names})
@@ -132,9 +140,9 @@ git push -u origin HEAD
 
 # Generate PR title and body via AI in a single call
 echo "Generating PR title and description..."
-result=$(printf '%s\n' "$diff" | claude -p \
-	"Write a PR title and description for this diff. Summarize these changes with high information density, covering all major points without conversational filler. Format: first line is the title (semantic/conventional commits format, no quotes), then a blank line, then the markdown description body with a brief summary and list of key changes. Output ONLY this, nothing else." \
-	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence)
+result=$(printf '%s\n' "$diff" | claude-bare \
+	"You write GitHub pull request titles and descriptions. Reply with the title and description only: no preface, no code fence around the reply." \
+	"Write a PR title and description for the diff on stdin. Summarize the changes with high information density, covering all major points without conversational filler. Format: first line is the title in Conventional Commits format (no quotes, no markdown), then a blank line, then the markdown description body with a brief summary and a list of key changes.")
 if [[ -z "$result" ]]; then
 	echo "Failed to generate PR description." >&2
 	exit 1

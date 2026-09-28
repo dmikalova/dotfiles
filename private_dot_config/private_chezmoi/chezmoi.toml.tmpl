@@ -1,4 +1,8 @@
 mode = "symlink"
+# Something on this Mac (probably the endpoint/compliance agent; ~/.osquery is
+# present) resets every folder under ~ to owner-only (700). Create targets the
+# same way so chezmoi doesn't see those folders as changed.
+umask = 0o077
 {{ if eq .chezmoi.os "darwin" -}}
 sourceDir = "~/Code/github.com/dmikalova/dotfiles"
 {{ else -}}

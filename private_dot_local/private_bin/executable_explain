@@ -9,5 +9,5 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
-claude -p "Explain this shell command concisely - what it does and what each part means, no preamble: $*" \
-	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence
+claude-bare "You explain shell commands. Be concise, no preamble." \
+	"Explain this shell command - what it does and what each part means: $*"

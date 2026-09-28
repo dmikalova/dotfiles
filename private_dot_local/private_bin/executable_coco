@@ -6,15 +6,24 @@
 set -euo pipefail
 if [ "${DEBUG:=}" = true ]; then set -x; fi
 
+# Keep the AI output from the first conventional-commit title on. Drops any
+# preface and code fences, and markdown (heading, bullet, bold, backticks)
+# around the title.
 _from_first_cc_line() {
 	printf '%s\n' "$1" | awk '
 		BEGIN { found = 0 }
-		{
-			if (!found && $0 ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]/) {
+		/^[ \t]*```/ { next }
+		!found {
+			line = $0
+			sub(/^[ \t]*(#+[ \t]*|[-*][ \t]+)?/, "", line)
+			gsub(/\*\*|__|`/, "", line)
+			if (line ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]*\))?!?:/) {
 				found = 1
+				print line
 			}
-			if (found) print
+			next
 		}
+		{ print }
 	'
 }
 
@@ -52,18 +61,17 @@ git hook run --ignore-missing pre-commit
 
 # Generate commit message via AI
 echo "Generating commit message..."
-msg=$(git diff --cached | claude -p \
-	"Write a semantic commit message (conventional commits format) for this diff. Output ONLY the commit message, nothing else. Use a short subject line and optionally a body separated by a blank line." \
-	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence)
-if [[ -z "$msg" ]]; then
+raw=$(git diff --cached | claude-bare \
+	"You write git commit messages. Reply with the commit message only, as plain text: no preface, no markdown, no code fences." \
+	"Write a commit message in Conventional Commits format for the diff on stdin: a subject line of at most 72 characters starting with a type such as feat, fix, docs, refactor or chore, then optionally a blank line and a body.")
+if [[ -z "$raw" ]]; then
 	echo "Failed to generate commit message." >&2
 	exit 1
 fi
 
-# Drop any AI preface before the first conventional-commit line.
-msg="$(_from_first_cc_line "$msg")"
+msg="$(_from_first_cc_line "$raw")"
 if [[ -z "$msg" ]]; then
-	echo "AI output missing a conventional commit title." >&2
+	printf 'AI output missing a conventional commit title:\n%s\n' "$raw" >&2
 	exit 1
 fi
 

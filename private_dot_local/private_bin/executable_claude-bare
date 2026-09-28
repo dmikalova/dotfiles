@@ -1,0 +1,24 @@
+#!/bin/sh
+# Run a one-shot Claude prompt with only the context given here: no CLAUDE.md
+# or AGENTS.md, settings, memory, skills, MCP servers or tools. Stdin is passed
+# through as input. Used by coco, copr, ask and explain.
+# Usage: claude-bare <system-prompt> <prompt> [< input]
+
+set -eu
+
+if [ $# -ne 2 ]; then
+	echo "Usage: claude-bare <system-prompt> <prompt>" >&2
+	exit 1
+fi
+
+# --setting-sources '' skips user and project settings and their CLAUDE.md
+# files; --bare would too but needs ANTHROPIC_API_KEY instead of the login.
+exec claude -p "$2" \
+	--system-prompt "$1" \
+	--setting-sources '' \
+	--disable-slash-commands \
+	--strict-mcp-config \
+	--tools "" \
+	--model claude-haiku-4-5-20251001 \
+	--effort low \
+	--no-session-persistence
