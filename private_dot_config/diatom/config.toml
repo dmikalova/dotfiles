@@ -1,12 +1,16 @@
 # diatom's machine-wide config; each repo's .diatom/config.toml sets the rest.
 # The built-in defaults are in diatom's internal/config/defaults.toml.
-
 # Install each new diatom release as it comes out, and restart the scheduler
 # and panes on it. Running sessions are suspended first and resume after.
 autoUpdate = true
 
+# Skills every agent session may load, on top of its profile's own. grill-me
+# hands off to grilling, so both are listed.
+skills = ["grill-me", "grilling"]
+
 # The gate of each kind of repo that sets none of its own: go for a repo with
-# a go.mod, node for one with a package.json.
+# a go.mod, node for one with a package.json. Top-level keys go above this:
+# anything after [gates] belongs to it.
 [gates]
 go = "mage ci:check"
 node = "npm test"

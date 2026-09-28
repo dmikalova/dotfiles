@@ -88,8 +88,9 @@ gh-dmikalova-uncommitted() {
     echo "No uncommitted changes found."
 }
 
-# cd into the next cddc39 or dmikalova repo with unpushed commits. Starts after
-# the current repo and wraps around, so repeated calls walk through them all.
+# cd into the next cddc39 or dmikalova repo with unpushed commits, or, when
+# none has any, the next with uncommitted changes. Each search starts after the
+# current repo and wraps around, so repeated calls walk through them all.
 git-next-push() {
     local code="${HOME}/Code/github.com"
     local -a repos=("$code"/{cddc39,dmikalova}/*/.git(N/:h))
@@ -106,7 +107,16 @@ git-next-push() {
             return 0
         fi
     done
-    echo "No unpushed commits found."
+    for (( i = 1; i <= n; i++ )); do
+        dir=${repos[(start - 1 + i) % n + 1]}
+        count=$(git -C "$dir" status --porcelain 2>/dev/null | wc -l)
+        if (( count > 0 )); then
+            cd "$dir"
+            echo "${count} uncommitted change(s) in: ${dir#$code/}"
+            return 0
+        fi
+    done
+    echo "No unpushed commits or uncommitted changes found."
 }
 
 # Create a new directory and enter it
