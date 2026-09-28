@@ -22,6 +22,9 @@ keybind = super+z=text:\x1f
 keybind = super+shift+z=csi:122;10u
 # cmd+c copies a selection, and otherwise reaches the app, as diatom's copy.
 keybind = performable:super+c=copy_to_clipboard
+# cmd+a reaches the app, as select all in diatom's text boxes, rather than
+# selecting the whole screen. A shell gets nothing from it.
+keybind = super+a=unbind
 
 window-padding-x = 8
 window-padding-y = 8
