@@ -1,9 +1,22 @@
 #!/bin/zsh
-# Create a PR with an AI-generated title/description.
-# Requires all changes to be already committed.
+# Create or update a PR with an AI-generated title/description and CircleCI
+# `ci:` labels. Requires all changes to be already committed.
+#
+# Usage: copr [-h|--help] [-d|--draft] [-l|--label <label>]...
+#   -d, --draft  Create the PR as a draft.
+#   -l, --label  Label to set; repeat or comma-separate for several. Skips the
+#                label menu.
+# Without -l, repos with `ci:` labels get a menu of them (↑/↓, space, enter)
+# with Claude's suggestions pre-selected, or the PR's current labels if it
+# already exists. CircleCI reads labels on PR creation and on push, so labels
+# are set before anything is pushed to an existing PR.
 
 set -euo pipefail
 if [ "${DEBUG:=}" = true ]; then set -x; fi
+
+_usage() {
+	sed -n 's/^# \{0,1\}//; 5,8p' "$ZSH_ARGZERO"
+}
 
 _from_first_cc_line() {
 	printf '%s\n' "$1" | awk '
@@ -16,6 +29,28 @@ _from_first_cc_line() {
 		}
 	'
 }
+
+help=()
+draft=()
+label_args=()
+zparseopts -D -E -F -- h=help -help=help d=draft -draft=draft \
+	l+:=label_args -label+:=label_args || { _usage >&2; exit 1; }
+if ((${#help})); then
+	_usage
+	exit 0
+fi
+if (($#)); then
+	_usage >&2
+	exit 1
+fi
+# label_args alternates flag, value; values may be comma-separated, and
+# --label=x arrives as "=x".
+labels_given=0
+labels=()
+for ((i = 2; i <= ${#label_args}; i += 2)); do
+	labels_given=1
+	labels+=(${(s:,:)${label_args[i]#=}})
+done
 
 # Don't run from the default branch
 current_branch=$(git branch --show-current)
@@ -32,13 +67,72 @@ if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
 	exit 1
 fi
 
+diff=$(git diff "$default_branch"...HEAD)
+existing_pr=$(gh pr view --json number --jq .number 2>/dev/null || true)
+current_labels=()
+if [[ -n "$existing_pr" ]]; then
+	current_labels=(${(f)"$(gh pr view "$existing_pr" --json labels --jq '.labels[].name')"})
+fi
+
+# Pick labels from a menu of the repo's ci: labels, one "name<TAB>description"
+# per line.
+ci_labels=$(gh label list --search 'ci:' --limit 200 --json name,description \
+	--jq '.[] | select(.name | startswith("ci:")) | "\(.name)\t\(.description)"' 2>/dev/null || true)
+if ((!labels_given)) && [[ -n "$ci_labels" ]]; then
+	ci_names=(${(f)"$(cut -f1 <<<"$ci_labels")"})
+
+	echo "Suggesting labels..."
+	suggested=$(printf 'Labels:\n%s\n\nDiff:\n%s\n' "$ci_labels" "$diff" | claude -p \
+		"These are CircleCI labels for a GitHub PR, each with its effect, followed by the PR's diff. Suggest the labels that fit this diff. Most PRs need none; only suggest a label that skips tests or deploys when the diff clearly calls for it. Output ONLY label names, one per line, or nothing if none fit." \
+		--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence || true)
+	# Keep only real label names.
+	suggested=(${(f)suggested})
+	suggested=(${suggested:*ci_names})
+
+	# Menu items are "name  description<TAB>name": gum shows the part before the
+	# tab and prints the part after it. Pre-selected items are read from stdin.
+	width=0
+	for name in $ci_names; do ((${#name} > width)) && width=${#name}; done
+	items=()
+	preselect=()
+	[[ -n "$existing_pr" ]] && start=(${current_labels:*ci_names}) || start=($suggested)
+	while IFS=$'\t' read -r name description; do
+		shown="${(r:width:)name}  ${description}"
+		items+=("${shown}"$'\t'"${name}")
+		((${start[(Ie)$name]})) && preselect+=("$shown")
+	done <<<"$ci_labels"
+
+	header="CI labels (space to select, enter to confirm)"
+	if [[ -n "$existing_pr" ]] && ((${#suggested})); then
+		header+=$'\n'"Claude suggests: ${(j:, :)suggested}"
+	fi
+	labels=(${(f)"$(print -rl -- "${preselect[@]}" | gum choose --no-limit \
+		--height=20 --label-delimiter=$'\t' --header="$header" "${items[@]}")"})
+fi
+
+# Existing PR: set labels before pushing so the pipeline started by the push
+# sees them. Only ci: labels picked in the menu are removed when unselected.
+if [[ -n "$existing_pr" ]]; then
+	add=(${labels:|current_labels})
+	if ((labels_given)); then
+		remove=()
+	else
+		remove=(${${current_labels:*ci_names}:|labels})
+	fi
+	if ((${#add} + ${#remove})); then
+		echo "Updating labels on PR #$existing_pr..."
+		gh pr edit "$existing_pr" ${add:+--add-label} ${add:+${(j:,:)add}} \
+			${remove:+--remove-label} ${remove:+${(j:,:)remove}}
+	fi
+fi
+
 # Push current branch
 echo "Pushing..."
 git push -u origin HEAD
 
 # Generate PR title and body via AI in a single call
 echo "Generating PR title and description..."
-result=$(git diff "$default_branch"...HEAD | claude -p \
+result=$(printf '%s\n' "$diff" | claude -p \
 	"Write a PR title and description for this diff. Summarize these changes with high information density, covering all major points without conversational filler. Format: first line is the title (semantic/conventional commits format, no quotes), then a blank line, then the markdown description body with a brief summary and list of key changes. Output ONLY this, nothing else." \
 	--model claude-haiku-4-5-20251001 --effort low --tools "" --no-session-persistence)
 if [[ -z "$result" ]]; then
@@ -66,14 +160,15 @@ if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|rev
 fi
 
 echo "\nTitle:\n$title"
-echo "\nDescription:\n$body\n"
+echo "\nDescription:\n$body"
+echo "\nLabels:\n${(j:, :)labels:-none}\n"
 
 # Create or update the PR
-existing_pr=$(gh pr view --json number --jq .number 2>/dev/null || true)
 if [[ -n "$existing_pr" ]]; then
 	echo "Updating existing PR #$existing_pr..."
 	gh pr edit "$existing_pr" --title "$title" --body "$body"
 else
-	gh pr create --base "$default_branch" --assignee @me \
+	gh pr create ${draft:+--draft} --base "$default_branch" --assignee @me \
+		${labels:+--label} ${labels:+${(j:,:)labels}} \
 		--title "$title" --body "$body"
 fi

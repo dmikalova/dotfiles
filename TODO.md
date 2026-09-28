@@ -7,6 +7,14 @@
 - Why does `AWS_PROFILE=sb   yarn nx run infra-<project>:diff-sb` have to declare sb twice?
 -
 
+- meetings:
+  - Riley
+  - Ben
+  - Rob
+  - Chris Watson
+  - Alex Saucet
+  - Hailey Willis
+
 ## Home
 - can chezmoi run directly off of github link?
 - alternative to obsidian?

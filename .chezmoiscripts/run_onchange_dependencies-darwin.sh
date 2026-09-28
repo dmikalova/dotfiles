@@ -32,6 +32,7 @@ brew install \
 	"git-delta" \
 	"gnupg" \
 	"golang" \
+	"gum" \
 	"govulncheck" \
 	"hunk" \
 	"jq" \
@@ -62,9 +63,11 @@ brew install --cask \
 	"font-sauce-code-pro-nerd-font" \
 	"hammerspoon" \
 	"linearmouse" \
+	"logitune" \
 	"obsidian" \
 	"signal" \
-	"visual-studio-code"
+	"visual-studio-code" \
+	"zoom"
 
 # The shared checks from project-standards, run by lefthook in projects
 # without go.mod. Rerun `go install ...@latest` to update it.
