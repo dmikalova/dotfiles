@@ -119,6 +119,19 @@ git-next-push() {
     echo "No unpushed commits or uncommitted changes found."
 }
 
+# Open the files in a directory (default: current) in VS Code, at most 25.
+# Subdirectories and hidden files are skipped.
+code-files() {
+    local dir="${1:-.}" max=25
+    local -a files=("$dir"/*(N.n))
+    if (( ! ${#files} )); then
+        echo "No files in: $dir" >&2
+        return 1
+    fi
+    (( ${#files} > max )) && echo "Opening the first ${max} of ${#files} files in: $dir" >&2
+    code "${files[@]:0:$max}"
+}
+
 # Create a new directory and enter it
 mkd() {
     mkdir -p "$@"

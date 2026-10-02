@@ -39,6 +39,9 @@ export SOPS_AGE_KEY_FILE="${HOME}/.config/sops/key.txt"
 # pager: moor, except delta keeps less for n/N jumps between files
 export PAGER="moor"
 export DELTA_PAGER="less -R"
+# aws: print to the terminal. cli_pager in ~/.aws/config is per profile and
+# named profiles don't inherit it from [default].
+export AWS_PAGER=""
 
 # bat: colored man pages
 export MANPAGER="sh -c 'col -bx | bat --language man --plain'"

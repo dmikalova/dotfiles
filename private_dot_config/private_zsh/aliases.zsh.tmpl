@@ -39,6 +39,8 @@ alias czr='chezmoi re-add'
 alias czs='chezmoi status'
 
 # git
+alias gce='git commit --allow-empty -m "ci: trigger pipeline" && git push'
+alias gdm='git diff main'
 alias gnp='git-next-push'
 alias gs='git status'
 alias ge='git commit --amend --no-edit && git push -f'
@@ -66,4 +68,5 @@ alias vim='nvim'
 YSU_IGNORED_ALIASES+=(vi vim)
 
 # vscode
+alias cf='code-files'
 alias cg='code $(git rev-parse --show-toplevel)'

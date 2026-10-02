@@ -21,7 +21,7 @@ local apps = {
   { "I", "Discord",            "personal" },
   { "K", "Slack",              "work" },
   { "M", messagesPWABundleID,  "personal" },
-  { "O", "Obsidian",           "personal" },
+  { "O", "Notion",             "work" },
   { "P", "Preview",            "any" },
   { "S", "System Settings",    "any" },
   { "T", "Ghostty",            "both" },

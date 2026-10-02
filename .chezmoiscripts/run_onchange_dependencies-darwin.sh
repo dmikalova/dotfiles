@@ -23,6 +23,7 @@ brew install \
 	"deno" \
 	"difftastic" \
 	"direnv" \
+	"docker" \
 	"eza" \
 	"fd" \
 	"fzf" \
@@ -53,6 +54,7 @@ brew install \
 	"sops" \
 	"starship" \
 	"tree-sitter-cli" \
+	"uv" \
 	"zellij" \
 	"zoxide"
 
@@ -64,6 +66,7 @@ brew install --cask \
 	"hammerspoon" \
 	"linearmouse" \
 	"logitune" \
+	"notion" \
 	"obsidian" \
 	"signal" \
 	"visual-studio-code" \

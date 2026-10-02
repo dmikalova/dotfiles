@@ -1,21 +1,11 @@
 # To do
 
-- [Onboarding checklist](https://app.notion.com/p/goodship-io/Onboarding-checklist-David-Mikalova-3e224418dc93801d9bded147623f628e)
-
-- time off
-- What does it mean that duck db is columnar compared to postgres
-- Why does `AWS_PROFILE=sb   yarn nx run infra-<project>:diff-sb` have to declare sb twice?
--
-
-- meetings:
-  - Riley
-  - Ben
-  - Rob
-  - Chris Watson
-  - Alex Saucet
-  - Hailey Willis
-
 ## Home
+
+- quiet keyboard setup for office
+- ghostty opening double with hammerspoon
+- Prevent AWS privilege escalation
+- project standards should add more info on what is changed - eg update gitignore, update go mod to version xyz - https://github.com/dmikalova/diatom/commit/f4de75664458f4be29826b601a9b9c637865c28b
 - can chezmoi run directly off of github link?
 - alternative to obsidian?
 - bitwarden as ssh server
@@ -45,45 +35,3 @@ Merge Conflict Blockers: Alert the author if an open PR suddenly develops merge 
 Stale Review Digests: Instead of real-time pings for old PRs, use a cron job to send a single daily digest summarizing PRs that have been waiting for a review for more than 48 hours.
 
 Page status: if page is down ping discord
-
-Teams:
-- Alex Saucet leads the Procurement team
-- Chris Watson leads the Orchestration team
-- Hailey and David Golke work on Laney, the GoodShip's AI offering. Iku works on Laney and DIP (our team)
-- DIP is Data/Infra/Pipelines. that would be you, me, Teban. though we will be all up in everyone's business all the time :joy:
-- Rob, Ben and Riley work on Analytics Engineering, which is ETL implementation and maintenance
-
-
-
-dip:from firefighters to force multipliers
-
-local devx - running mmultiple copies locally (teban)
-cicd
-SLAs/metrics
-AAR - after action reports (from outages)
-status page
-segregate data to separate aws accounts
-ephemeral environments
-data and ai
-test db instead of local data
-temporal and nx
-nextjs zones
-fan out and parallelize tests in cicd
-- codeowners for infra work - automatically ping in slack
-
-pure infra:
-- stand up stg env
-- currently sandbox (tag PR) and production
-- stg on PoCs and sales accounts
-- presales env - same product, different data
-- incident management
--
-
-- psql 15
-- learn more about motherduck
-- supervisord
-- ecs scaling
-- get off of sst.dev
-- https://linear.app/goodship/issue/DIP-2647/in-app-outage-banner-maintenance-mode-ability-to-shut-off-traffic-to
-  - goodship config > maintenance mode
-  - shut it down mode > deploy level script

@@ -1,6 +1,7 @@
 #!/bin/zsh
 # Create or update a PR with an AI-generated title/description and CircleCI
-# `ci:` labels. Requires all changes to be already committed.
+# `ci:` labels. Requires all changes to be already committed. If the branch's
+# PR is merged or closed, a new PR is created instead.
 #
 # Usage: copr [-h|--help] [-d|--draft] [-l|--label <label>]...
 #   -d, --draft  Create the PR as a draft.
@@ -15,7 +16,7 @@ set -euo pipefail
 if [ "${DEBUG:=}" = true ]; then set -x; fi
 
 _usage() {
-	sed -n 's/^# \{0,1\}//; 5,8p' "$ZSH_ARGZERO"
+	sed -n 's/^# \{0,1\}//; 6,9p' "$ZSH_ARGZERO"
 }
 
 # Keep the AI output from the first conventional-commit title on. Drops any
@@ -75,8 +76,23 @@ if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
 	exit 1
 fi
 
-diff=$(git diff "$default_branch"...HEAD)
-existing_pr=$(gh pr view --json number --jq .number 2>/dev/null || true)
+# gh pr view also finds the branch's merged or closed PR. Only an open PR is
+# updated; otherwise a new PR is created.
+existing_pr=""
+diff_base="$default_branch"
+read -r pr_number pr_state pr_head <<<"$(gh pr view --json number,state,headRefOid \
+	--jq '"\(.number) \(.state) \(.headRefOid)"' 2>/dev/null || true)"
+if [[ "$pr_state" == OPEN ]]; then
+	existing_pr="$pr_number"
+elif [[ -n "$pr_state" ]]; then
+	echo "PR #$pr_number is ${(L)pr_state}; creating a new PR."
+	# Describe only the commits after the old PR's head. A squash merge leaves
+	# them in the default branch diff.
+	if git merge-base --is-ancestor "$pr_head" HEAD 2>/dev/null; then
+		diff_base="$pr_head"
+	fi
+fi
+diff=$(git diff "$diff_base"...HEAD)
 current_labels=()
 if [[ -n "$existing_pr" ]]; then
 	current_labels=(${(f)"$(gh pr view "$existing_pr" --json labels --jq '.labels[].name')"})
@@ -161,7 +177,7 @@ if [[ "$body" == "$result" ]]; then
 fi
 
 if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
-	title="$(git log --format=%s "$default_branch"...HEAD | head -n 1)"
+	title="$(git log --format=%s "$diff_base"...HEAD | head -n 1)"
 	if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
 		title="chore: summarize branch changes"
 	fi

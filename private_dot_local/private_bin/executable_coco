@@ -61,11 +61,10 @@ git hook run --ignore-missing pre-commit
 
 # Generate commit message via AI
 echo "Generating commit message..."
-raw=$(git diff --cached | claude-bare \
-	"You write git commit messages. Reply with the commit message only, as plain text: no preface, no markdown, no code fences." \
-	"Write a commit message in Conventional Commits format for the diff on stdin: a subject line of at most 72 characters starting with a type such as feat, fix, docs, refactor or chore, then optionally a blank line and a body.")
-if [[ -z "$raw" ]]; then
-	echo "Failed to generate commit message." >&2
+if ! raw=$(git diff --cached | claude-bare \
+	"You write git commit messages. ..." \
+	"Write a commit message in Conventional Commits format ..."); then
+	printf 'claude-bare failed:\n%s\n' "$raw" >&2
 	exit 1
 fi
 
