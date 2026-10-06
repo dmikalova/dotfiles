@@ -17,7 +17,8 @@ aws-sso-util configure populate \
 	--sso-region us-west-2 \
 	--sso-start-url https://d-9267a1970f.awsapps.com/start \
 	--account-name-case lower \
-	--role-name-case lower
+	--role-name-case lower \
+	--no-credential-process
 
 # shorten account names
 sed -i '' \
@@ -34,5 +35,21 @@ sed -i '' \
 	-e 's/\.administratoraccess/-admin/g' \
 	"$HOME/.aws/config"
 
-# credential_process needs an absolute path; bare "aws-sso-util" isn't resolved via PATH
-sed -i '' 's|credential_process = aws-sso-util|credential_process = /opt/homebrew/bin/aws-sso-util|g' "$HOME/.aws/config"
+# use a shared sso-session so the AWS CLI gets a refresh token and renews the
+# access token without a browser login
+# awsume has no SSO support, only credential_process. The AWS CLI and SDKs
+# resolve SSO before credential_process, so this line is used by awsume alone.
+# It reads the profile from AWS_PROFILE, which awsume sets.
+sed -i '' \
+	-e '/^sso_start_url = /d' \
+	-e 's|^sso_region = .*|sso_session = goodship\
+credential_process = /opt/homebrew/bin/aws configure export-credentials --format process|' \
+	"$HOME/.aws/config"
+
+cat >>"$HOME/.aws/config" <<'EOF'
+
+[sso-session goodship]
+sso_start_url = https://d-9267a1970f.awsapps.com/start
+sso_region = us-west-2
+sso_registration_scopes = sso:account:access
+EOF

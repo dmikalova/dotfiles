@@ -228,6 +228,27 @@ local function launchOrFocusInSpace(app, spaceType)
     return
   end
 
+  -- Already in the app: rotate through all of its windows, including
+  -- non-standard ones (e.g. a Slack huddle) that Cmd+` skips
+  local focusedWindow = hs.window.focusedWindow()
+  if focusedWindow and appMatches(focusedWindow:application(), app) then
+    local appWindows = {}
+    for _, w in ipairs(hs.window.allWindows()) do
+      if appMatches(w:application(), app) and w:isVisible() then
+        table.insert(appWindows, w)
+      end
+    end
+    if #appWindows > 1 then
+      table.sort(appWindows, function(a, b) return a:id() < b:id() end)
+      for i, w in ipairs(appWindows) do
+        if w:id() == focusedWindow:id() then
+          appWindows[(i % #appWindows) + 1]:focus()
+          return
+        end
+      end
+    end
+  end
+
   -- App is running - use launchOrFocus to switch to its window
   launchOrFocusApp(app)
   hs.timer.usleep(300000)
