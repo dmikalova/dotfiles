@@ -1,11 +1,15 @@
 -- Space navigation and window moving
 
--- Send Ctrl+Arrow keystroke for space switching
+-- Send Ctrl+Arrow keystroke for space switching. Flags are set explicitly on
+-- every event: without a mods table, Hammerspoon derives flags from a single
+-- private CGEventSource that lives until reload, so if its tracked modifier
+-- state drifts the arrow goes out with the wrong modifiers and macOS ignores
+-- it until hs.reload() recreates the source. Arrow keys carry fn natively.
 local function sendCtrlArrow(direction)
-  hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, true):post()
-  hs.eventtap.event.newKeyEvent(direction, true):post()
-  hs.eventtap.event.newKeyEvent(direction, false):post()
-  hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, false):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl" }, "ctrl", true):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, direction, true):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, direction, false):post()
+  hs.eventtap.event.newKeyEvent({}, "ctrl", false):post()
 end
 
 -- Move focused window to adjacent space using click-drag

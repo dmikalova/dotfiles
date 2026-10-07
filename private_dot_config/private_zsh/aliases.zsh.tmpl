@@ -39,7 +39,7 @@ alias czr='chezmoi re-add'
 alias czs='chezmoi status'
 
 # diatom - go -C builds from the module dir, so this works from any cwd
-alias diatom-local='go -C ~/Code/github.com/dmikalova/diatom build -o ~/.local/bin/diatom ./cmd/diatom && diatom'
+alias diatom-local='go -C ~/Code/github.com/dmikalova/diatom install ./cmd/diatom && diatom'
 
 # git
 alias gce='git commit --allow-empty -m "ci: trigger pipeline" && git push'

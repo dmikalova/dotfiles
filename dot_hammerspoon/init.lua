@@ -5,7 +5,7 @@ require("spaces")
 require("windows")
 local clipboard = require("clipboard")
 
--- Ctrl+H: Reload Hammerspoon config
+-- Alt+H: Reload Hammerspoon config
 hs.hotkey.bind("alt", "H", function()
   hs.reload()
 end)
@@ -26,3 +26,6 @@ end)
 
 -- Cmd+Alt+V: Show clipboard history
 hs.hotkey.bind({ "cmd", "alt" }, "V", clipboard.show)
+
+-- Post a notification banner once the config has finished loading
+hs.notify.new({ title = "Hammerspoon", informativeText = "Config loaded" }):send()

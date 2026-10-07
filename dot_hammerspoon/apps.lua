@@ -7,7 +7,9 @@
 -- Types: "work", "personal", "any", "both", "space-args", "reserved"
 --   work/personal: launch in designated space (work=left, personal=right)
 --   any: switch to app regardless of current space
---   both: opens new instance if no window on current space
+--   both: opens new window if no window on current space. Optional 4th
+--     element is a menu path (e.g. {"File", "New Window"}) used to open the
+--     window in the running instance instead of starting a new process
 --   space-args: like "both", but launches with space-specific args (4th element)
 --   reserved: key used elsewhere (noop)
 
@@ -24,7 +26,7 @@ local apps = {
   { "O", "Notion",             "work" },
   { "P", "Preview",            "any" },
   { "S", "System Settings",    "any" },
-  { "T", "Ghostty",            "both" },
+  { "T", "Ghostty",            "both", { "File", "New Window" } },
   { "V", "Code",               "both" },
   { "Y", "YouTube Music",      "personal" },
   { "X", "Clipboard",          "reserved" },
@@ -98,12 +100,16 @@ local function getSpaceIndex(targetSpace)
   return nil
 end
 
--- Send Ctrl+Arrow keystroke for space switching
+-- Send Ctrl+Arrow keystroke for space switching. Flags are set explicitly on
+-- every event: without a mods table, Hammerspoon derives flags from a single
+-- private CGEventSource that lives until reload, so if its tracked modifier
+-- state drifts the arrow goes out with the wrong modifiers and macOS ignores
+-- it until hs.reload() recreates the source. Arrow keys carry fn natively.
 local function sendCtrlArrow(arrowKey)
-  hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, true):post()
-  hs.eventtap.event.newKeyEvent(arrowKey, true):post()
-  hs.eventtap.event.newKeyEvent(arrowKey, false):post()
-  hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, false):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl" }, "ctrl", true):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, arrowKey, true):post()
+  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, arrowKey, false):post()
+  hs.eventtap.event.newKeyEvent({}, "ctrl", false):post()
 end
 
 -- Switch spaces using Ctrl+Arrow for smooth slide animation
@@ -328,12 +334,42 @@ local function launchOrFocusInSpace(app, spaceType)
   end
 end
 
+-- Open a new window in the running instance via its menu, then focus the
+-- window once it appears. Returns false if the app isn't running or the menu
+-- item can't be selected, so the caller can fall back to a new instance.
+local function openWindowViaMenu(app, menuPath)
+  local appObj = findApp(app)
+  if not appObj then return false end
+
+  local existing = {}
+  for _, w in ipairs(appObj:allWindows()) do existing[w:id()] = true end
+
+  if not appObj:selectMenuItem(menuPath) then return false end
+
+  local newWin = nil
+  hs.timer.waitUntil(function()
+    for _, w in ipairs(appObj:allWindows()) do
+      if not existing[w:id()] then
+        newWin = w
+        return true
+      end
+    end
+    return false
+  end, function()
+    newWin:focus()
+  end, 0.05)
+  return true
+end
+
 -- Launch, focus, or rotate - but only consider windows on current space
--- Opens new instance if no windows on current space
-local function launchOrFocusOrRotateCurrentSpace(app)
+-- Opens new window (via menuPath if given) if no windows on current space
+local function launchOrFocusOrRotateCurrentSpace(app, menuPath)
   local windowsOnSpace = getWindowsOnCurrentSpace(app)
 
   if #windowsOnSpace == 0 then
+    if menuPath and openWindowViaMenu(app, menuPath) then
+      return
+    end
     -- No windows on current space, open new instance
     if isBundleID(app) then
       hs.application.launchOrFocusByBundleID(app)
@@ -370,8 +406,9 @@ for _, shortcut in ipairs(apps) do
   if appType == "reserved" then
     -- noop - key used elsewhere
   elseif appType == "both" then
+    local menuPath = shortcut[4]
     hs.hotkey.bind("alt", key, function()
-      launchOrFocusOrRotateCurrentSpace(app)
+      launchOrFocusOrRotateCurrentSpace(app, menuPath)
     end)
   elseif appType == "space-args" then
     local spaceArgs = shortcut[4]

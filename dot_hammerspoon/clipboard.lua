@@ -61,5 +61,7 @@ end
 local M = {}
 
 M.show = showClipboard
+-- Keep a reference so the timer isn't garbage collected (which stops it)
+M.watcher = clipWatcher
 
 return M
