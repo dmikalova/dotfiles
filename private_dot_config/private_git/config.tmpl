@@ -34,6 +34,10 @@
 [diff "sops"]
 	textconv = "sops -d"
 
+[fetch]
+	prune = true
+	pruneTags = true
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -76,14 +80,21 @@
 	diff = delta --paging=never
 
 [pull]
-	rebase = false
+	rebase = true
 
 [push]
 	autoSetupRemote = true
 	default = current
 
+[rebase]
+	autoSquash = true
+	autoStash = true
+	# Rebasing a branch also moves any stacked branches that point into it.
+	updateRefs = true
+
 [rerere]
 	enabled = true
+	autoUpdate = true
 
 [tag]
 	gpgsign = "true"

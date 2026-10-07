@@ -8,6 +8,9 @@ autoUpdate = true
 # hands off to grilling, so both are listed.
 skills = ["grill-me", "grilling"]
 
+# The editor to use for opening files.
+editor = "code"
+
 # The gate of each kind of repo that sets none of its own: go for a repo with
 # a go.mod, node for one with a package.json. Top-level keys go above this:
 # anything after [gates] belongs to it.
@@ -19,3 +22,4 @@ node = "npm test"
 # regenerate files, so agents never run it themselves.
 [fixes]
 go = "mage ci:fix"
+

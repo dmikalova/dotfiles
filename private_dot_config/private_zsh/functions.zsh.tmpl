@@ -75,6 +75,57 @@ git-tag() {
     git push origin "$env" --no-verify
 }
 
+# Bring the current branch up to date, keeping history linear and the next push
+# a fast-forward. Absorbs rewrites made by the Update with rebase button.
+git-update() {
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+
+    local branch
+    branch=$(git branch --show-current) || return 1
+    if [[ -z "$branch" ]]; then
+        echo "git-update: detached HEAD" >&2
+        return 1
+    fi
+
+    local remote
+    remote=$(git config "branch.${branch}.remote") || remote=origin
+
+    # Read the old remote tip before fetching so a rewrite is detectable.
+    local old new
+    old=$(git rev-parse --verify --quiet "refs/remotes/${remote}/${branch}")
+    git fetch --prune "$remote" || return 1
+    new=$(git rev-parse --verify --quiet "refs/remotes/${remote}/${branch}")
+
+    if [[ -n "$new" && "$new" != "$old" ]]; then
+        if [[ -z "$old" ]] || git merge-base --is-ancestor "$old" "$new"; then
+            git rebase "$new" || return 1
+        else
+            # The remote branch was rewritten, so replay only the commits that
+            # the old remote tip did not already have.
+            git rebase --onto "$new" "$old" "$branch" || return 1
+        fi
+    fi
+
+    # origin/HEAD is absent in some clones, so refresh it before reading.
+    git remote set-head "$remote" --auto >/dev/null 2>&1
+    local default
+    default=$(git symbolic-ref --short "refs/remotes/${remote}/HEAD" 2>/dev/null)
+    : "${default:=${remote}/main}"
+
+    [[ "$default" == "${remote}/${branch}" ]] && return 0
+    git merge-base --is-ancestor "$default" HEAD && return 0
+
+    # Rebasing a published branch onto the default branch would rewrite commits
+    # the remote already has, which only a force push could deliver.
+    if [[ -n "$new" ]]; then
+        echo "git-update: ${branch} is behind ${default}." >&2
+        echo "git-update: use Update with rebase on the pull request, then run gu again." >&2
+        return 1
+    fi
+
+    git rebase "$default"
+}
+
 # cd into the first dmikalova repo with uncommitted changes
 gh-dmikalova-uncommitted() {
     local base_dir="${HOME}/Code/github.com/dmikalova"
