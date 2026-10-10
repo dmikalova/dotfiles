@@ -53,8 +53,10 @@ brew install \
 	"shfmt" \
 	"sops" \
 	"starship" \
+	"terramate" \
 	"tree-sitter-cli" \
 	"uv" \
+	"xorriso" \
 	"zellij" \
 	"zoxide"
 
@@ -63,6 +65,7 @@ brew install --cask \
 	"discord" \
 	"docker-desktop" \
 	"font-sauce-code-pro-nerd-font" \
+	"google-cloud-sdk" \
 	"hammerspoon" \
 	"linearmouse" \
 	"logitune" \

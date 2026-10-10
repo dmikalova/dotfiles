@@ -1,5 +1,7 @@
 -- Load modules
 require("hs.ipc")
+-- Must come first: it wraps hs.hotkey.bind to instrument every later binding
+require("diagnostics")
 require("apps")
 require("spaces")
 require("windows")
