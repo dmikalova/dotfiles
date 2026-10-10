@@ -3,33 +3,36 @@
 # `ci:` labels. Requires all changes to be already committed. If the branch's
 # PR is merged or closed, a new PR is created instead.
 #
-# Usage: copr [-h|--help] [-d|--draft] [-l|--label <label>]...
+# Usage: copr [-h|--help] [-d|--draft] [-y|--yes] [-l|--label <label>]...
 #   -d, --draft  Create the PR as a draft.
+#   -y, --yes    Take the pre-selected labels; skips the label menu.
 #   -l, --label  Label to set; repeat or comma-separate for several. Skips the
 #                label menu.
-# Without -l, repos with `ci:` labels get a menu of them (↑/↓, space, enter)
-# with Claude's suggestions pre-selected, or the PR's current labels if it
-# already exists. CircleCI reads labels on PR creation and on push, so labels
-# are set before anything is pushed to an existing PR.
+# Without -l or -y, repos with `ci:` labels get a menu of them (↑/↓, space,
+# enter) with Claude's suggestions pre-selected, or the PR's current labels if
+# it already exists. CircleCI reads labels on PR creation and on push, so
+# labels are set before anything is pushed to an existing PR.
 
 set -euo pipefail
 if [ "${DEBUG:=}" = true ]; then set -x; fi
 
 _usage() {
-	sed -n 's/^# \{0,1\}//; 6,9p' "$ZSH_ARGZERO"
+	sed -n 's/^# \{0,1\}//; 6,10p' "$ZSH_ARGZERO"
 }
+
+_cc_re='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]*\))?!?:'
 
 # Keep the AI output from the first conventional-commit title on. Drops any
 # preface and markdown (heading, bullet, bold, backticks) around the title; the
 # body is markdown and kept as is.
 _from_first_cc_line() {
-	printf '%s\n' "$1" | awk '
+	printf '%s\n' "$1" | awk -v re="$_cc_re" '
 		BEGIN { found = 0 }
 		!found {
 			line = $0
 			sub(/^[ \t]*(#+[ \t]*|[-*][ \t]+)?/, "", line)
 			gsub(/\*\*|__|`/, "", line)
-			if (line ~ /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]*\))?!?:/) {
+			if (line ~ re) {
 				found = 1
 				print line
 			}
@@ -39,11 +42,28 @@ _from_first_cc_line() {
 	'
 }
 
+# The other half of the split: everything the AI wrote before the title.
+_before_first_cc_line() {
+	printf '%s\n' "$1" | awk -v re="$_cc_re" '
+		{
+			line = $0
+			sub(/^[ \t]*(#+[ \t]*|[-*][ \t]+)?/, "", line)
+			gsub(/\*\*|__|`/, "", line)
+			if (line ~ re) { exit }
+			print $0
+		}
+	'
+}
+
 help=()
 draft=()
+yes=()
 label_args=()
-zparseopts -D -E -F -- h=help -help=help d=draft -draft=draft \
-	l+:=label_args -label+:=label_args || { _usage >&2; exit 1; }
+zparseopts -D -E -F -- h=help -help=help d=draft -draft=draft y=yes -yes=yes \
+	l+:=label_args -label+:=label_args || {
+	_usage >&2
+	exit 1
+}
 if ((${#help})); then
 	_usage
 	exit 0
@@ -76,10 +96,14 @@ if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
 	exit 1
 fi
 
+# A stale local default branch puts the merge base far back and pulls everyone
+# else's merged work into the diff.
+git fetch --quiet origin
+
 # gh pr view also finds the branch's merged or closed PR. Only an open PR is
 # updated; otherwise a new PR is created.
 existing_pr=""
-diff_base="$default_branch"
+diff_base="origin/$default_branch"
 read -r pr_number pr_state pr_head <<<"$(gh pr view --json number,state,headRefOid \
 	--jq '"\(.number) \(.state) \(.headRefOid)"' 2>/dev/null || true)"
 if [[ "$pr_state" == OPEN ]]; then
@@ -98,40 +122,88 @@ if [[ -n "$existing_pr" ]]; then
 	current_labels=(${(f)"$(gh pr view "$existing_pr" --json labels --jq '.labels[].name')"})
 fi
 
-# Pick labels from a menu of the repo's ci: labels, one "name<TAB>description"
-# per line.
+# The repo's ci: labels, one "name<TAB>description" per line.
 ci_labels=$(gh label list --search 'ci:' --limit 200 --json name,description \
 	--jq '.[] | select(.name | startswith("ci:")) | "\(.name)\t\(.description)"' 2>/dev/null || true)
-if ((!labels_given)) && [[ -n "$ci_labels" ]]; then
+ci_names=()
+want_labels=0
+if [[ -n "$ci_labels" ]]; then
 	ci_names=(${(f)"$(cut -f1 <<<"$ci_labels")"})
-
-	echo "Suggesting labels..."
-	suggested=$(printf 'Labels:\n%s\n\nDiff:\n%s\n' "$ci_labels" "$diff" | claude-bare \
-		"You pick GitHub PR labels. Reply with label names only, one per line, as plain text, or with nothing if none fit." \
-		"Stdin has CircleCI labels for a GitHub PR, each with its effect, followed by the PR's diff. Suggest the labels that fit this diff. Most PRs need none; only suggest a label that skips tests or deploys when the diff clearly calls for it." || true)
-	# Keep only real label names.
-	suggested=(${(f)suggested})
-	suggested=(${suggested:*ci_names})
-
-	# Menu items are "name  description<TAB>name": gum shows the part before the
-	# tab and prints the part after it. Pre-selected items are read from stdin.
-	width=0
-	for name in $ci_names; do ((${#name} > width)) && width=${#name}; done
-	items=()
-	preselect=()
-	[[ -n "$existing_pr" ]] && start=(${current_labels:*ci_names}) || start=($suggested)
-	while IFS=$'\t' read -r name description; do
-		shown="${(r:width:)name}  ${description}"
-		items+=("${shown}"$'\t'"${name}")
-		((${start[(Ie)$name]})) && preselect+=("$shown")
-	done <<<"$ci_labels"
-
-	header="CI labels (space to select, enter to confirm)"
-	if [[ -n "$existing_pr" ]] && ((${#suggested})); then
-		header+=$'\n'"Claude suggests: ${(j:, :)suggested}"
+	if ((! labels_given)); then
+		want_labels=1
 	fi
-	labels=(${(f)"$(print -rl -- "${preselect[@]}" | gum choose --no-limit \
-		--height=20 --label-delimiter=$'\t' --header="$header" "${items[@]}")"})
+fi
+
+# One AI call for the title, body and labels: the diff is long, and reading it
+# twice doubled the wait. Runs before the push so labels reach the pipeline.
+echo "Generating PR title and description..."
+system="You write GitHub pull request titles and descriptions. Reply with the asked-for lines only: no preface, no code fence around the reply."
+task="Write a PR title and description for the diff on stdin. Summarize the changes with high information density, covering all major points without conversational filler. Format: first line is the title in Conventional Commits format (no quotes, no markdown), then a blank line, then the markdown description body with a brief summary and a list of key changes."
+input="$diff"
+if ((want_labels)); then
+	task="Stdin has the repo's CircleCI labels, each with its effect, followed by the PR's diff. Reply with, in order: a line \"Labels: <comma-separated label names, or none>\", then the PR title in Conventional Commits format (no quotes, no markdown), then a blank line, then the markdown description body with a brief summary and a list of key changes. Summarize the changes with high information density, covering all major points without conversational filler. Most PRs need no label; only pick a label that skips tests or deploys when the diff clearly calls for it."
+	input=$(printf 'CI labels:\n%s\n\nDiff:\n%s\n' "$ci_labels" "$diff")
+fi
+result=$(printf '%s\n' "$input" | claude-bare "$system" "$task")
+if [[ -z "$result" ]]; then
+	echo "Failed to generate PR description." >&2
+	exit 1
+fi
+
+# The labels line sits ahead of the title, inside the preface the title parser
+# drops. Anything that is not a real label name falls out here.
+suggested=()
+if ((want_labels)); then
+	suggested=$(_before_first_cc_line "$result" |
+		sed -n 's/^[[:space:]]*[Ll]abels:[[:space:]]*//p' | head -n 1)
+	suggested=(${(s:,:)${suggested//[[:space:]]/}})
+	suggested=(${suggested:*ci_names})
+fi
+
+# Drop AI preface and keep output starting from the first valid title line.
+cc_block="$(_from_first_cc_line "$result")"
+if [[ -n "$cc_block" ]]; then
+	result="$cc_block"
+fi
+
+title="${result%%$'\n'*}"
+body="${result#*$'\n'$'\n'}"
+if [[ "$body" == "$result" ]]; then
+	body="${result#*$'\n'}"
+fi
+
+if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
+	title="$(git log --format=%s "$diff_base"..HEAD | head -n 1)"
+	if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
+		title="chore: summarize branch changes"
+	fi
+fi
+
+# Pick labels from a menu of the repo's ci: labels.
+if ((want_labels)); then
+	[[ -n "$existing_pr" ]] && start=(${current_labels:*ci_names}) || start=($suggested)
+	if ((${#yes})); then
+		labels=($start)
+	else
+		# Menu items are "name  description<TAB>name": gum shows the part before
+		# the tab and prints the part after it. Pre-selected items come in on stdin.
+		width=0
+		for name in $ci_names; do ((${#name} > width)) && width=${#name}; done
+		items=()
+		preselect=()
+		while IFS=$'\t' read -r name description; do
+			shown="${(r:width:)name}  ${description}"
+			items+=("${shown}"$'\t'"${name}")
+			((${start[(Ie)$name]})) && preselect+=("$shown")
+		done <<<"$ci_labels"
+
+		header="CI labels (space to select, enter to confirm)"
+		if [[ -n "$existing_pr" ]] && ((${#suggested})); then
+			header+=$'\n'"Claude suggests: ${(j:, :)suggested}"
+		fi
+		labels=(${(f)"$(print -rl -- "${preselect[@]}" | gum choose --no-limit \
+			--height=20 --label-delimiter=$'\t' --header="$header" "${items[@]}")"})
+	fi
 fi
 
 # Existing PR: set labels before pushing so the pipeline started by the push
@@ -153,35 +225,6 @@ fi
 # Push current branch
 echo "Pushing..."
 git push -u origin HEAD
-
-# Generate PR title and body via AI in a single call
-echo "Generating PR title and description..."
-result=$(printf '%s\n' "$diff" | claude-bare \
-	"You write GitHub pull request titles and descriptions. Reply with the title and description only: no preface, no code fence around the reply." \
-	"Write a PR title and description for the diff on stdin. Summarize the changes with high information density, covering all major points without conversational filler. Format: first line is the title in Conventional Commits format (no quotes, no markdown), then a blank line, then the markdown description body with a brief summary and a list of key changes.")
-if [[ -z "$result" ]]; then
-	echo "Failed to generate PR description." >&2
-	exit 1
-fi
-
-# Drop AI preface and keep output starting from the first valid title line.
-cc_block="$(_from_first_cc_line "$result")"
-if [[ -n "$cc_block" ]]; then
-	result="$cc_block"
-fi
-
-title="${result%%$'\n'*}"
-body="${result#*$'\n'$'\n'}"
-if [[ "$body" == "$result" ]]; then
-	body="${result#*$'\n'}"
-fi
-
-if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
-	title="$(git log --format=%s "$diff_base"...HEAD | head -n 1)"
-	if ! [[ "$title" =~ '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)[(:]' ]]; then
-		title="chore: summarize branch changes"
-	fi
-fi
 
 echo "\nTitle:\n$title"
 echo "\nDescription:\n$body"
