@@ -30,6 +30,9 @@ window-padding-x = 8
 window-padding-y = 8
 copy-on-select = true
 confirm-close-surface = false
+# Ghostty prompts before pasting anything containing a newline, since that can
+# run on arrival. Traded away: pastes here come from a trusted editor.
+clipboard-paste-protection = false
 scrollback-limit = 100000000
 
 notify-on-command-finish = unfocused

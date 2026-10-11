@@ -42,6 +42,7 @@ brew install \
 	"mage" \
 	"moor" \
 	"neovim" \
+	"nmap" \
 	"meetingbar" \
 	"nvm" \
 	"opentofu" \
