@@ -73,6 +73,7 @@ brew install --cask \
 	"notion" \
 	"obsidian" \
 	"signal" \
+	"tailscale-app" \
 	"visual-studio-code" \
 	"zoom"
 
