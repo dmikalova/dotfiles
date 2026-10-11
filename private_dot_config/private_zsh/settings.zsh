@@ -32,12 +32,12 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:complete:(cd|z):*' fzf-preview 'eza -1 --color=always $realpath'
 
 # text navigation - use cat and press key combo to get code
-bindkey '^[[1;5D' backward-word # cmd + ←
-bindkey '^[[1;5C' forward-word  # cmd + →
+bindkey '^[[1;5D' backward-word  # cmd + ←
+bindkey '^[[1;5C' forward-word   # cmd + →
 bindkey '^[[H' beginning-of-line # home
 bindkey '^[[F' end-of-line       # end
-bindkey '^H' backward-kill-word # cmd + ⌫
-bindkey '^[[3;5~' kill-word     # cmd + ⌦
+bindkey '^H' backward-kill-word  # cmd + ⌫
+bindkey '^[[3;5~' kill-word      # cmd + ⌦
 # bindkey '[I' backward-kill-line # cmd + ⌫
 
 # Word motions and deletes stop at punctuation like / - . = as in text editors;
@@ -72,7 +72,10 @@ _discard_terminal_replies() {
 		']')
 			while read -u 0 -t 0.05 -s -k 1 char; do
 				[[ $char == $'\a' ]] && break
-				[[ $char == $'\e' ]] && { read -u 0 -t 0.05 -s -k 1 char; break; }
+				[[ $char == $'\e' ]] && {
+					read -u 0 -t 0.05 -s -k 1 char
+					break
+				}
 			done
 			;;
 		# CSI, ends with a byte in @-~.
