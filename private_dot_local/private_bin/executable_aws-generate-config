@@ -20,12 +20,17 @@ aws-sso-util configure populate \
 	--role-name-case lower \
 	--no-credential-process
 
+# remove org prefix
+sed -i '' \
+	-e 's/gs-//g' \
+	"$HOME/.aws/config"
+
 # shorten account names
 sed -i '' \
-	-e 's/gs-production/prod/g' \
-	-e 's/gs-sandbox/sb/g' \
-	-e 's/gs-staging/stg/g' \
-	-e 's/gs-internal/int/g' \
+	-e 's/production/prod/g' \
+	-e 's/sandbox/sb/g' \
+	-e 's/staging/stg/g' \
+	-e 's/internal/int/g' \
 	"$HOME/.aws/config"
 
 # shorten/simplify role suffixes

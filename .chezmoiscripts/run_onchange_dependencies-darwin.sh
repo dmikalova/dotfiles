@@ -52,6 +52,7 @@ brew install \
 	"ripgrep" \
 	"shellcheck" \
 	"shfmt" \
+	"slack" \
 	"sops" \
 	"starship" \
 	"terramate" \

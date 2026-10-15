@@ -18,8 +18,8 @@ each() {
     done
 }
 
-# AWS SSO login if needed, then assume the role (default sb-ro). A function,
-# not a script: awsume sets credentials in the current shell.
+# AWS SSO login if needed, then select the profile (default sb-ro).
+# A function, not a script: the profile must be set in the current shell.
 aws-auth() {
     local role="${1:-sb-ro}"
 
@@ -32,7 +32,11 @@ aws-auth() {
         fi
     fi
 
-    awsume "$role"
+    unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_SECURITY_TOKEN
+    unset AWS_CREDENTIAL_EXPIRATION AWSUME_PROFILE AWSUME_EXPIRATION AWSUME_COMMAND
+    unset AWS_REGION AWS_DEFAULT_REGION
+    export AWS_PROFILE="$role" AWS_DEFAULT_PROFILE="$role"
+    aws sts get-caller-identity >/dev/null
 }
 # rm: move to the macOS Trash instead of deleting. rm-style flags (-r, -f, ...)
 # are dropped - /usr/bin/trash rejects them - so `rm -rf dir` still works.

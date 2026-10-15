@@ -1,25 +1,103 @@
-# diatom's machine-wide config; each repo's .diatom/config.toml sets the rest.
-# The built-in defaults are in diatom's internal/config/defaults.toml.
-# Install each new diatom release as it comes out, and restart the scheduler
-# and panes on it. Running sessions are suspended first and resume after.
-autoUpdate = true
+# diatom's config. Diatom writes this file, so edit it when diatom is closed.
+#
+# The top of the file is what every repo gets. A [repos."<prefix>"] block
+# below it is what the repos under that prefix get instead, and a longer
+# prefix wins over a shorter one. The prefix names a repo the way its origin
+# does, without a scheme or a .git:
+#
+#   [repos."github.com/goodship-io"]       every repo of the organisation
+#   [repos."github.com/goodship-io/web"]   that one repo
+#
+# profiles and autoUpdate are yours, not a repo's: they are set here at the
+# top and nowhere else. Every other lever can go in a block.
+#
+# A lever left out takes diatom's own default. The window's repo page writes
+# the blocks for you.
 
-# Skills every agent session may load, on top of its profile's own. grill-me
-# hands off to grilling, so both are listed.
-skills = ["grill-me", "grilling"]
-
-# The editor to use for opening files.
+# The editor the window opens.
 editor = "code"
 
-# The gate of each kind of repo that sets none of its own: go for a repo with
-# a go.mod, node for one with a package.json. Top-level keys go above this:
-# anything after [gates] belongs to it.
-[gates]
-go = "mage ci:check"
-node = "npm test"
+# Whether diatom updates itself.
+autoUpdate = true
 
-# What diatom runs before the gate when a session ends, to format and
-# regenerate files, so agents never run it themselves.
+# Diatom does not know these keys, and does nothing with them.
+skills = ["grill-me", "grilling"]
+
 [fixes]
-go = "mage ci:fix"
+  go = "mage ci:fix"
 
+[gates]
+  go = "mage ci:check"
+  node = "npm test"
+
+# The repo github.com/dmikalova/dmikalova.
+[repos."github.com/dmikalova/dmikalova"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/dotfiles.
+[repos."github.com/dmikalova/dotfiles"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/droid.
+[repos."github.com/dmikalova/droid"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/email-unsubscribe.
+[repos."github.com/dmikalova/email-unsubscribe"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/factorio-mods.
+[repos."github.com/dmikalova/factorio-mods"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/infrastructure.
+[repos."github.com/dmikalova/infrastructure"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/keyforge-scripts.
+[repos."github.com/dmikalova/keyforge-scripts"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/keyforge.cards.
+[repos."github.com/dmikalova/keyforge.cards"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/login.
+[repos."github.com/dmikalova/login"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/mklv.tech.
+[repos."github.com/dmikalova/mklv.tech"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/synths.
+[repos."github.com/dmikalova/synths"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
+
+# The repo github.com/dmikalova/tasks.
+[repos."github.com/dmikalova/tasks"]
+
+# The command every session's work must pass.
+gate = "mage ci:check"
