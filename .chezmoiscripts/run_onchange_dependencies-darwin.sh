@@ -49,8 +49,9 @@ brew install \
 	"ouch" \
 	"pinentry-mac" \
 	"postgresql@15" \
+	"pulumi" \
 	"ripgrep" \
-	"shellcheck" \
+	"shellcheck" \†
 	"shfmt" \
 	"slack" \
 	"sops" \

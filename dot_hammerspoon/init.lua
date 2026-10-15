@@ -2,10 +2,17 @@
 require("hs.ipc")
 -- Must come first: it wraps hs.hotkey.bind to instrument every later binding
 require("diagnostics")
+local input = require("input")
 require("apps")
 require("spaces")
 require("windows")
 local clipboard = require("clipboard")
+
+-- Clear any modifier or mouse button left latched by a synthetic event. This
+-- runs on every load so alt+H recovers the machine, and on shutdown so a
+-- reload never leaves one behind.
+input.releaseAll()
+hs.shutdownCallback = input.releaseAll
 
 -- Alt+H: Reload Hammerspoon config
 hs.hotkey.bind("alt", "H", function()
@@ -23,6 +30,7 @@ end)
 -- IPC stops responding until force-quit). Simulate the native Lock Screen
 -- shortcut instead, which goes through macOS's normal path.
 hs.hotkey.bind({ "cmd", "alt" }, "L", function()
+  if input.postingBlocked("Locking the screen") then return end
   hs.eventtap.keyStroke({ "ctrl", "cmd" }, "q")
 end)
 

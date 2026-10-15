@@ -144,6 +144,9 @@ function M.dump()
   local function add(fmt, ...) out[#out + 1] = string.format(fmt, ...) end
 
   add("accessibility=%s", tostring(hs.accessibilityState()))
+  -- When true, macOS suppresses every event tap and synthetic keystroke
+  -- system-wide. Nothing in this config can work until it clears.
+  add("secureInput=%s", tostring(hs.eventtap.isSecureInputEnabled()))
   add("keyWatcherEnabled=%s", tostring(watcher:isEnabled()))
 
   local disabled = {}

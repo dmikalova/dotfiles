@@ -1,5 +1,7 @@
 -- Clipboard history with chooser UI
 
+local input = require("input")
+
 local history = {}
 local maxHistory = 50
 local lastChange = hs.pasteboard.changeCount()
@@ -37,6 +39,7 @@ local function showClipboard()
   local chooser = hs.chooser.new(function(choice)
     if not choice then return end
     hs.pasteboard.setContents(choice.text)
+    if input.postingBlocked("Pasting") then return end
     hs.eventtap.keyStroke("cmd", "v")
   end)
 

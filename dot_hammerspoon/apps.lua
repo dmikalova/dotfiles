@@ -1,5 +1,7 @@
 -- App switching functionality
 
+local input = require("input")
+
 -- To list all window names in the Hammerspoon console:
 -- for _, w in ipairs(hs.window.filter.new(true):getWindows()) do print(w:application():name() .. " | " .. (w:title() or "")) end
 
@@ -100,17 +102,8 @@ local function getSpaceIndex(targetSpace)
   return nil
 end
 
--- Send Ctrl+Arrow keystroke for space switching. Flags are set explicitly on
--- every event: without a mods table, Hammerspoon derives flags from a single
--- private CGEventSource that lives until reload, so if its tracked modifier
--- state drifts the arrow goes out with the wrong modifiers and macOS ignores
--- it until hs.reload() recreates the source. Arrow keys carry fn natively.
-local function sendCtrlArrow(arrowKey)
-  hs.eventtap.event.newKeyEvent({ "ctrl" }, "ctrl", true):post()
-  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, arrowKey, true):post()
-  hs.eventtap.event.newKeyEvent({ "ctrl", "fn" }, arrowKey, false):post()
-  hs.eventtap.event.newKeyEvent({}, "ctrl", false):post()
-end
+-- Send Ctrl+Arrow keystroke for space switching
+local sendCtrlArrow = input.sendCtrlArrow
 
 -- Switch spaces using Ctrl+Arrow for smooth slide animation
 local function gotoSpaceSmooth(targetSpace)
@@ -204,17 +197,12 @@ local function moveWindowToSpaceByDrag(win, appObj, moveLeft)
   if not frame then return end
 
   local clickPoint = { x = frame.x + 55, y = frame.y + 4 }
-  local originalMousePos = hs.mouse.absolutePosition()
 
-  hs.mouse.absolutePosition(clickPoint)
-  hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseDown, clickPoint):post()
-
-  hs.timer.usleep(20000)
-  sendCtrlArrow(moveLeft and "left" or "right")
-  hs.timer.usleep(20000)
-
-  hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseUp, clickPoint):post()
-  hs.mouse.absolutePosition(originalMousePos)
+  input.withLeftButtonHeld(clickPoint, function()
+    hs.timer.usleep(20000)
+    sendCtrlArrow(moveLeft and "left" or "right")
+    hs.timer.usleep(20000)
+  end)
 end
 
 -- Launch app in a specific space, or focus if already running
