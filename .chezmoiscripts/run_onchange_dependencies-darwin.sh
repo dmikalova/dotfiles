@@ -14,6 +14,7 @@ brew bundle install --no-upgrade --file=- <<-'BREWFILE'
 	brew "awscli"
 	brew "awsume"
 	brew "bat"
+  brew "caddy"
 	brew "carapace"
 	brew "catimg"
 	brew "chezmoi"
