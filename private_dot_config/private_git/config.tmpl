@@ -73,6 +73,7 @@
 	repositoryformatversion = 0
 
 [merge]
+	autoStash = true
 	conflictStyle = zdiff3
 
 [pager]
@@ -80,7 +81,9 @@
 	diff = delta --paging=never
 
 [pull]
-	rebase = true
+	# Merge, don't rebase: conflicts surface once, in one commit, and
+	# `git merge --continue` finishes the job.
+	rebase = false
 
 [push]
 	autoSetupRemote = true

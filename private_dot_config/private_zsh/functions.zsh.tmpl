@@ -38,6 +38,28 @@ aws-auth() {
     export AWS_PROFILE="$role" AWS_DEFAULT_PROFILE="$role"
     aws sts get-caller-identity >/dev/null
 }
+
+# Keep the machine awake until a wall-clock time. A time already passed today
+# means the same time tomorrow. Runs in the foreground; Ctrl-C ends it early.
+# Usage: caff-until HH:MM
+caff-until() {
+    if [[ ! "$1" =~ '^[0-9]{2}:[0-9]{2}$' ]]; then
+        echo "Usage: caff-until HH:MM" >&2
+        return 1
+    fi
+    zmodload -F zsh/datetime b:strftime p:EPOCHSECONDS
+
+    local now=$EPOCHSECONDS end
+    end=$(date -j -f '%Y-%m-%d %H:%M' "$(strftime '%Y-%m-%d' $now) $1" '+%s') || return 1
+    ((end <= now)) && ((end += 86400))
+
+    echo "Awake until $(strftime '%a %H:%M' $end) ($(((end - now) / 60))m)"
+    caffeinate -ud -t $((end - now))
+}
+
+caff-work() { caff-until 18:00 }
+caff-home() { caff-until 01:00 }
+
 # rm: move to the macOS Trash instead of deleting. rm-style flags (-r, -f, ...)
 # are dropped - /usr/bin/trash rejects them - so `rm -rf dir` still works.
 rm() {

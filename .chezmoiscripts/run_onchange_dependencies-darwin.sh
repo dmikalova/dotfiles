@@ -26,6 +26,7 @@ brew install \
 	"docker" \
 	"eza" \
 	"fd" \
+	"ffmpeg" \
 	"fzf" \
 	"gh" \
 	"ghostty" \
@@ -51,11 +52,12 @@ brew install \
 	"postgresql@15" \
 	"pulumi" \
 	"ripgrep" \
-	"shellcheck" \†
+	"shellcheck" \
 	"shfmt" \
 	"slack" \
 	"sops" \
 	"starship" \
+	"terraform" \
 	"terramate" \
 	"tree-sitter-cli" \
 	"uv" \
