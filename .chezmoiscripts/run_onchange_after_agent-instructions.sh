@@ -6,13 +6,13 @@
 set -eu
 
 for link in \
-	"${HOME}/.claude/CLAUDE.md" \
-	"${HOME}/.copilot/copilot-instructions.md" \
-	"${HOME}/.github/copilot-instructions.md"; do
-	if [ -e "${link}" ] && [ ! -L "${link}" ]; then
-		echo "skipping ${link}: a real file is in the way" >&2
-		continue
-	fi
-	mkdir -p "$(dirname "${link}")"
-	ln -sfn "${HOME}/.agents/AGENTS.md" "${link}"
+  "${HOME}/.claude/CLAUDE.md" \
+  "${HOME}/.copilot/copilot-instructions.md" \
+  "${HOME}/.github/copilot-instructions.md"; do
+  if [ -e "${link}" ] && [ ! -L "${link}" ]; then
+    echo "skipping ${link}: a real file is in the way" >&2
+    continue
+  fi
+  mkdir -p "$(dirname "${link}")"
+  ln -sfn "${HOME}/.agents/AGENTS.md" "${link}"
 done

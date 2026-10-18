@@ -29,7 +29,7 @@ defaults write com.apple.controlcenter "NSStatusItem Preferred Position Sound" -
 # This write just pre-seeds the correct value; the manual step is still
 # required once per machine.
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add "64" \
-	'{enabled = 1; value = {parameters = (32, 49, 524288); type = standard;};}'
+  '{enabled = 1; value = {parameters = (32, 49, 524288); type = standard;};}'
 
 # Appearance: Light, no auto dark-mode switching, Green accent
 defaults delete NSGlobalDomain AppleInterfaceStyle 2>/dev/null || true

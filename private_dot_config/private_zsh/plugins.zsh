@@ -17,9 +17,9 @@ antidote load "${DIR}/plugins.txt" "${ZSH_CACHE_DIR}/plugins.zsh"
 # history-substring-search doesn't bind keys. Bind both arrow encodings:
 # normal mode (^[[A, what Ghostty sends at the prompt) and application mode (^[OA).
 for KEYMAP_NAME in emacs viins; do
-	bindkey -M "${KEYMAP_NAME}" '^[[A' history-substring-search-up
-	bindkey -M "${KEYMAP_NAME}" '^[OA' history-substring-search-up
-	bindkey -M "${KEYMAP_NAME}" '^[[B' history-substring-search-down
-	bindkey -M "${KEYMAP_NAME}" '^[OB' history-substring-search-down
+  bindkey -M "${KEYMAP_NAME}" '^[[A' history-substring-search-up
+  bindkey -M "${KEYMAP_NAME}" '^[OA' history-substring-search-up
+  bindkey -M "${KEYMAP_NAME}" '^[[B' history-substring-search-down
+  bindkey -M "${KEYMAP_NAME}" '^[OB' history-substring-search-down
 done
 unset KEYMAP_NAME

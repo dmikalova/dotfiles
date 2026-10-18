@@ -9,10 +9,10 @@ autoload -Uz compinit
 dump="${ZSH_CACHE_DIR}/zcompdump"
 changed=(${^fpath}(N-/e:'[[ $REPLY -nt $dump ]]':))
 if [[ ! -s $dump ]] || ((${#changed})); then
-	compinit -d "${dump}"
-	touch "${dump}"
+  compinit -d "${dump}"
+  touch "${dump}"
 else
-	compinit -C -d "${dump}"
+  compinit -C -d "${dump}"
 fi
 unset dump changed
 

@@ -1,0 +1,23 @@
+# shfmt has no config file of its own. It reads EditorConfig instead, and only
+# when it is invoked with no formatting flags: passing -i, -ci, -bn, -sr or -kp
+# makes it ignore every file below. So format with a bare `shfmt -w`.
+#
+# This file sits in $HOME, so it covers every repo under it. A repo that wants
+# something else overrides it with its own .editorconfig, which wins because it
+# sits closer to the file.
+#
+# EditorConfig matches on path, never on shebang, so an extensionless script
+# gets shfmt's default tabs no matter what is written here.
+
+root = true
+
+[*.{sh,bash,bats,ksh,mksh,zsh}]
+indent_style = space
+indent_size = 2
+
+# `ignore` is shfmt's own extension, not part of the EditorConfig spec, so most
+# editors pass over this section. shfmt walks into dot-directories, so without
+# it a `shfmt -w .` rewrites downloaded Terraform modules. It applies when shfmt
+# walks a directory; pass --apply-ignore when naming files explicitly.
+[**/.terraform/**]
+ignore = true

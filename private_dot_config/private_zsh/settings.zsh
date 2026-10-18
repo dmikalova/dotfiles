@@ -60,32 +60,32 @@ setopt NO_BEEP        # Disable system beep.
 # and leaves it in the input queue, where zle self-inserts it into the next
 # command line. Drop a pending reply, but hand back anything typed ahead.
 _discard_terminal_replies() {
-	local char kind
-	while read -u 0 -t 0 -s -k 1 char; do
-		if [[ $char != $'\e' ]]; then
-			print -z -- "$char"
-			return
-		fi
-		read -u 0 -t 0.05 -s -k 1 kind || return
-		case $kind in
-		# OSC, ends with BEL or ESC \.
-		']')
-			while read -u 0 -t 0.05 -s -k 1 char; do
-				[[ $char == $'\a' ]] && break
-				[[ $char == $'\e' ]] && {
-					read -u 0 -t 0.05 -s -k 1 char
-					break
-				}
-			done
-			;;
-		# CSI, ends with a byte in @-~.
-		'[')
-			while read -u 0 -t 0.05 -s -k 1 char; do
-				[[ $char == [@-~] ]] && break
-			done
-			;;
-		esac
-	done
+  local char kind
+  while read -u 0 -t 0 -s -k 1 char; do
+    if [[ $char != $'\e' ]]; then
+      print -z -- "$char"
+      return
+    fi
+    read -u 0 -t 0.05 -s -k 1 kind || return
+    case $kind in
+    # OSC, ends with BEL or ESC \.
+    ']')
+      while read -u 0 -t 0.05 -s -k 1 char; do
+        [[ $char == $'\a' ]] && break
+        [[ $char == $'\e' ]] && {
+          read -u 0 -t 0.05 -s -k 1 char
+          break
+        }
+      done
+      ;;
+    # CSI, ends with a byte in @-~.
+    '[')
+      while read -u 0 -t 0.05 -s -k 1 char; do
+        [[ $char == [@-~] ]] && break
+      done
+      ;;
+    esac
+  done
 }
 precmd_functions+=(_discard_terminal_replies)
 

@@ -1,85 +1,89 @@
 #!/bin/sh
 # macOS dependencies installed via Homebrew
 
+# `brew install` upgrades a package that is already present but outdated, which
+# restarts apps like VS Code in the middle of whatever they were doing. `brew
+# bundle --no-upgrade` installs only what is missing and leaves the rest alone.
+# Upgrades are a separate, deliberate `brew upgrade`.
 echo "installing brew packages"
-brew install \
-	"age" \
-	"antidote" \
-	"atuin" \
-	"aws-sso-util" \
-	"aws-vpn-client" \
-	"awscli" \
-	"awsume" \
-	"bat" \
-	"carapace" \
-	"catimg" \
-	"chezmoi" \
-	"chroma" \
-	"circleci" \
-	"claude-code" \
-	"cloc" \
-	"colordiff" \
-	"coreutils" \
-	"deno" \
-	"difftastic" \
-	"direnv" \
-	"docker" \
-	"eza" \
-	"fd" \
-	"ffmpeg" \
-	"fzf" \
-	"gh" \
-	"ghostty" \
-	"git" \
-	"git-delta" \
-	"gnupg" \
-	"golang" \
-	"gum" \
-	"govulncheck" \
-	"hunk" \
-	"jq" \
-	"jqp" \
-	"lefthook" \
-	"mage" \
-	"moor" \
-	"neovim" \
-	"nmap" \
-	"meetingbar" \
-	"nvm" \
-	"opentofu" \
-	"ouch" \
-	"pinentry-mac" \
-	"postgresql@15" \
-	"pulumi" \
-	"ripgrep" \
-	"shellcheck" \
-	"shfmt" \
-	"slack" \
-	"sops" \
-	"starship" \
-	"terraform" \
-	"terramate" \
-	"tree-sitter-cli" \
-	"uv" \
-	"xorriso" \
-	"zellij" \
-	"zoxide"
+brew bundle install --no-upgrade --file=- <<-'BREWFILE'
+	brew "age"
+	brew "antidote"
+	brew "atuin"
+	brew "aws-sso-util"
+	brew "awscli"
+	brew "awsume"
+	brew "bat"
+	brew "carapace"
+	brew "catimg"
+	brew "chezmoi"
+	brew "chroma"
+	brew "circleci"
+	brew "cloc"
+	brew "colordiff"
+	brew "coreutils"
+	brew "deno"
+	brew "difftastic"
+	brew "direnv"
+	brew "docker"
+	brew "eza"
+	brew "fd"
+	brew "ffmpeg"
+	brew "fzf"
+	brew "gh"
+	brew "git"
+	brew "git-delta"
+	brew "gnupg"
+	brew "go"
+	brew "govulncheck"
+	brew "gum"
+	brew "hunk"
+	brew "jj"
+	brew "jq"
+	brew "jqp"
+	brew "lefthook"
+	brew "mage"
+	brew "moor"
+	brew "neovim"
+	brew "nmap"
+	brew "nvm"
+	brew "opentofu"
+	brew "ouch"
+	brew "pinentry-mac"
+	brew "postgresql@15"
+	brew "pulumi"
+	brew "ripgrep"
+	brew "shellcheck"
+	brew "shfmt"
+	brew "sops"
+	brew "starship"
+	brew "terramate"
+	brew "tree-sitter-cli"
+	brew "uv"
+	brew "xorriso"
+	brew "zellij"
+	brew "zoxide"
 
-brew install --cask \
-	"bitwarden" \
-	"discord" \
-	"docker-desktop" \
-	"font-sauce-code-pro-nerd-font" \
-	"google-cloud-sdk" \
-	"hammerspoon" \
-	"linearmouse" \
-	"logitune" \
-	"notion" \
-	"obsidian" \
-	"signal" \
-	"tailscale-app" \
-	"visual-studio-code" \
-	"zoom"
+	cask "aws-vpn-client"
+	cask "bitwarden"
+	cask "claude-code"
+	cask "discord"
+	cask "docker-desktop"
+	cask "font-sauce-code-pro-nerd-font"
+	cask "gcloud-cli"
+	cask "ghostty"
+	cask "hammerspoon"
+	cask "linearmouse"
+	cask "logitune"
+	cask "meetingbar"
+	cask "notion"
+	cask "obsidian"
+	cask "signal"
+	cask "slack"
+	cask "tailscale-app"
+	cask "visual-studio-code"
+	cask "zoom"
+BREWFILE
 
 # The shared checks from project-standards, run by lefthook in projects
 # without go.mod. Rerun `go install ...@latest` to update it.

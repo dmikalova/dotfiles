@@ -7,15 +7,15 @@ self="$(git rev-parse --git-common-dir)/hooks/post-checkout"
 rm -f "$self"
 
 case "$(git remote get-url origin 2>/dev/null)" in
-  *github.com[:/]dmikalova/*) ;;
-  *) exit 0 ;;
+*github.com[:/]dmikalova/*) ;;
+*) exit 0 ;;
 esac
 command -v lefthook >/dev/null || exit 0
 root=$(git rev-parse --show-toplevel)
 for config in lefthook.yml lefthook.yaml lefthook.json lefthook.jsonc lefthook.toml \
-  .lefthook.yml .lefthook.yaml .lefthook.json .lefthook.jsonc .lefthook.toml; do
-  if [ -f "$root/$config" ]; then
-    (cd "$root" && lefthook install)
-    exit 0
-  fi
+	.lefthook.yml .lefthook.yaml .lefthook.json .lefthook.jsonc .lefthook.toml; do
+	if [ -f "$root/$config" ]; then
+		(cd "$root" && lefthook install)
+		exit 0
+	fi
 done
