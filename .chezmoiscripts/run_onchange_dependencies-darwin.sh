@@ -77,7 +77,6 @@ brew bundle install --no-upgrade --file=- <<-'BREWFILE'
 	cask "linearmouse"
 	cask "logitune"
 	cask "meetingbar"
-	cask "notion"
 	cask "obsidian"
 	cask "signal"
 	cask "slack"
