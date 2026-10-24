@@ -21,6 +21,12 @@ Spaces (Mission Control):
   - Ensure exactly 2 Spaces exist: work = space 1,
     personal = space 2 (matches dot_hammerspoon/apps.lua)
 
+Finder sidebar (no supported CLI on macOS 26):
+  - Connect once to smb://den/storage (Cmd-K) and save
+    the password in the keychain, then chezmoi apply
+    again so autofs gets ~/den-storage
+  - Drag ~/den-storage into the sidebar Favorites
+
 =========================================================
 
 EOF
