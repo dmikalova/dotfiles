@@ -82,6 +82,7 @@ brew bundle install --no-upgrade --file=- <<-'BREWFILE'
 	cask "slack"
 	cask "tailscale-app"
 	cask "visual-studio-code"
+	cask "wacom-tablet"
 	cask "zoom"
 BREWFILE
 
