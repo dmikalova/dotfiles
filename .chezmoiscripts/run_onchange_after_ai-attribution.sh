@@ -21,18 +21,3 @@ merge "${HOME}/.copilot/settings.json" '.includeCoAuthoredBy = false'
 
 # Claude Code. Empty strings remove the attribution text.
 merge "${HOME}/.claude/settings.json" '.attribution.commit = "" | .attribution.pr = ""'
-
-# VS Code. settings.json is JSONC, with comments and trailing commas, which
-# jq cannot read. Edit the one key as text.
-case "$(uname -s)" in
-Darwin) vscode="${HOME}/Library/Application Support/Code/User/settings.json" ;;
-*) vscode="${HOME}/.config/Code/User/settings.json" ;;
-esac
-if [ ! -s "${vscode}" ]; then
-  mkdir -p "$(dirname "${vscode}")"
-  printf '{\n  "git.addAICoAuthor": "off"\n}\n' >"${vscode}"
-elif grep -q '"git\.addAICoAuthor"' "${vscode}"; then
-  perl -pi -e 's/("git\.addAICoAuthor"\s*:\s*)"[^"]*"/$1"off"/' "${vscode}"
-else
-  perl -0pi -e 's/\A(\s*\{)/$1\n  "git.addAICoAuthor": "off",/' "${vscode}"
-fi
