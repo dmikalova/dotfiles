@@ -19,3 +19,9 @@ Apply ASD-STE100 Simplified Technical English (STE) rules to written deliverable
 - The authoritative, licensed ASD-STE100 dictionary is not available to the agent. Apply the rules above and the common substitutions. Do not reproduce or claim a complete approved-word list.
 - Flag any word that could be non-approved. Do not assert certainty.
 - If a licensed dictionary, a project term supplement, or an STE checker (for example HyperSTE) is available, conform to it strictly. Software terms (Lambda, secret, shipperId) are technical nouns and are allowed.
+
+## Git workflow
+
+- In repos owned by `dmikalova`, commit and push to the default branch. Do not open a pull request unless the user asks for one.
+- In all other repos, open a pull request. Do not push to the default branch.
+- Do not add a `Co-authored-by` trailer or any other agent attribution to commits or pull requests.
