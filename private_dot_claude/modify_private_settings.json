@@ -1,0 +1,13 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Claude Code writes this file too (model, theme), so only these keys are
+       set here and every other key is kept. */ -}}
+{{- $s := dict -}}
+{{- if .chezmoi.stdin -}}{{- $s = fromJson .chezmoi.stdin -}}{{- end -}}
+{{- /* No agent attribution in commits or pull requests. */ -}}
+{{- $s = setValueAtPath "attribution.commit" "" $s -}}
+{{- $s = setValueAtPath "attribution.pr" "" $s -}}
+{{- /* Agents use the shell tools and node for one-off scripts, not Python. */ -}}
+{{- $deny := list "Bash(python:*)" "Bash(python3:*)" -}}
+{{- $perms := get $s "permissions" | default dict -}}
+{{- $s = setValueAtPath "permissions.deny" (concat (get $perms "deny" | default list) $deny | uniq) $s -}}
+{{ toPrettyJson "  " $s }}
