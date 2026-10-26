@@ -17,6 +17,7 @@ local input = require("input")
 
 local messagesPWABundleID = "com.google.Chrome.app.hpfldicfbfomlpcikngkocigghgafkph"
 local apps = {
+  { "A", "Aseprite",           "personal" },
   { "B", "Bitwarden",          "personal" },
   { "C", "Google Chrome",      "space-args", { work = '--profile-directory="Default"', personal = '--profile-directory="Profile 1"' } },
   { "D", "Finder",             "reserved" },
