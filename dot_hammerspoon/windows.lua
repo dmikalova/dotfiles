@@ -175,3 +175,70 @@ end
 
 hs.hotkey.bind({ "ctrl", "alt", "shift" }, "M", function() throwToScreen("west") end)
 hs.hotkey.bind({ "ctrl", "alt", "shift" }, "/", function() throwToScreen("east") end)
+
+-- Restore window placement after lock/sleep. When the displays sleep, macOS
+-- can briefly drop the external monitor and gather every window onto the
+-- remaining display (e.g. Slack jumps off the laptop screen). Snapshot each
+-- window's screen and frame on lock/sleep, then put back any window that
+-- changed screens once the displays settle after unlock/wake.
+local RESTORE_WINDOW_SECONDS = 15
+local snapshot = nil
+local restoreUntil = 0
+
+local function takeSnapshot()
+  snapshot = {}
+  for _, win in ipairs(hs.window.allWindows()) do
+    local screen = win:screen()
+    if win:isStandard() and screen then
+      snapshot[win:id()] = { screen = screen:getUUID(), frame = win:frame() }
+    end
+  end
+end
+
+local function restoreSnapshot()
+  if not snapshot or hs.timer.secondsSinceEpoch() > restoreUntil then return end
+  for _, win in ipairs(hs.window.allWindows()) do
+    local saved = snapshot[win:id()]
+    local current = win:screen()
+    if saved and current and current:getUUID() ~= saved.screen
+        and hs.screen.find(saved.screen) then
+      win:setFrame(saved.frame)
+    end
+  end
+end
+
+local function scheduleRestore()
+  restoreUntil = hs.timer.secondsSinceEpoch() + RESTORE_WINDOW_SECONDS
+  -- Displays reattach at different speeds, so retry a few times
+  for _, delay in ipairs({ 1, 3, 6 }) do
+    hs.timer.doAfter(delay, restoreSnapshot)
+  end
+end
+
+local cw = hs.caffeinate.watcher
+local M = {}
+
+M.caffeinateWatcher = cw.new(function(event)
+  if event == cw.screensDidLock or event == cw.screensDidSleep
+      or event == cw.systemWillSleep then
+    -- Keep the first snapshot: lock is followed by display sleep, and by then
+    -- windows may already have moved
+    if not snapshot or hs.timer.secondsSinceEpoch() > restoreUntil then
+      takeSnapshot()
+      restoreUntil = math.huge
+    end
+  elseif event == cw.screensDidUnlock or event == cw.screensDidWake
+      or event == cw.systemDidWake then
+    scheduleRestore()
+  end
+end):start()
+
+-- macOS can re-layout windows when the monitor reattaches, after unlock
+M.screenWatcher = hs.screen.watcher.new(function()
+  if snapshot and hs.timer.secondsSinceEpoch() <= restoreUntil then
+    hs.timer.doAfter(1, restoreSnapshot)
+  end
+end):start()
+
+-- Returned so require() keeps the watchers referenced (not garbage collected)
+return M
