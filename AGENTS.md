@@ -26,3 +26,8 @@
 - **If an exception is truly needed, don't make it: ask.** Explain what the
   check flags, why the code can't reasonably satisfy it, and what the
   exception would be, with the exact lines, so the human can decide.
+
+# Pull Request Rules
+
+- **Assign the user:** When you create a pull request on behalf of the user,
+  assign it to `dmikalova` (for example, `gh pr create --assignee dmikalova`).
