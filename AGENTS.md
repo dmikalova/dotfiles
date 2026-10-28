@@ -12,6 +12,10 @@
   1. Primary solution/code block.
   2. A concise summary explaining the changes, key context, and any trade-offs
      made. If a decision needs to be made, add concrete examples.
+- **Final response last:** Make all tool calls before you write the final
+  response. Do not make a tool call after the final response (for example, to
+  rename the chat or record an artifact). The UI collapses all text before the
+  last tool call, and this hides the final response.
 - **Tone:** Technical, terse, objective, and clear. Zero flair.
 
 # Code Rules
