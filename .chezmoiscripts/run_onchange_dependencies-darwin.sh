@@ -66,6 +66,7 @@ brew bundle install --no-upgrade --file=- <<-'BREWFILE'
 	brew "zellij"
 	brew "zoxide"
   brew "caddy"
+  brew "vlc"
 
 	cask "aws-vpn-client"
 	cask "bitwarden"
