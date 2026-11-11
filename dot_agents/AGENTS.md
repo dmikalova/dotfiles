@@ -20,6 +20,13 @@ Apply ASD-STE100 Simplified Technical English (STE) rules to written deliverable
 - Flag any word that could be non-approved. Do not assert certainty.
 - If a licensed dictionary, a project term supplement, or an STE checker (for example HyperSTE) is available, conform to it strictly. Software terms (Lambda, secret, shipperId) are technical nouns and are allowed.
 
+## Final response
+
+- Make every tool call before the final response. This includes completion and bookkeeping tools such as `task_complete`, chat renames, and artifact records.
+- Write the final response after the last tool call. The UI collapses all text before the last tool call, so the user does not see it.
+- Make the final response complete: the full answer, with no pointer such as "see above". Also put the full answer in the summary field of a completion tool.
+- This rule wins over a tool description that asks for the summary before the call or says not to restate it.
+
 ## Git workflow
 
 - In repos owned by `dmikalova`, commit and push to the default branch. Do not open a pull request unless the user asks for one.
