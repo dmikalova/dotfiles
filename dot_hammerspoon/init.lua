@@ -6,6 +6,7 @@ local input = require("input")
 require("apps")
 require("spaces")
 require("windows")
+require("media")
 local clipboard = require("clipboard")
 
 -- Clear any modifier or mouse button left latched by a synthetic event. This
