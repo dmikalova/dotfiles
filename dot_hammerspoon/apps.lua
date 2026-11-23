@@ -25,6 +25,7 @@ local apps = {
   { "H", "Hammerspoon Reload", "reserved" },
   { "I", "Discord",            "personal" },
   { "K", "Slack",              "work" },
+  { "L", "VLC",                "any" },
   { "M", messagesPWABundleID,  "personal" },
   { "O", "Notion",             "work" },
   { "P", "Preview",            "any" },
