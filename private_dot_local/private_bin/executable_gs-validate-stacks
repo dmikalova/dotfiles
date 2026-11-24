@@ -68,7 +68,7 @@ _gsvs_strip() {
 # every run, and put each JSON object of a container definition on its own line.
 _gsvs_normalize() {
 	_gsvs_strip "$1" | sed -E \
-		-e "s#$2#<repo>#g" \
+		-e "s#(/private)?$2#<repo>#g" \
 		-e 's/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/<uuid>/g' \
 		-e 's/[0-9a-f]{32,64}/<hash>/g' \
 		-e 's/(deployment\.timestamp"\] = )[0-9]+/\1<ts>/' \
@@ -143,6 +143,10 @@ _gsvs_compare() {
 	repo=$(sed -n 's/^Repo: //p' "$out/meta.txt")
 	base=$(sed -n 's/^Baseline worktree: //p' "$out/meta.txt")
 	[[ -f "$out/baseline/$stack-$stage.log" ]] || return 0
+	# SST plans resources in parallel, so the line order changes between runs.
+	# The same lines in a different order count as the same.
+	cmp -s <(_gsvs_normalize "$out/baseline/$stack-$stage.log" "$base" | sort) \
+		<(_gsvs_normalize "$out/$stack-$stage.log" "$repo" | sort) && return 0
 	diff -u \
 		--label "baseline/$stack-$stage" <(_gsvs_normalize "$out/baseline/$stack-$stage.log" "$base") \
 		--label "branch/$stack-$stage" <(_gsvs_normalize "$out/$stack-$stage.log" "$repo") |
