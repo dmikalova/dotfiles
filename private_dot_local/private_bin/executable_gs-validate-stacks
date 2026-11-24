@@ -80,7 +80,11 @@ _gsvs_classify() {
 		printf 'ACCESS_DENIED\t%s\n' "$(grep -oE 'not authorized to perform: [^ ]+' <<<"$text" | sort -u | paste -sd ';' -) (rerun with -a)"
 	elif grep -qE 'Environment variable not found \(GITHUB_TOKEN\)' <<<"$text"; then
 		printf 'ENV_ERROR\t%s\n' 'GITHUB_TOKEN is not set'
-	elif grep -qE 'not found in ECR repository' <<<"$text" && [[ "$rc" != 0 ]]; then
+	elif grep -qE 'cannot be deleted' <<<"$text"; then
+		# The plan deletes protected resources: the stage runs code that this
+		# branch does not have (often a sandbox deploy from another branch).
+		printf 'PROTECTED_DELETE\t%s\n' "$(grep -oE '::[A-Za-z0-9-]+" cannot be deleted' <<<"$text" | sed -E 's/^::|" cannot be deleted//g' | sort -u | paste -sd ',' -)"
+	elif grep -E 'not found in ECR repository' <<<"$text" | grep -qv 'falling back' && [[ "$rc" != 0 ]]; then
 		printf 'IMAGE_MISSING\t%s\n' "$(grep -oE 'Image with tag [^ ]+ not found in ECR repository [^ ,]+' <<<"$text" | head -1)"
 	elif [[ "$rc" != 0 ]] || grep -qE '✕ +Failed' <<<"$text"; then
 		printf 'FAILED\t%s\n' "$(grep -E '^(Error|error)[: ]|✕' <<<"$text" | grep -v '✕ *Failed' | head -1 | cut -c1-200)"
