@@ -79,6 +79,17 @@ if [ -f "${SECRETS_FILE}" ]; then
 fi
 {{ end -}}
 
+# github: take the token from gh's keyring login so it never goes stale.
+# Unset GITHUB_TOKEN/GH_TOKEN for the call, else gh echoes them back.
+if command -v gh >/dev/null 2>&1; then
+    GITHUB_TOKEN=$(env -u GITHUB_TOKEN -u GH_TOKEN gh auth token --hostname github.com 2>/dev/null)
+    if [ -n "${GITHUB_TOKEN}" ]; then
+        export GITHUB_TOKEN
+    else
+        unset GITHUB_TOKEN
+    fi
+fi
+
 # zsh
 export ZSH_COMPLETIONS_DIR="${DIR}/completions"
 export ZSH_CACHE_DIR="${DIR}/cache"
