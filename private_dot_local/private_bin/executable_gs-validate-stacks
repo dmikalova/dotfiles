@@ -145,17 +145,35 @@ _gsvs_compare() {
 # then the env, secret and image lines that differ (DD_TAGS,
 # NEXT_PUBLIC_COMMIT_SHA and DD_VERSION carry the commit, so they are skipped).
 # Args: log profile
+_gsvs_stem() {
+	local n="${1:l}"
+	n="${n%taskdefinition}"; n="${n%-task-def}"; n="${n%taskdef}"
+	n="${n%fargateservice}"; n="${n%service}"; n="${n%-svc}"
+	print -r -- "${n%-}"
+}
+
 _gsvs_taskdefs() {
-	local log="$1" clean svcs def svc arn c i=0
-	local -a defs
+	local log="$1" clean def tdname svc arn c line i=0 cand
+	local -a rows svcs
 	clean=$(_gsvs_strip "$log")
-	defs=(${(f)"$(grep 'containerDefinitions = ' <<<"$clean" | sed 's/^ *\* containerDefinitions = //')"})
-	((${#defs})) || return 0
-	svcs=$(awk '/^[*+]  .* aws:ecs:Service$/ {print $2}' <<<"$clean")
+	# One "<task definition resource name><TAB><json>" row per planned definition.
+	rows=(${(f)"$(awk '
+		/^[+*~-]  [^ ]/ { n = split($0, w, " "); name = w[n - 1] }
+		/^   [*+~] containerDefinitions = / { sub(/^ *[*+~] containerDefinitions = /, ""); print name "\t" $0 }
+	' <<<"$clean")"})
+	((${#rows})) || return 0
+	svcs=(${(f)"$(awk '/^[*+]  .* aws:ecs:Service$/ { n = split($0, w, " "); print w[n - 1] }' <<<"$clean")"})
 	local flat='.[] | .name as $c | ((.environment//[])[] | "\($c) env \(.name)=\(.value)"), ((.secrets//[])[] | "\($c) secret \(.name)=\(.valueFrom)"), "\($c) image=\(.image)"'
-	for def in $defs; do
+	for line in $rows; do
 		((i++))
-		svc=$(sed -n "${i}p" <<<"$svcs")
+		tdname="${line%%$'\t'*}"; def="${line#*$'\t'}"
+		# Pair the task definition with its service by name stem. Fall back to
+		# the only service when there is one.
+		svc=""
+		for cand in $svcs; do
+			[[ "$(_gsvs_stem "$cand")" == "$(_gsvs_stem "$tdname")" ]] && { svc="$cand"; break; }
+		done
+		[[ -z "$svc" && ${#svcs} == 1 && ${#rows} == 1 ]] && svc="${svcs[1]}"
 		arn=""
 		if [[ -n "$svc" ]]; then
 			for c in $(AWS_PROFILE="$2" aws ecs list-clusters --query 'clusterArns[]' --output text 2>/dev/null); do
