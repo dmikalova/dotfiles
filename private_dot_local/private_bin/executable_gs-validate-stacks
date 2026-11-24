@@ -76,6 +76,8 @@ _gsvs_classify() {
 		printf 'PARAM_ERROR\t%s\n' "$(grep -oE '(Param [A-Z0-9_]+ has no value for stage [a-z]+|Unknown param: [A-Z0-9_]+)' <<<"$text" | sort -u | paste -sd ';' -)"
 	elif grep -qE 'UnrecognizedClientException|ExpiredToken|security token included in the request is invalid|Error loading SSO Token|SSO session.*expired' <<<"$text"; then
 		printf 'AUTH_ERROR\t%s\n' 'AWS credentials are missing or expired'
+	elif grep -qE 'AccessDenied|is not authorized to perform' <<<"$text" && [[ "$rc" != 0 ]]; then
+		printf 'ACCESS_DENIED\t%s\n' "$(grep -oE 'not authorized to perform: [^ ]+' <<<"$text" | sort -u | paste -sd ';' -) (rerun with -a)"
 	elif grep -qE 'Environment variable not found \(GITHUB_TOKEN\)' <<<"$text"; then
 		printf 'ENV_ERROR\t%s\n' 'GITHUB_TOKEN is not set'
 	elif grep -qE 'not found in ECR repository' <<<"$text" && [[ "$rc" != 0 ]]; then
@@ -136,7 +138,8 @@ _gsvs_compare() {
 # A task definition diff shows only the new value. Compare each planned
 # container definition in a log with the task definition that its ECS service
 # runs now. Prints one "<service> (deployed: <family:rev>)" header per service,
-# then the env, secret and image lines that differ (DD_TAGS is skipped).
+# then the env, secret and image lines that differ (DD_TAGS,
+# NEXT_PUBLIC_COMMIT_SHA and DD_VERSION carry the commit, so they are skipped).
 # Args: log profile
 _gsvs_taskdefs() {
 	local log="$1" clean svcs def svc arn c i=0
@@ -163,7 +166,7 @@ _gsvs_taskdefs() {
 		diff <(AWS_PROFILE="$2" aws ecs describe-task-definition --task-definition "$arn" \
 			--query 'taskDefinition.containerDefinitions' | jq -r "$flat" | sort) \
 			<(print -r -- "$def" | jq -r "$flat" | sort) |
-			grep -E '^[<>]' | grep -vE ' env DD_TAGS=' |
+			grep -E '^[<>]' | grep -vE ' env (DD_TAGS|NEXT_PUBLIC_COMMIT_SHA|DD_VERSION)=' |
 			sed -E -e 's/(DD_API_KEY=)[0-9a-f]+/\1<redacted>/' -e 's/^</  deployed:/' -e 's/^>/  planned: /'
 	done
 }
