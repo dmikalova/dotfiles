@@ -133,6 +133,41 @@ _gsvs_compare() {
 		tail -n +3
 }
 
+# A task definition diff shows only the new value. Compare each planned
+# container definition in a log with the task definition that its ECS service
+# runs now. Prints one "<service> (deployed: <family:rev>)" header per service,
+# then the env, secret and image lines that differ (DD_TAGS is skipped).
+# Args: log profile
+_gsvs_taskdefs() {
+	local log="$1" clean svcs def svc arn c i=0
+	local -a defs
+	clean=$(_gsvs_strip "$log")
+	defs=(${(f)"$(grep 'containerDefinitions = ' <<<"$clean" | sed 's/^ *\* containerDefinitions = //')"})
+	((${#defs})) || return 0
+	svcs=$(awk '/^[*+]  .* aws:ecs:Service$/ {print $2}' <<<"$clean")
+	local flat='.[] | .name as $c | ((.environment//[])[] | "\($c) env \(.name)=\(.value)"), ((.secrets//[])[] | "\($c) secret \(.name)=\(.valueFrom)"), "\($c) image=\(.image)"'
+	for def in $defs; do
+		((i++))
+		svc=$(sed -n "${i}p" <<<"$svcs")
+		arn=""
+		if [[ -n "$svc" ]]; then
+			for c in $(AWS_PROFILE="$2" aws ecs list-clusters --query 'clusterArns[]' --output text 2>/dev/null); do
+				arn=$(AWS_PROFILE="$2" aws ecs describe-services --cluster "$c" --services "$svc" \
+					--query 'services[?status==`ACTIVE`].taskDefinition|[0]' --output text 2>/dev/null)
+				[[ -n "$arn" && "$arn" != None ]] && break
+				arn=""
+			done
+		fi
+		print -r -- "== ${svc:-task definition $i} (deployed: ${${arn##*/}:-not found})"
+		[[ -z "$arn" ]] && continue
+		diff <(AWS_PROFILE="$2" aws ecs describe-task-definition --task-definition "$arn" \
+			--query 'taskDefinition.containerDefinitions' | jq -r "$flat" | sort) \
+			<(print -r -- "$def" | jq -r "$flat" | sort) |
+			grep -E '^[<>]' | grep -vE ' env DD_TAGS=' |
+			sed -E -e 's/(DD_API_KEY=)[0-9a-f]+/\1<redacted>/' -e 's/^</  deployed:/' -e 's/^>/  planned: /'
+	done
+}
+
 _gsvs_report() {
 	local out="$1" stack stage rc secs st detail log notable cmp bst bdetail has_base=0
 	[[ -d "$out/baseline" ]] && has_base=1
@@ -181,6 +216,21 @@ _gsvs_report() {
 				print -r -- '```'
 			done <"$out/summary.tsv"
 		fi
+
+		print
+		print -r -- "## Task definitions against what is deployed"
+		print
+		print -r -- "Each planned container definition compared with the task definition that the ECS service runs now. With the image fallback on, an image change is expected. Any env or secret line needs a reason."
+		local tdf
+		for tdf in "$out"/*.taskdefs.txt(N); do
+			[[ -s "$tdf" ]] || continue
+			print
+			print -r -- "### ${${tdf:t}%.taskdefs.txt}"
+			print
+			print -r -- '```'
+			cat "$tdf"
+			print -r -- '```'
+		done
 
 		print
 		print -r -- "## Changes beyond noise (branch diff against the deployed stack)"
@@ -419,6 +469,11 @@ gs-validate-stacks() {
 		secs=$((SECONDS - start))
 		_gsvs_record "$out/summary.tsv" "$stack" "$s" "$rc" "$secs"
 		IFS=$'\t' read -r st detail <<<"$(_gsvs_classify "$log" "$rc")"
+		if [[ "$st" == CHANGES ]]; then
+			_gsvs_taskdefs "$log" "$profile" >"$out/$stack-$s.taskdefs.txt"
+			local envdiff=$(grep -cE '^  (deployed|planned): .* (env|secret) ' "$out/$stack-$s.taskdefs.txt")
+			((envdiff)) && detail="$detail, $envdiff task def env/secret line(s) differ from deployed"
+		fi
 
 		cmp=""
 		if [[ -n "$base_wt" && -d "$base_wt/iac/$stack" ]]; then
