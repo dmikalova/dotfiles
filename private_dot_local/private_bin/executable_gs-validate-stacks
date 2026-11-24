@@ -142,8 +142,8 @@ _gsvs_compare() {
 # A task definition diff shows only the new value. Compare each planned
 # container definition in a log with the task definition that its ECS service
 # runs now. Prints one "<service> (deployed: <family:rev>)" header per service,
-# then the env, secret and image lines that differ (DD_TAGS,
-# NEXT_PUBLIC_COMMIT_SHA and DD_VERSION carry the commit, so they are skipped).
+# then the env, secret and image lines that differ. The env vars that carry the
+# commit or the CI build (DD_TAGS, COMMIT_SHA, BUILD_URL and similar) are skipped.
 # Args: log profile
 _gsvs_stem() {
 	local n="${1:l}"
@@ -188,7 +188,7 @@ _gsvs_taskdefs() {
 		diff <(AWS_PROFILE="$2" aws ecs describe-task-definition --task-definition "$arn" \
 			--query 'taskDefinition.containerDefinitions' | jq -r "$flat" | sort) \
 			<(print -r -- "$def" | jq -r "$flat" | sort) |
-			grep -E '^[<>]' | grep -vE ' env (DD_TAGS|NEXT_PUBLIC_COMMIT_SHA|DD_VERSION)=' |
+			grep -E '^[<>]' | grep -vE ' env (DD_TAGS|DD_VERSION|NEXT_PUBLIC_COMMIT_SHA|COMMIT_SHA|BUILD_NUMBER|BUILD_URL|DEPLOYMENT_BRANCH|DEPLOYMENT_TIMESTAMP)=' |
 			sed -E -e 's/(DD_API_KEY=)[0-9a-f]+/\1<redacted>/' -e 's/^</  deployed:/' -e 's/^>/  planned: /'
 	done
 }
