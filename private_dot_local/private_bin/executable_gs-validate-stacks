@@ -1,0 +1,444 @@
+#!/bin/zsh
+# Run `sst diff` for every iac stack in the goodship monorepo, for each stage.
+# Write one log per stack and stage, a summary.tsv and a report.md.
+#
+# With -b REF, also run the same diff from a worktree at REF (for example
+# origin/main), right after each branch diff, and compare the two logs. A
+# local diff always shows noise (code zips, deploy tags, the image), and a
+# task definition diff shows only the new value. The comparison with the
+# baseline shows only what the branch itself changes.
+#
+# A failed stack does not stop the run. Output goes to
+# $TMPDIR/gs-validate-stacks/<branch>-<time> (or -o DIR), and
+# $TMPDIR/gs-validate-stacks/latest points at the newest run.
+#
+# Usage: gs-validate-stacks [options] [repo-dir]
+#   -s STAGES  comma list of short stages (default: sb,prod)
+#   -p STACKS  comma list of iac/<stack> names (default: every stack that has
+#              an sst:diff:<stage> script)
+#   -b REF     also diff REF in a baseline worktree and compare (recommended:
+#              -b origin/main). The first use runs yarn install there.
+#   -o DIR     output directory
+#   -r DIR     rerun only the stack/stage pairs that failed in run DIR, and
+#              write the new logs into DIR (keeps the -b setting of that run)
+#   -R DIR     only rebuild report.md for run DIR (no AWS, no diffs)
+#   -c         first run nx lint, typecheck and small tests on affected projects
+#   -n         no ECR image fallback (by default USE_FALLBACK_IMAGE=true, so a
+#              stack whose image for origin/main is not built yet still diffs)
+#   -a         use the <stage>-admin AWS profile instead of <stage>
+#   -h         show this help
+#
+# repo-dir defaults to the git top level of the current directory.
+#
+# Examples:
+#   gs-validate-stacks -b origin/main
+#   gs-validate-stacks -b origin/main -p platform,foundation,temporal
+#   gs-validate-stacks -r "$TMPDIR/gs-validate-stacks/latest"
+
+GS_SELF="${0:A}"
+typeset -gA GS_ACCOUNTS=(sb 992382640925 prod 800303818564 stg 266438516248 int 028236335584)
+
+# Property changes that every local diff shows and that do not come from code:
+# the Lambda code zip and versioned object, DD_TAGS (it carries the commit),
+# and the CI and deploy tags.
+# No backslashes: awk -v would eat them.
+GS_NOISE_PROPS='^(environment[.]variables[.]DD_TAGS|lastModified|s3Key|key|source|versionId|sourceCodeHash|codeSha256|qualifiedArn|qualifiedInvokeArn|version|tags(All)?[[]"(ci[.]pipeline[.]number|deployment[.]number|deployment[.]timestamp|git[.]branch|git[.]commit[.]sha)"[]])$'
+# Resources that every local diff shows.
+GS_NOISE_RES='(verify-deployed-version command:local:Command|Code aws:s3:BucketObjectv2)$'
+
+_gsvs_usage() {
+	sed -n '2,/^$/p' "$1" | sed 's/^# \{0,1\}//'
+}
+
+_gsvs_strip() {
+	sed $'s/\x1b\\[[0-9;]*m//g' "$1"
+}
+
+# Normalize a log for the baseline comparison: drop values that differ on
+# every run, and put each JSON object of a container definition on its own line.
+_gsvs_normalize() {
+	_gsvs_strip "$1" | sed -E \
+		-e "s#$2#<repo>#g" \
+		-e 's/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/<uuid>/g' \
+		-e 's/[0-9a-f]{32,64}/<hash>/g' \
+		-e 's/(deployment\.timestamp"\] = )[0-9]+/\1<ts>/' \
+		-e 's/^(SST [0-9.]+ ready!).*/\1/' |
+		sed -E 's/\},\{/},\
+{/g' |
+		grep -vE '^\s*$|^\s+at |^\| '
+}
+
+# Classify one log. Prints: STATUS<TAB>detail
+_gsvs_classify() {
+	local log="$1" rc="$2" text notable
+	text=$(_gsvs_strip "$log")
+	if grep -qE 'has no value for stage|Unknown param:' <<<"$text"; then
+		printf 'PARAM_ERROR\t%s\n' "$(grep -oE '(Param [A-Z0-9_]+ has no value for stage [a-z]+|Unknown param: [A-Z0-9_]+)' <<<"$text" | sort -u | paste -sd ';' -)"
+	elif grep -qE 'UnrecognizedClientException|ExpiredToken|security token included in the request is invalid|Error loading SSO Token|SSO session.*expired' <<<"$text"; then
+		printf 'AUTH_ERROR\t%s\n' 'AWS credentials are missing or expired'
+	elif grep -qE 'Environment variable not found \(GITHUB_TOKEN\)' <<<"$text"; then
+		printf 'ENV_ERROR\t%s\n' 'GITHUB_TOKEN is not set'
+	elif grep -qE 'not found in ECR repository' <<<"$text" && [[ "$rc" != 0 ]]; then
+		printf 'IMAGE_MISSING\t%s\n' "$(grep -oE 'Image with tag [^ ]+ not found in ECR repository [^ ,]+' <<<"$text" | head -1)"
+	elif [[ "$rc" != 0 ]] || grep -qE '✕ +Failed' <<<"$text"; then
+		printf 'FAILED\t%s\n' "$(grep -E '^(Error|error)[: ]|✕' <<<"$text" | grep -v '✕ *Failed' | head -1 | cut -c1-200)"
+	elif grep -qE '➜ +No changes' <<<"$text"; then
+		printf 'NO_CHANGES\t\n'
+	else
+		notable=$(_gsvs_notable "$log")
+		if [[ -z "$notable" ]]; then
+			printf 'NOISE_ONLY\t%s\n' 'code zip, DD_TAGS, deploy tags'
+		else
+			printf 'CHANGES\t%s\n' "$(grep -c '^- ' <<<"$notable") resource(s)"
+		fi
+	fi
+}
+
+# Print the resources in a diff log that change more than noise properties.
+# One "- <op> <resource>: prop, prop" line per resource.
+_gsvs_notable() {
+	_gsvs_strip "$1" | awk -v noise="$GS_NOISE_PROPS" -v noiseres="$GS_NOISE_RES" '
+		function flush() {
+			if (res != "" && res !~ noiseres && (op != "*" || props != "")) {
+				printf "- %s %s%s\n", op, res, (props == "" ? "" : ": " props)
+			}
+			res = ""; props = ""
+		}
+		/^~  Diff/ { next }
+		/^[+*~-]  [^ ]/ {
+			flush()
+			op = substr($0, 1, 1)
+			res = substr($0, 4)
+			next
+		}
+		/^   [+*~-] [^ ]/ && res != "" {
+			p = substr($0, 6); sub(/ = .*/, "", p); sub(/: .*/, "", p)
+			if (p !~ noise) props = (props == "" ? p : props ", " p)
+			next
+		}
+		/^[^ ]/ { flush() }
+		END { flush() }
+	'
+}
+
+# Compare the branch log with the baseline log. Prints the diff, empty if same.
+_gsvs_compare() {
+	local out="$1" stack="$2" stage="$3" repo base
+	repo=$(sed -n 's/^Repo: //p' "$out/meta.txt")
+	base=$(sed -n 's/^Baseline worktree: //p' "$out/meta.txt")
+	[[ -f "$out/baseline/$stack-$stage.log" ]] || return 0
+	diff -u \
+		--label "baseline/$stack-$stage" <(_gsvs_normalize "$out/baseline/$stack-$stage.log" "$base") \
+		--label "branch/$stack-$stage" <(_gsvs_normalize "$out/$stack-$stage.log" "$repo") |
+		tail -n +3
+}
+
+_gsvs_report() {
+	local out="$1" stack stage rc secs st detail log notable cmp bst bdetail has_base=0
+	[[ -d "$out/baseline" ]] && has_base=1
+	{
+		print -r -- "# Stack validation report"
+		print
+		print -r -- "- Run: \`$out\`"
+		[[ -f "$out/meta.txt" ]] && sed 's/^/- /' "$out/meta.txt"
+		print
+		if ((has_base)); then
+			print -r -- "| Stack | Stage | Exit | Time | Status | Baseline status | Vs baseline | Detail |"
+			print -r -- "| -- | -- | -- | -- | -- | -- | -- | -- |"
+		else
+			print -r -- "| Stack | Stage | Exit | Time | Status | Detail |"
+			print -r -- "| -- | -- | -- | -- | -- | -- |"
+		fi
+		while IFS=$'\t' read -r stack stage rc secs; do
+			log="$out/$stack-$stage.log"
+			[[ -f "$log" ]] || continue
+			IFS=$'\t' read -r st detail <<<"$(_gsvs_classify "$log" "$rc")"
+			if ((has_base)); then
+				bst="-"; cmp="-"
+				if [[ -f "$out/baseline/$stack-$stage.log" ]]; then
+					IFS=$'\t' read -r bst bdetail <<<"$(_gsvs_classify "$out/baseline/$stack-$stage.log" "$(_gsvs_base_rc "$out" "$stack" "$stage")")"
+					[[ -z "$(_gsvs_compare "$out" "$stack" "$stage")" ]] && cmp="SAME" || cmp="**DIFFERENT**"
+				fi
+				print -r -- "| $stack | $stage | $rc | ${secs}s | $st | $bst | $cmp | ${detail//|/\\|} |"
+			else
+				print -r -- "| $stack | $stage | $rc | ${secs}s | $st | ${detail//|/\\|} |"
+			fi
+		done <"$out/summary.tsv"
+
+		if ((has_base)); then
+			print
+			print -r -- "## Differences from the baseline"
+			print
+			print -r -- "Values that change on every run (hashes, UUIDs, timestamps, paths) are normalized. Every line here comes from the branch. Review each one."
+			while IFS=$'\t' read -r stack stage rc secs; do
+				cmp=$(_gsvs_compare "$out" "$stack" "$stage")
+				[[ -z "$cmp" ]] && continue
+				print
+				print -r -- "### $stack $stage"
+				print
+				print -r -- '```diff'
+				print -r -- "$cmp"
+				print -r -- '```'
+			done <"$out/summary.tsv"
+		fi
+
+		print
+		print -r -- "## Changes beyond noise (branch diff against the deployed stack)"
+		print
+		print -r -- "Hidden noise: the Lambda code zip, \`DD_TAGS\`, the CI and deploy tags, and the verify-deployed-version commands."
+		print -r -- "A task definition shows only the new value, so use the baseline comparison to see what the branch changes in it."
+		while IFS=$'\t' read -r stack stage rc secs; do
+			log="$out/$stack-$stage.log"
+			[[ -f "$log" ]] || continue
+			notable=$(_gsvs_notable "$log")
+			[[ -z "$notable" ]] && continue
+			print
+			print -r -- "### $stack $stage"
+			print
+			print -r -- "$notable"
+		done <"$out/summary.tsv"
+	} >"$out/report.md"
+
+	print
+	print "Status counts (branch):"
+	while IFS=$'\t' read -r stack stage rc secs; do
+		[[ -f "$out/$stack-$stage.log" ]] || continue
+		_gsvs_classify "$out/$stack-$stage.log" "$rc" | cut -f1
+	done <"$out/summary.tsv" | sort | uniq -c
+	if ((has_base)); then
+		print
+		print "Different from baseline:"
+		while IFS=$'\t' read -r stack stage rc secs; do
+			[[ -n "$(_gsvs_compare "$out" "$stack" "$stage")" ]] && print "  $stack $stage"
+		done <"$out/summary.tsv"
+	fi
+	print
+	print "Report: $out/report.md"
+	print "Logs:   $out/<stack>-<stage>.log"
+}
+
+_gsvs_base_rc() {
+	awk -F'\t' -v a="$2" -v b="$3" '$1 == a && $2 == b { rc = $3 } END { print (rc == "" ? 0 : rc) }' "$1/baseline/summary.tsv" 2>/dev/null
+}
+
+# Run one sst diff. Args: dir stack stage profile fallback log
+_gsvs_diff() {
+	(
+		cd "$1/iac/$2" &&
+			AWS_PROFILE="$4" USE_FALLBACK_IMAGE="$5" yarn "sst:diff:$3"
+	) >"$6" 2>&1 </dev/null
+}
+
+# Replace or add a row in a summary.tsv. Args: file stack stage rc secs
+_gsvs_record() {
+	local f="$1"
+	touch "$f"
+	awk -F'\t' -v a="$2" -v b="$3" '!($1 == a && $2 == b)' "$f" >"$f.tmp" && mv "$f.tmp" "$f"
+	printf '%s\t%s\t%s\t%s\n' "$2" "$3" "$4" "$5" >>"$f"
+}
+
+# Create or update the baseline worktree at REF. Prints its path.
+_gsvs_baseline() {
+	local repo="$1" ref="$2" root="$3" wt sha
+	wt="$root/baseline-worktree"
+	git -C "$repo" fetch --quiet origin >&2 || return 1
+	sha=$(git -C "$repo" rev-parse --verify "$ref^{commit}") || return 1
+	if [[ ! -e "$wt/.git" ]]; then
+		git -C "$repo" worktree add --detach "$wt" "$sha" >&2 || return 1
+	else
+		git -C "$wt" checkout --quiet --detach "$sha" >&2 || return 1
+	fi
+	if [[ ! -f "$wt/.gsvs-installed" || "$(<"$wt/.gsvs-installed")" != "$(git -C "$wt" rev-parse HEAD:yarn.lock)" ]]; then
+		echo "Installing dependencies in the baseline worktree (first run or yarn.lock changed)..." >&2
+		(cd "$wt" && yarn install >"$root/baseline-install.log" 2>&1) || {
+			echo "yarn install failed in $wt, see $root/baseline-install.log" >&2
+			return 1
+		}
+		git -C "$wt" rev-parse HEAD:yarn.lock >"$wt/.gsvs-installed"
+	fi
+	print -r -- "$wt"
+}
+
+gs-validate-stacks() {
+	emulate -L zsh
+	setopt local_options pipefail no_monitor no_notify
+
+	local stages_arg="sb,prod" stacks_arg="" out="" rerun="" report_only="" base_ref="" checks=0 fallback=1 admin=0
+	local opt
+	OPTIND=1
+	while getopts "s:p:b:o:r:R:cnah" opt; do
+		case "$opt" in
+			s) stages_arg="$OPTARG" ;;
+			p) stacks_arg="$OPTARG" ;;
+			b) base_ref="$OPTARG" ;;
+			o) out="$OPTARG" ;;
+			r) rerun="${OPTARG:A}" ;;
+			R) report_only="${OPTARG:A}" ;;
+			c) checks=1 ;;
+			n) fallback=0 ;;
+			a) admin=1 ;;
+			h) _gsvs_usage "$GS_SELF"; return 0 ;;
+			*) _gsvs_usage "$GS_SELF" >&2; return 1 ;;
+		esac
+	done
+	shift $((OPTIND - 1))
+
+	if [[ -n "$report_only" ]]; then
+		[[ -f "$report_only/summary.tsv" ]] || { echo "No summary.tsv in $report_only" >&2; return 1; }
+		_gsvs_report "$report_only"
+		return 0
+	fi
+
+	local repo="${1:-$(git rev-parse --show-toplevel 2>/dev/null)}"
+	if [[ -z "$repo" || ! -d "$repo/iac" ]]; then
+		echo "Run this inside the goodship repo, or pass the repo directory." >&2
+		return 1
+	fi
+	repo="${repo:A}"
+	cd "$repo" || return 1
+
+	local cmd
+	for cmd in aws gh jq yarn git; do
+		command -v "$cmd" >/dev/null 2>&1 || { echo "$cmd not found" >&2; return 1; }
+	done
+
+	# Node from .nvmrc
+	if [[ -f .nvmrc ]]; then
+		local want="$(<.nvmrc)"
+		if [[ "$(node -v 2>/dev/null)" != "v${want#v}" ]]; then
+			[[ -s /opt/homebrew/opt/nvm/nvm.sh ]] && source /opt/homebrew/opt/nvm/nvm.sh --no-use
+			nvm use --silent >/dev/null || { echo "nvm use failed for Node $want (try: nvm install)" >&2; return 1; }
+		fi
+		echo "Node $(node -v)"
+	fi
+
+	# .yarnrc.yml needs GITHUB_TOKEN to parse at all.
+	if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+		export GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+		[[ -n "$GITHUB_TOKEN" ]] || { echo "No GITHUB_TOKEN and gh auth token failed" >&2; return 1; }
+	fi
+
+	# Static keys would override AWS_PROFILE.
+	unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_PROFILE AWS_DEFAULT_PROFILE
+
+	local -a stages pairs stacks
+	stages=(${(s:,:)stages_arg})
+
+	local branch="$(git branch --show-current 2>/dev/null)"
+	branch="${branch//\//_}"
+	local root="${TMPDIR:-/tmp}"; root="${root%/}/gs-validate-stacks"
+	mkdir -p "$root"
+	local s1 s2 s3 s4 p s
+	if [[ -n "$rerun" ]]; then
+		[[ -f "$rerun/summary.tsv" ]] || { echo "No summary.tsv in $rerun" >&2; return 1; }
+		out="$rerun"
+		while IFS=$'\t' read -r s1 s2 s3 s4; do
+			if [[ "$s3" != 0 ]] || { [[ -d "$out/baseline" ]] && [[ "$(_gsvs_base_rc "$out" "$s1" "$s2")" != 0 ]]; }; then
+				pairs+=("$s1:$s2")
+			fi
+		done <"$out/summary.tsv"
+		(( ${#pairs} )) || { echo "Nothing failed in $out"; return 0; }
+		stages=(${(u)pairs#*:})
+		[[ -z "$base_ref" ]] && base_ref=$(sed -n 's/^Baseline ref: //p' "$out/meta.txt")
+	else
+		[[ -z "$out" ]] && out="$root/${branch:-detached}-$(date +%Y%m%d-%H%M%S)"
+		mkdir -p "$out"
+		: >"$out/summary.tsv"
+		if [[ -n "$stacks_arg" ]]; then
+			stacks=(${(s:,:)stacks_arg})
+		else
+			stacks=(iac/*/package.json(N:h:t))
+		fi
+		for p in $stacks; do
+			for s in $stages; do
+				jq -e --arg k "sst:diff:$s" '.scripts[$k]' "iac/$p/package.json" >/dev/null 2>&1 && pairs+=("$p:$s")
+			done
+		done
+	fi
+	out="${out:A}"
+	ln -sfn "$out" "$root/latest"
+
+	# AWS login and account check, one per stage.
+	local profile acct
+	for s in $stages; do
+		profile="$s"; ((admin)) && profile="$s-admin"
+		if ! acct=$(aws sts get-caller-identity --profile "$profile" --query Account --output text 2>/dev/null); then
+			aws sso login --profile "$profile" || return 1
+			acct=$(aws sts get-caller-identity --profile "$profile" --query Account --output text) || return 1
+		fi
+		if [[ -n "${GS_ACCOUNTS[$s]:-}" && "$acct" != "${GS_ACCOUNTS[$s]}" ]]; then
+			echo "Profile $profile is account $acct, expected ${GS_ACCOUNTS[$s]}" >&2
+			return 1
+		fi
+		echo "AWS $s: profile $profile, account $acct"
+	done
+
+	local base_wt=""
+	if [[ -n "$base_ref" ]]; then
+		base_wt=$(_gsvs_baseline "$repo" "$base_ref" "$root") || return 1
+		mkdir -p "$out/baseline"
+		echo "Baseline: $base_ref at $(git -C "$base_wt" rev-parse --short HEAD) in $base_wt"
+	fi
+
+	if [[ -z "$rerun" ]]; then
+		{
+			print -r -- "Repo: $repo"
+			print -r -- "Branch: $(git branch --show-current) @ $(git rev-parse --short HEAD)"
+			[[ -n "$base_ref" ]] && print -r -- "Baseline ref: $base_ref"
+			[[ -n "$base_wt" ]] && print -r -- "Baseline worktree: $base_wt"
+			[[ -n "$base_wt" ]] && print -r -- "Baseline commit: $(git -C "$base_wt" rev-parse --short HEAD)"
+			print -r -- "Image fallback: $( ((fallback)) && echo on || echo off)"
+			print -r -- "Started: $(date '+%Y-%m-%d %H:%M:%S')"
+		} >"$out/meta.txt"
+	fi
+
+	# Keep the Mac awake while this shell runs.
+	command -v caffeinate >/dev/null && { caffeinate -i -w $$ &! }
+
+	if ((checks)); then
+		echo "Running nx lint, typecheck and small tests on affected projects..."
+		# graphql-operations typecheck can start before its generated file exists.
+		yarn exec nx run @goodship/graphql-operations:codegen >"$out/nx-codegen.log" 2>&1
+		yarn exec nx affected -t lint typecheck test -c small --base=origin/main --parallel=2 >"$out/nx-checks.log" 2>&1
+		print -r -- "nx checks: EXIT=$?" | tee -a "$out/meta.txt"
+		grep -E "Successfully ran|Failed tasks" -A5 "$out/nx-checks.log"
+	fi
+
+	local fb="false"; ((fallback)) && fb="true"
+	echo "Diffing ${#pairs} stack/stage pairs into $out"
+	local pair stack start rc secs log st detail brc bst bdetail cmp i=0
+	for pair in $pairs; do
+		((i++))
+		stack="${pair%%:*}"; s="${pair#*:}"
+		profile="$s"; ((admin)) && profile="$s-admin"
+		log="$out/$stack-$s.log"
+
+		start=$SECONDS
+		_gsvs_diff "$repo" "$stack" "$s" "$profile" "$fb" "$log"
+		rc=$?
+		secs=$((SECONDS - start))
+		_gsvs_record "$out/summary.tsv" "$stack" "$s" "$rc" "$secs"
+		IFS=$'\t' read -r st detail <<<"$(_gsvs_classify "$log" "$rc")"
+
+		cmp=""
+		if [[ -n "$base_wt" && -d "$base_wt/iac/$stack" ]]; then
+			start=$SECONDS
+			_gsvs_diff "$base_wt" "$stack" "$s" "$profile" "$fb" "$out/baseline/$stack-$s.log"
+			brc=$?
+			_gsvs_record "$out/baseline/summary.tsv" "$stack" "$s" "$brc" "$((SECONDS - start))"
+			IFS=$'\t' read -r bst bdetail <<<"$(_gsvs_classify "$out/baseline/$stack-$s.log" "$brc")"
+			[[ -z "$(_gsvs_compare "$out" "$stack" "$s")" ]] && cmp="| base $bst, SAME" || cmp="| base $bst, DIFFERENT"
+		fi
+
+		printf '[%d/%d] %-26s %-5s EXIT=%-3s %4ss  %s %s %s\n' "$i" "${#pairs}" "$stack" "$s" "$rc" "$secs" "$st" "$detail" "$cmp"
+		if [[ "$st" == AUTH_ERROR ]]; then
+			echo "AWS login expired. Log in again and run: gs-validate-stacks -r $out" >&2
+			break
+		fi
+	done
+
+	print -r -- "Finished: $(date '+%Y-%m-%d %H:%M:%S')" >>"$out/meta.txt"
+	_gsvs_report "$out"
+}
+
+gs-validate-stacks "$@"
